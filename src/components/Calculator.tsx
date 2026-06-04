@@ -15,9 +15,13 @@ import {
   openEmailShare,
   openWhatsAppShare,
 } from "@/lib/calculatorShare";
+import { CALCULATOR_NAV_EVENT, type CalculatorNavTarget } from "@/lib/calculatorNav";
 import { SectionEyebrow } from "./SectionEyebrow";
 import { SectionReveal } from "./SectionReveal";
-import { SectionWave } from "./SectionWave";
+
+export type CalculatorProps = {
+  variant?: "hero" | "section";
+};
 
 function formatNumber(value: number, mode: CalcMode) {
   if (Number.isNaN(value)) return "--";
@@ -109,7 +113,8 @@ function AmountInput({ mode, value, onChange, onUserEdit, label }: AmountInputPr
   );
 }
 
-export function Calculator() {
+export function Calculator({ variant = "section" }: CalculatorProps) {
+  const isHero = variant === "hero";
   const [mode, setMode] = useState<CalcMode>("UF_TO_CLP");
   const [input, setInput] = useState("1");
   const [rate, setRate] = useState<number | null>(null);
@@ -122,6 +127,24 @@ export function Calculator() {
 
   const parsed = parseAmount(input);
   const invalid = !isValidAmount(input);
+
+  const resetResult = () => {
+    setCalculatedResult(null);
+    setCalcError("");
+  };
+
+  useEffect(() => {
+    const onNav = (event: Event) => {
+      const target = (event as CustomEvent<{ target: CalculatorNavTarget }>).detail?.target;
+      if (target === "UF_TO_CLP" || target === "CLP_TO_UF") {
+        setMode(target);
+        setCalculatedResult(null);
+        setCalcError("");
+      }
+    };
+    window.addEventListener(CALCULATOR_NAV_EVENT, onNav);
+    return () => window.removeEventListener(CALCULATOR_NAV_EVENT, onNav);
+  }, []);
 
   useEffect(() => {
     const loadRate = async () => {
@@ -140,11 +163,6 @@ export function Calculator() {
     };
     loadRate();
   }, []);
-
-  const resetResult = () => {
-    setCalculatedResult(null);
-    setCalcError("");
-  };
 
   const handleCalculate = () => {
     if (!rate) {
@@ -195,27 +213,16 @@ export function Calculator() {
 
   const hasResult = calculatedResult !== null && !invalid;
 
-  return (
-    <section id="tool" className="section-tool relative overflow-hidden pb-14 pt-8 sm:pb-16 sm:pt-10 lg:pb-20 lg:pt-12">
-      <div className="section-tool-glow" aria-hidden />
-      <div className="section-tool-blob" aria-hidden />
-      <div className="section-tool-rings" aria-hidden />
-
-      <div className="relative z-10 mx-auto w-full max-w-4xl px-4 sm:px-6 lg:px-8">
-        <SectionReveal className="text-center">
-          <SectionEyebrow>Live calculator</SectionEyebrow>
-          <h2 className="mt-4 text-3xl font-bold text-ink sm:text-4xl">UF ↔ CLP Tool</h2>
-          <p className="mx-auto mt-3 max-w-md text-sm text-ink-soft sm:text-base">
-            Enter an amount, then tap Calculate. Share your result via WhatsApp, email, or PDF.
-          </p>
-        </SectionReveal>
-
-        <SectionReveal delay={0.1} className="mt-8 sm:mt-10">
-          <div className="calculator-card rounded-[28px] p-5 sm:p-8">
+  const card = (
+    <div
+      className={`calculator-card text-left ${isHero ? "hero-calculator-card rounded-[20px] p-4 sm:rounded-[24px] sm:p-6" : "rounded-[28px] p-5 sm:p-8"}`}
+    >
             {loading ? <p className="text-sm text-ink-soft">Loading UF rate...</p> : null}
             {error ? <p className="mt-4 rounded-xl bg-error/10 p-3 text-sm text-error">{error}</p> : null}
 
-            <div className="mt-5 grid min-w-0 gap-5 lg:grid-cols-[1fr_auto_1fr] lg:items-stretch lg:gap-4">
+            <div
+              className={`grid min-w-0 gap-5 lg:grid-cols-[1fr_auto_1fr] lg:items-stretch lg:gap-4 ${loading && !error ? "mt-3" : isHero ? "mt-0" : "mt-5"}`}
+            >
               <div className="calc-panel min-w-0">
                 <AmountInput
                   mode={mode}
@@ -332,11 +339,36 @@ export function Calculator() {
                 </span>
               ) : null}
             </div>
-          </div>
+    </div>
+  );
+
+  if (isHero) {
+    return (
+      <div id="tool" className="hero-calculator w-full">
+        {card}
+      </div>
+    );
+  }
+
+  return (
+    <section className="section-tool relative overflow-hidden pb-14 pt-8 sm:pb-16 sm:pt-10 lg:pb-20 lg:pt-12">
+      <div className="section-tool-glow" aria-hidden />
+      <div className="section-tool-blob" aria-hidden />
+      <div className="section-tool-rings" aria-hidden />
+
+      <div className="relative z-10 mx-auto w-full max-w-4xl px-4 sm:px-6 lg:px-8">
+        <SectionReveal className="text-center">
+          <SectionEyebrow>Live calculator</SectionEyebrow>
+          <h2 className="mt-4 text-3xl font-bold text-ink sm:text-4xl">UF ↔ CLP Tool</h2>
+          <p className="mx-auto mt-3 max-w-md text-sm text-ink-soft sm:text-base">
+            Enter an amount, then tap Calculate. Share your result via WhatsApp, email, or PDF.
+          </p>
+        </SectionReveal>
+
+        <SectionReveal delay={0.1} className="mt-8 sm:mt-10">
+          {card}
         </SectionReveal>
       </div>
-
-      <SectionWave fill="--bg-base" className="relative z-10 -mb-px" />
     </section>
   );
 }

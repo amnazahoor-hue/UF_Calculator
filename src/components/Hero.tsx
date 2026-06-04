@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { navigateFromHeroTab, scrollToPageSection } from "@/lib/calculatorNav";
-import { SectionWave } from "./SectionWave";
+import { Calculator } from "./Calculator";
 
 const stagger = {
   hidden: {},
@@ -62,83 +62,6 @@ function TrustPill() {
   );
 }
 
-function DashboardMockup() {
-  return (
-    <div className="hero-mockup hero-mockup-inner overflow-hidden">
-      <div className="flex items-center justify-between border-b border-[color-mix(in_oklab,var(--surface)_10%,transparent)] px-4 py-3 sm:px-5">
-        <div className="flex items-center gap-1.5">
-          <span className="h-2.5 w-2.5 rounded-full bg-error" />
-          <span className="h-2.5 w-2.5 rounded-full bg-accent" />
-          <span className="h-2.5 w-2.5 rounded-full bg-success" />
-        </div>
-        <span className="text-[11px] font-medium text-[color-mix(in_oklab,var(--surface)_65%,transparent)] sm:text-xs">
-          UF Calculator · Live dashboard
-        </span>
-      </div>
-
-      <div className="grid gap-3 p-4 sm:grid-cols-5 sm:gap-4 sm:p-5">
-        <div className="rounded-xl border border-[color-mix(in_oklab,var(--surface)_8%,transparent)] bg-[color-mix(in_oklab,var(--surface)_5%,transparent)] p-4 shadow-[inset_0_1px_0_color-mix(in_oklab,var(--surface)_12%,transparent)] sm:col-span-3">
-          <p className="text-[10px] font-semibold uppercase tracking-widest text-[color-mix(in_oklab,var(--surface)_50%,transparent)]">
-            Conversion
-          </p>
-          <div className="mt-3 grid gap-3 sm:grid-cols-[1fr_auto_1fr] sm:items-center">
-            <div className="rounded-lg bg-[color-mix(in_oklab,var(--ink)_85%,transparent)] p-3 text-left ring-1 ring-[color-mix(in_oklab,var(--surface)_6%,transparent)]">
-              <p className="text-[10px] uppercase text-[color-mix(in_oklab,var(--surface)_45%,transparent)]">From</p>
-              <p className="mt-1 text-lg font-semibold text-surface sm:text-xl">1 UF</p>
-            </div>
-            <div className="mx-auto flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-accent to-accent-2 text-sm text-surface shadow-[0_6px_16px_color-mix(in_oklab,var(--accent)_35%,transparent)]">
-              ↔
-            </div>
-            <div className="rounded-lg bg-[color-mix(in_oklab,var(--ink)_85%,transparent)] p-3 text-left ring-1 ring-[color-mix(in_oklab,var(--surface)_6%,transparent)]">
-              <p className="text-[10px] uppercase text-[color-mix(in_oklab,var(--surface)_45%,transparent)]">To</p>
-              <p className="mt-1 text-lg font-semibold text-surface sm:text-xl">$39.189</p>
-            </div>
-          </div>
-        </div>
-
-        <div className="flex flex-col gap-3 sm:col-span-2">
-          <div className="flex-1 rounded-xl border border-[color-mix(in_oklab,var(--surface)_8%,transparent)] bg-[color-mix(in_oklab,var(--surface)_5%,transparent)] p-4 shadow-[inset_0_1px_0_color-mix(in_oklab,var(--surface)_10%,transparent)]">
-            <div className="flex items-start justify-between gap-2">
-              <div>
-                <p className="text-[10px] uppercase tracking-wide text-[color-mix(in_oklab,var(--surface)_50%,transparent)]">
-                  Live UF rate
-                </p>
-                <p className="mt-1 text-xl font-bold text-success">39,189</p>
-                <p className="text-[10px] text-[color-mix(in_oklab,var(--surface)_45%,transparent)]">CLP per UF</p>
-              </div>
-              <span className="rounded-full bg-[color-mix(in_oklab,var(--success)_18%,transparent)] px-2 py-0.5 text-[10px] font-medium text-success">
-                +0.12%
-              </span>
-            </div>
-            <div className="mt-3 h-14 overflow-hidden rounded-lg bg-[color-mix(in_oklab,var(--success)_12%,transparent)]">
-              <svg className="h-full w-full" viewBox="0 0 120 48" preserveAspectRatio="none" aria-hidden>
-                <defs>
-                  <linearGradient id="heroSpark" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="var(--success)" stopOpacity="0.35" />
-                    <stop offset="100%" stopColor="var(--success)" stopOpacity="0" />
-                  </linearGradient>
-                </defs>
-                <path d="M0 40 L15 34 L30 36 L45 28 L60 30 L75 22 L90 24 L105 14 L120 10 V48 H0 Z" fill="url(#heroSpark)" />
-                <path
-                  d="M0 40 L15 34 L30 36 L45 28 L60 30 L75 22 L90 24 L105 14 L120 10"
-                  fill="none"
-                  stroke="var(--success)"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                />
-              </svg>
-            </div>
-          </div>
-          <div className="rounded-xl border border-[color-mix(in_oklab,var(--surface)_8%,transparent)] bg-[color-mix(in_oklab,var(--surface)_4%,transparent)] px-4 py-3">
-            <p className="text-[10px] text-[color-mix(in_oklab,var(--surface)_45%,transparent)]">Last updated</p>
-            <p className="text-sm font-semibold text-surface">Today · Official source</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
 export function Hero() {
   const [activeTab, setActiveTab] = useState<TabId>("UF_TO_CLP");
 
@@ -150,7 +73,7 @@ export function Hero() {
   };
 
   return (
-    <section id="home" className="overflow-x-hidden bg-bg-base pb-10 pt-0 sm:pb-14">
+    <section id="home" className="overflow-x-hidden bg-bg-warm-2 pb-0 pt-0">
       <div className="hero-panel hero-panel-grid relative w-full rounded-none">
         <div aria-hidden className="hero-panel-glows">
           <span className="hero-panel-glow hero-panel-glow--1" />
@@ -203,7 +126,7 @@ export function Hero() {
                 whileTap={{ scale: 0.98 }}
                 className="group inline-flex items-center gap-2 rounded-2xl bg-ink px-8 py-3.5 text-base font-semibold text-surface shadow-[0_16px_40px_color-mix(in_oklab,var(--ink)_28%,transparent),0_4px_12px_color-mix(in_oklab,var(--ink)_18%,transparent)] transition-[box-shadow] duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--bg-warm-2)]"
               >
-                Open Calculator
+                Use calculator
                 <svg
                   width="18"
                   height="18"
@@ -273,25 +196,15 @@ export function Hero() {
           </motion.div>
 
           <motion.div
-            className="relative mx-auto mt-8 w-full max-w-[960px] pb-2 sm:mt-10 sm:pb-4"
+            className="relative mx-auto mt-8 w-full max-w-[960px] pb-2 sm:mt-10 sm:pb-6"
             variants={fadeUp}
             initial="hidden"
             animate="show"
             transition={{ delay: 0.35 }}
           >
-            <motion.div
-              animate={{ y: [0, -6, 0] }}
-              transition={{ duration: 5.5, repeat: Infinity, ease: "easeInOut" }}
-              className="w-full"
-            >
-              <DashboardMockup />
-            </motion.div>
+            <Calculator variant="hero" />
           </motion.div>
         </div>
-      </div>
-
-      <div className="relative mt-0 w-full">
-        <SectionWave fill="--ink" />
       </div>
     </section>
   );

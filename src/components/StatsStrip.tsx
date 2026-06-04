@@ -3,7 +3,6 @@
 import { motion } from "framer-motion";
 import { SectionEyebrow } from "./SectionEyebrow";
 import { SectionReveal } from "./SectionReveal";
-import { SectionWave } from "./SectionWave";
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
@@ -109,8 +108,6 @@ export function StatsStrip() {
           ))}
         </motion.div>
       </div>
-
-      <SectionWave fill="--surface" className="-mb-px" />
     </section>
   );
 }

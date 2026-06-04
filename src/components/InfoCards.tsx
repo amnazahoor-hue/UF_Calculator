@@ -4,7 +4,6 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { SectionEyebrow } from "./SectionEyebrow";
 import { SectionReveal } from "./SectionReveal";
-import { SectionWave } from "./SectionWave";
 
 const info = [
   {
@@ -52,7 +51,7 @@ function InfoCardIcon({ type }: { type: (typeof info)[number]["icon"] }) {
 
 export function InfoCards() {
   return (
-    <section className="section-info-wrap relative -mt-1 overflow-hidden pb-12 pt-0 sm:pb-14 sm:-mt-2">
+    <section className="section-info-wrap relative overflow-hidden pb-12 pt-0 sm:pb-14 sm:pt-0">
       <div className="relative mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
         <div className="section-info-panel relative overflow-hidden rounded-[28px] px-5 pb-9 pt-6 sm:px-9 sm:pb-11 sm:pt-7 md:px-11 md:pb-12 md:pt-8">
           <div aria-hidden className="section-info-texture" />
@@ -113,8 +112,6 @@ export function InfoCards() {
           </div>
         </div>
       </div>
-
-      <SectionWave fill="--surface" className="relative z-10 -mb-px" />
     </section>
   );
 }

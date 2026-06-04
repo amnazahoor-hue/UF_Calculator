@@ -253,21 +253,18 @@ h2 {
   pointer-events: none;
 }
 
-.hero-mockup {
-  border-radius: 16px;
-  border: 1px solid color-mix(in oklab, var(--surface) 14%, transparent);
-  box-shadow:
-    0 2px 8px color-mix(in oklab, var(--ink) 25%, transparent),
-    0 12px 32px color-mix(in oklab, var(--ink) 20%, transparent),
-    0 40px 80px color-mix(in oklab, var(--ink) 28%, transparent);
+.hero-calculator {
+  position: relative;
+  z-index: 10;
 }
 
-.hero-mockup-inner {
-  background: linear-gradient(
-    180deg,
-    color-mix(in oklab, var(--surface) 6%, var(--ink)) 0%,
-    var(--ink) 12%
-  );
+.hero-calculator-card {
+  border-color: color-mix(in oklab, var(--accent) 22%, var(--border));
+  background: color-mix(in oklab, var(--surface) 98%, transparent);
+  box-shadow:
+    0 2px 8px color-mix(in oklab, var(--ink) 8%, transparent),
+    0 12px 32px color-mix(in oklab, var(--accent) 14%, transparent),
+    0 28px 64px color-mix(in oklab, var(--ink) 12%, transparent);
 }
 
 .glass-card {
@@ -905,7 +902,6 @@ h2 {
 /* Info — warm panel (phase 2 ready) */
 .section-info-wrap {
   background: var(--bg-base);
-  margin-top: -0.25rem;
 }
 
 .section-info-panel {

@@ -6,7 +6,6 @@ import { useState } from "react";
 import { faqItems } from "./faqData";
 import { SectionEyebrow } from "./SectionEyebrow";
 import { SectionReveal } from "./SectionReveal";
-import { SectionWave } from "./SectionWave";
 
 const faqImages = [
   {
@@ -133,8 +132,6 @@ export function Faq() {
           </div>
         </div>
       </div>
-
-      <SectionWave fill="--ink" className="relative z-10 -mb-px mt-0" />
     </section>
   );
 }

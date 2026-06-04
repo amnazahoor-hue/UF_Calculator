@@ -5,7 +5,6 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import { SectionEyebrow } from "./SectionEyebrow";
 import { SectionReveal } from "./SectionReveal";
-import { SectionWave } from "./SectionWave";
 
 function HowStepArrow() {
   return (
@@ -64,7 +63,7 @@ const collageImages = [
 
 export function HowItWorks() {
   return (
-    <section id="how-it-works" className="section-how relative overflow-hidden pb-4 pt-10 sm:pb-6 sm:pt-12 lg:pb-8 lg:pt-14">
+    <section id="how-it-works" className="section-how relative overflow-hidden pb-10 pt-10 sm:pb-12 sm:pt-12 lg:pb-14 lg:pt-14">
       <div className="relative mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
         <div className="how-layout">
           <div className="how-left h-full">
@@ -145,8 +144,6 @@ export function HowItWorks() {
           </div>
         </div>
       </div>
-
-      <SectionWave fill="--bg-warm-2" className="relative z-10 -mb-px" />
     </section>
   );
 }
