@@ -3,15 +3,21 @@ import dynamic from "next/dynamic";
 import { Hero } from "@/components/Hero";
 import { StatsStrip } from "@/components/StatsStrip";
 import { faqItems } from "@/components/faqData";
-import { defaultDescription } from "@/lib/site";
+const homeTitle = "Calculadora UF Chile | Convierte UF a CLP y CLP a UF";
+const homeDescription =
+  "Convierta UF a pesos chilenos y pesos a UF con nuestra calculadora UF. Obtenga al instante el valor de UF, actualizaciones diarias y cálculos precisos.";
 
 export const metadata: Metadata = {
-  title: "UF Calculator Chile | Official UF to CLP Tool",
-  description: defaultDescription,
+  title: homeTitle,
+  description: homeDescription,
   alternates: { canonical: "/" },
   openGraph: {
-    title: `UF Calculator Chile | Official UF to CLP Tool`,
-    description: defaultDescription,
+    title: homeTitle,
+    description: homeDescription,
+  },
+  twitter: {
+    title: homeTitle,
+    description: homeDescription,
   },
 };
 
