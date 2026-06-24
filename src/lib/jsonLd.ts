@@ -5,6 +5,7 @@ import {
   contactEmail,
   contentLastUpdated,
   defaultDescription,
+  homeTitle,
   officialUfRateUrl,
   siteName,
   siteUrl,
@@ -12,7 +13,7 @@ import {
 } from "@/lib/site";
 
 const organizationId = `${siteUrl}/#organization`;
-const websiteId = `${siteUrl}/#website`;
+const webPageId = `${siteUrl}/#webpage`;
 const webApplicationId = `${siteUrl}/#webapplication`;
 const authorPersonId = `${siteUrl}/author#person`;
 
@@ -78,15 +79,19 @@ function organizationNode() {
   };
 }
 
-function websiteNode() {
+function webPageNode(path = "/") {
+  const pageUrl = absoluteSiteUrl(path);
+
   return {
-    "@type": "WebSite",
-    "@id": websiteId,
-    url: siteUrl,
-    name: siteName,
+    "@type": "WebPage",
+    "@id": path === "/" ? webPageId : `${pageUrl}#webpage`,
+    url: pageUrl,
+    name: path === "/" ? homeTitle : siteName,
     description: defaultDescription,
     inLanguage: "es-CL",
+    dateModified: contentLastUpdated,
     publisher: { "@id": organizationId },
+    mainEntity: { "@id": webApplicationId },
   };
 }
 
@@ -112,8 +117,8 @@ function webApplicationNode() {
     },
     provider: { "@id": organizationId },
     publisher: { "@id": organizationId },
-    isPartOf: { "@id": websiteId },
-    mainEntityOfPage: { "@id": websiteId },
+    isPartOf: { "@id": webPageId },
+    mainEntityOfPage: { "@id": webPageId },
   };
 }
 
@@ -137,7 +142,7 @@ export function faqPageNode(rate: number) {
     "@type": "FAQPage",
     "@id": `${siteUrl}/#faq`,
     url: `${siteUrl}/#faq`,
-    isPartOf: { "@id": websiteId },
+    isPartOf: { "@id": webPageId },
     mainEntity: buildFaqItems(rate).map((item) => ({
       "@type": "Question",
       name: item.q,
@@ -152,11 +157,24 @@ export function faqPageNode(rate: number) {
 type SiteSchemaOptions = {
   breadcrumbs?: BreadcrumbItem[];
   faqRate?: number;
+  pagePath?: string;
   additionalNodes?: Record<string, unknown>[];
 };
 
+export function standaloneJsonLd(node: Record<string, unknown>) {
+  return {
+    "@context": "https://schema.org",
+    ...node,
+  };
+}
+
 export function siteSchemaGraph(options: SiteSchemaOptions = {}) {
-  const graph: Record<string, unknown>[] = [organizationNode(), websiteNode(), webApplicationNode()];
+  const pagePath = options.pagePath ?? "/";
+  const graph: Record<string, unknown>[] = [
+    organizationNode(),
+    webPageNode(pagePath),
+    webApplicationNode(),
+  ];
 
   if (options.breadcrumbs?.length) {
     graph.push(breadcrumbListNode(options.breadcrumbs));
@@ -173,10 +191,24 @@ export function siteSchemaGraph(options: SiteSchemaOptions = {}) {
   return jsonLdGraph(...graph);
 }
 
+/** Five standalone blocks so Schema.org Validator lists each type separately. */
+export function homePageSchemas(faqRate: number) {
+  const breadcrumbs = [{ name: "Inicio", path: "/" }];
+
+  return [
+    standaloneJsonLd(organizationNode()),
+    standaloneJsonLd(webPageNode("/")),
+    standaloneJsonLd(webApplicationNode()),
+    standaloneJsonLd(breadcrumbListNode(breadcrumbs)),
+    standaloneJsonLd(faqPageNode(faqRate)),
+  ];
+}
+
 export function homePageSchemaGraph(faqRate: number) {
   return siteSchemaGraph({
     breadcrumbs: [{ name: "Inicio", path: "/" }],
     faqRate,
+    pagePath: "/",
   });
 }
 
@@ -206,7 +238,7 @@ export function authorPageSchemaGraph() {
         name: `Autora editorial | ${siteName}`,
         description: `Perfil editorial de ${siteAuthor.name} en ${siteName}.`,
         inLanguage: "es-CL",
-        isPartOf: { "@id": websiteId },
+        isPartOf: { "@id": webPageId },
         about: { "@id": authorPersonId },
         mainEntity: { "@id": authorPersonId },
       },
@@ -237,6 +269,7 @@ export function aboutUsArticleSchemaGraph() {
   const aboutArticleId = `${siteUrl}/about-us#article`;
 
   return siteSchemaGraph({
+    pagePath: "/about-us",
     breadcrumbs: [
       { name: "Inicio", path: "/" },
       { name: "Sobre nosotros", path: "/about-us" },
@@ -252,7 +285,7 @@ export function aboutUsArticleSchemaGraph() {
         dateModified: contentLastUpdated,
         author: { "@id": authorPersonId },
         publisher: { "@id": organizationId },
-        isPartOf: { "@id": websiteId },
+        isPartOf: { "@id": `${absoluteSiteUrl("/about-us")}#webpage` },
         mainEntityOfPage: absoluteSiteUrl("/about-us"),
       },
     ],
