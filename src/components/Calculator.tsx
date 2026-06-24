@@ -34,6 +34,7 @@ import {
 import { SectionEyebrow } from "./SectionEyebrow";
 import { SectionReveal } from "./SectionReveal";
 import { UfDateStrip } from "./UfDateStrip";
+import { UfRatePanelSkeleton } from "./UfRatePanelSkeleton";
 import { UfDayChangeNotice } from "./UfDayChange";
 
 export type CalculatorProps = {
@@ -309,42 +310,55 @@ export function Calculator({ variant = "section" }: CalculatorProps) {
     <div
       className={`calculator-card text-left ${isHero ? "hero-calculator-card rounded-[20px] p-4 sm:rounded-[24px] sm:p-6" : "rounded-[28px] p-5 sm:p-8"}`}
     >
-            {loading ? <p className="text-sm text-ink-soft">Cargando valor UF...</p> : null}
-            {error ? <p className="mt-4 rounded-xl bg-error/10 p-3 text-sm text-error">{error}</p> : null}
+            <div className="uf-rate-panel" aria-busy={loading} aria-live="polite">
+              {error ? <p className="rounded-xl bg-error/10 p-3 text-sm text-error">{error}</p> : null}
 
-            {!loading && !error && history.length > 0 ? (
-              <div className="uf-rate-panel">
-                <div className="uf-rate-panel-head">
-                  <div>
-                    <p className="uf-rate-panel-eyebrow">
-                      {selectedDate && isTodayDate(selectedDate) ? "Valor UF hoy" : "Valor UF del día"}
-                    </p>
-                    {selectedDate ? (
-                      <p className="uf-rate-panel-date">{formatUfLongDate(selectedDate)}</p>
+              {!error && loading ? <UfRatePanelSkeleton /> : null}
+
+              {!error && !loading && history.length > 0 ? (
+                <>
+                  <div className="uf-rate-panel-head">
+                    <div>
+                      <p className="uf-rate-panel-eyebrow">
+                        {selectedDate && isTodayDate(selectedDate) ? "Valor UF hoy" : "Valor UF del día"}
+                      </p>
+                      {selectedDate ? (
+                        <p className="uf-rate-panel-date">{formatUfLongDate(selectedDate)}</p>
+                      ) : (
+                        <p className="uf-rate-panel-date uf-rate-panel-date--placeholder" aria-hidden>
+                          &nbsp;
+                        </p>
+                      )}
+                    </div>
+                    <button
+                      type="button"
+                      onClick={handleCopyRate}
+                      disabled={!rate}
+                      className="uf-rate-copy-btn"
+                      aria-label="Copiar valor UF"
+                    >
+                      {copied ? "Copiado" : "Copiar"}
+                    </button>
+                  </div>
+                  <p className="uf-rate-panel-value">
+                    1 UF ={" "}
+                    <strong className="uf-rate-value-display">
+                      ${rate ? formatClpRate(rate) : "—"}
+                    </strong>{" "}
+                    CLP
+                  </p>
+                  <div className="uf-rate-day-change-slot">
+                    {dayChange ? (
+                      <UfDayChangeNotice change={dayChange} referenceDate={rateDate} compact />
                     ) : null}
                   </div>
-                  <button
-                    type="button"
-                    onClick={handleCopyRate}
-                    disabled={!rate}
-                    className="uf-rate-copy-btn"
-                    aria-label="Copiar valor UF"
-                  >
-                    {copied ? "Copiado" : "Copiar"}
-                  </button>
-                </div>
-                <p className="uf-rate-panel-value">
-                  1 UF = <strong>${rate ? formatClpRate(rate) : "--"}</strong> CLP
-                </p>
-                {dayChange ? (
-                  <UfDayChangeNotice change={dayChange} referenceDate={rateDate} compact />
-                ) : null}
-                <UfDateStrip history={history} selectedDate={selectedDate} onSelect={handleDateSelect} />
-              </div>
-            ) : null}
+                  <UfDateStrip history={history} selectedDate={selectedDate} onSelect={handleDateSelect} />
+                </>
+              ) : null}
+            </div>
 
             <div
-              className={`grid min-w-0 gap-5 lg:grid-cols-[1fr_auto_1fr] lg:items-stretch lg:gap-4 ${loading && !error ? "mt-3" : isHero ? "mt-0" : "mt-5"}`}
+              className={`grid min-w-0 gap-5 lg:grid-cols-[1fr_auto_1fr] lg:items-stretch lg:gap-4 ${isHero ? "mt-0" : "mt-5"}`}
             >
               <div className="calc-panel min-w-0">
                 <AmountInput
@@ -488,12 +502,15 @@ export function Calculator({ variant = "section" }: CalculatorProps) {
               ) : null}
             </AnimatePresence>
 
-            <div id="live-rate" className="mt-6 flex flex-wrap items-center gap-3 text-xs text-ink-soft">
-              <span className="rounded-full bg-[color-mix(in_oklab,var(--accent)_12%,var(--surface))] px-3 py-1 font-medium text-accent">
-                Tasa: {rate ? formatClpRate(rate) : "--"} CLP
+            <div id="live-rate" className="uf-live-rate-bar mt-6 flex flex-wrap items-center gap-3 text-xs text-ink-soft">
+              <span className="uf-live-rate-pill rounded-full bg-[color-mix(in_oklab,var(--accent)_12%,var(--surface))] px-3 py-1 font-medium text-accent">
+                Tasa:{" "}
+                <strong className="uf-rate-value-display font-semibold">
+                  {loading ? "…" : rate ? formatClpRate(rate) : "—"} CLP
+                </strong>
               </span>
-              <span>
-                Fecha: {rateDate ? formatUfLongDate(rateDate) : "--"}
+              <span className="uf-live-rate-date">
+                Fecha: {loading ? "…" : rateDate ? formatUfLongDate(rateDate) : "—"}
               </span>
               {fallback ? (
                 <span className="rounded-full bg-[color-mix(in_oklab,var(--accent-2)_25%,var(--surface))] px-3 py-1 text-accent">

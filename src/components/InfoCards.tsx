@@ -97,7 +97,9 @@ export function InfoCards() {
           </div>
         </SectionReveal>
 
-        <div className="relative mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="relative mt-8">
+          <h3 className="sr-only">Beneficios de la calculadora UF</h3>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {features.map((item, index) => (
             <SectionReveal key={item.title} delay={index * 0.06}>
               <motion.article
@@ -108,11 +110,12 @@ export function InfoCards() {
                 <span className="info-card-icon">
                   <FeatureIcon type={item.icon} />
                 </span>
-                <h3 className="mt-4 text-base font-bold leading-snug text-ink">{item.title}</h3>
+                <p className="info-card-title mt-4 text-base font-bold leading-snug text-ink">{item.title}</p>
                 <span className="info-card-accent" aria-hidden />
               </motion.article>
             </SectionReveal>
           ))}
+          </div>
         </div>
 
         <SectionReveal delay={0.28} className="mt-8 text-center">

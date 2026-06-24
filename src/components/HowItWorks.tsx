@@ -2,11 +2,11 @@
 
 import { Fragment } from "react";
 import { motion } from "framer-motion";
-import Image from "next/image";
-import { siteImages } from "@/lib/images";
 import { scrollToPageSection } from "@/lib/calculatorNav";
+import { imageCatalog } from "@/lib/images";
 import { SectionEyebrow } from "./SectionEyebrow";
 import { SectionReveal } from "./SectionReveal";
+import { SiteImage } from "./SiteImage";
 
 function HowStepArrow() {
   return (
@@ -44,7 +44,7 @@ const steps = [
   {
     num: "03",
     mobileNum: "3",
-    title: "Paso 3: Nuestra Calculadora Realizará El Cálculo",
+    title: "Paso 3: Nuestra Calculadora Realizará El Cálculo.",
     description:
       "Para calcular el valor UF a pesos, nuestra herramienta simplemente multiplicará la cantidad de UF por el valor de la UF. En caso de que desee convertir pesos a UF, simplemente divide la cantidad en pesos por el valor de la UF.",
     markerClass: "how-step-marker--center",
@@ -60,26 +60,10 @@ const steps = [
 ] as const;
 
 const collageImages = [
-  {
-    src: siteImages.howItWorks.softwareDeveloper,
-    alt: "Persona consultando el valor diario de la UF en pantalla",
-    objectPosition: "center 20%",
-  },
-  {
-    src: siteImages.howItWorks.teamStrategy,
-    alt: "Profesionales eligiendo la dirección de conversión UF o pesos",
-    objectPosition: "center center",
-  },
-  {
-    src: siteImages.howItWorks.financialCalculation,
-    alt: "Cálculo financiero con calculadora y documentos",
-    objectPosition: "center center",
-  },
-  {
-    src: siteImages.howItWorks.contractReview,
-    alt: "Revisión de contratos y fechas de pago en UF",
-    objectPosition: "center 25%",
-  },
+  imageCatalog.howItWorks.softwareDeveloper,
+  imageCatalog.howItWorks.teamStrategy,
+  imageCatalog.howItWorks.financialCalculation,
+  imageCatalog.howItWorks.contractReview,
 ] as const;
 
 export function HowItWorks() {
@@ -91,11 +75,11 @@ export function HowItWorks() {
             <SectionReveal>
               <SectionEyebrow>Cómo funciona</SectionEyebrow>
               <h2 className="mt-4 max-w-md text-[clamp(2rem,4vw,2.75rem)] font-bold leading-tight tracking-[-0.02em] text-ink">
-                ¿Cómo Funciona el Cálculo UF?
+                ¿Cómo Funciona Cálculo Calculo UF?
               </h2>
               <p className="mt-4 max-w-sm text-sm leading-relaxed text-ink-soft sm:text-base">
-                Nuestro convertidor UF no lleva mucho tiempo en la conversión de UF a pesos; puede convertir fácilmente
-                de pesos chilenos a UF. Así es como funciona:
+                Respuesta directa: ingresa un monto, elige UF → CLP o CLP → UF y presiona Calcular. La herramienta
+                multiplica o divide por el valor UF del día seleccionado en segundos.
               </p>
               <a
                 href="#tool"
@@ -130,16 +114,18 @@ export function HowItWorks() {
                     transition={{ duration: 0.45, delay: index * 0.08, ease: [0.22, 1, 0.36, 1] }}
                     whileHover={{ y: -3 }}
                   >
-                    <Image
-                      src={img.src}
-                      alt={img.alt}
+                    <SiteImage
+                      image={img}
                       width={612}
                       height={408}
                       sizes="(max-width: 1024px) 45vw, 260px"
                       quality={88}
                       loading="lazy"
                       className="how-img-photo"
-                      style={{ objectPosition: img.objectPosition }}
+                      style={{
+                        objectPosition:
+                          index === 0 ? "center 20%" : index === 3 ? "center 25%" : "center center",
+                      }}
                     />
                   </motion.div>
                 ))}

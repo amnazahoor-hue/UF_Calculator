@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import type { ReactNode } from "react";
 import { FooterSocialIcon, type SocialIconId } from "./FooterSocialIcons";
 import { SectionReveal } from "./SectionReveal";
+import { scrollToPageSection } from "@/lib/calculatorNav";
 import { footerConnectLinks, footerLegalLinks, footerProductLinks } from "@/lib/navigation";
 import { siteName } from "@/lib/site";
 
@@ -29,9 +30,14 @@ function scrollToTool(e: { preventDefault: () => void }) {
   document.getElementById("tool")?.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
+function scrollToHero(e: { preventDefault: () => void }) {
+  e.preventDefault();
+  scrollToPageSection("home");
+}
+
 export function Footer({ brand }: { brand: ReactNode }) {
   return (
-    <footer id="contact" className="footer-shell relative pb-4 pt-2 sm:pb-5 sm:pt-3">
+    <footer id="contact" className="footer-shell relative py-3 sm:py-4">
       <div aria-hidden className="footer-shell-glow" />
       <div className="relative mx-auto w-full max-w-shell px-3 sm:px-5 lg:px-8 xl:px-10">
         <div className="footer-bar">
@@ -81,7 +87,7 @@ export function Footer({ brand }: { brand: ReactNode }) {
             </SectionReveal>
 
             <SectionReveal delay={0.06} className="lg:col-span-2">
-              <h3 className="footer-column-title">Producto</h3>
+              <p className="footer-column-title font-bold text-sm uppercase tracking-widest text-ink">Producto</p>
               <nav className="mt-4 space-y-2.5" aria-label="Enlaces del producto">
                 {footerProductLinks.map((link) => (
                   <Link key={link.href} href={link.href} className="footer-link">
@@ -92,7 +98,7 @@ export function Footer({ brand }: { brand: ReactNode }) {
             </SectionReveal>
 
             <SectionReveal delay={0.1} className="lg:col-span-3">
-              <h3 className="footer-column-title">Legal e información</h3>
+              <p className="footer-column-title font-bold text-sm uppercase tracking-widest text-ink">Legal e información</p>
               <nav className="mt-4 space-y-2.5" aria-label="Enlaces legales e informativos">
                 {footerLegalLinks.map((link) => (
                   <Link key={link.href} href={link.href} className="footer-link">
@@ -103,7 +109,7 @@ export function Footer({ brand }: { brand: ReactNode }) {
             </SectionReveal>
 
             <SectionReveal delay={0.14} className="lg:col-span-3">
-              <h3 className="footer-column-title">Conectar</h3>
+              <p className="footer-column-title font-bold text-sm uppercase tracking-widest text-ink">Conectar</p>
               <nav className="mt-4 space-y-2.5" aria-label="Enlaces de contacto">
                 {footerConnectLinks.map((link) => (
                   <Link key={link.href} href={link.href} className="footer-link">
@@ -135,7 +141,9 @@ export function Footer({ brand }: { brand: ReactNode }) {
 
           <div className="footer-bottom-bar mt-10 border-t border-[color-mix(in_oklab,var(--border)_85%,transparent)] pt-6">
             <p className="text-center text-xs text-ink-soft" suppressHydrationWarning>
-              &copy; {new Date().getFullYear()} {siteName}. Todos los derechos reservados.
+              <a href="#home" onClick={scrollToHero} className="footer-copyright-link">
+                &copy; {new Date().getFullYear()} {siteName}. Todos los derechos reservados.
+              </a>
             </p>
           </div>
         </div>

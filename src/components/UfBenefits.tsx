@@ -163,9 +163,7 @@ export function UfBenefits() {
         <div className="benefits-showcase-panel">
           <SectionReveal className="benefits-showcase-header">
             <p className="benefits-showcase-eyebrow">Beneficios</p>
-            <h2 className="benefits-showcase-title">
-              El Poder De <em>La Calculadora UF</em>
-            </h2>
+            <h2 className="benefits-showcase-title">¿Cuáles Son Los Beneficios De La Calculadora UF?</h2>
             <p className="benefits-showcase-intro">
               Nuestra calculadora está diseñada para brindarle resultados fluidos, precisos y rápidos. No se trata solo
               de un número que necesita ser calculado; esta es la razón por la que los asuntos de UF en Chile importan.

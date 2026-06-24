@@ -58,7 +58,7 @@ export function UfUseCases() {
   }, []);
 
   return (
-    <section id="casos-de-uso" className="section-use-cases relative overflow-hidden pb-12 pt-10 sm:pb-14 sm:pt-12">
+    <section id="use-cases" className="section-use-cases relative overflow-hidden pb-12 pt-10 sm:pb-14 sm:pt-12">
       <div aria-hidden className="use-cases-sky" />
       <div aria-hidden className="use-cases-cloud use-cases-cloud--1" />
       <div aria-hidden className="use-cases-cloud use-cases-cloud--2" />

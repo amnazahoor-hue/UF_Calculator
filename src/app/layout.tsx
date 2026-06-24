@@ -6,7 +6,9 @@ import { FooterBrand } from "@/components/FooterBrand";
 import { HashScrollHandler } from "@/components/HashScrollHandler";
 import { Header } from "@/components/Header";
 import { HeaderBrand } from "@/components/HeaderBrand";
-import { webApplicationJsonLd, webSiteJsonLd } from "@/lib/jsonLd";
+import { siteSchemaGraph } from "@/lib/jsonLd";
+import { imageCatalog } from "@/lib/images";
+import { siteOpenGraphImage, siteTwitterImage } from "@/lib/metadata";
 import { defaultDescription, homeTitle, siteName, siteUrl } from "@/lib/site";
 
 const inter = Inter({
@@ -35,7 +37,6 @@ export const metadata: Metadata = {
     "calculadora uf chile",
     "mindicador UF",
   ],
-  alternates: { canonical: "/" },
   robots: { index: true, follow: true },
   openGraph: {
     title: homeTitle,
@@ -44,17 +45,17 @@ export const metadata: Metadata = {
     siteName,
     locale: "es_CL",
     type: "website",
-    images: [{ url: "/opengraph-image", width: 1200, height: 630, alt: siteName }],
+    images: [siteOpenGraphImage],
   },
   twitter: {
     card: "summary_large_image",
     title: homeTitle,
     description: defaultDescription,
-    images: ["/opengraph-image"],
+    images: [siteTwitterImage],
   },
   icons: {
-    icon: [{ url: "/images/favicon.webp", type: "image/webp", sizes: "48x48" }],
-    apple: [{ url: "/images/apple-touch-icon.webp", type: "image/webp", sizes: "180x180" }],
+    icon: [{ url: imageCatalog.favicon.src, type: "image/webp", sizes: "48x48" }],
+    apple: [{ url: imageCatalog.appleTouchIcon.src, type: "image/webp", sizes: "180x180" }],
   },
 };
 
@@ -63,7 +64,7 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const structuredData = [webSiteJsonLd, webApplicationJsonLd];
+  const structuredData = siteSchemaGraph();
 
   return (
     <html lang="es" className={`${inter.variable} h-full overflow-x-clip antialiased`} suppressHydrationWarning>

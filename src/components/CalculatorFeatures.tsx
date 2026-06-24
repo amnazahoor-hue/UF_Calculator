@@ -178,7 +178,7 @@ export function CalculatorFeatures() {
 
         <SectionReveal delay={0.32} className="features-showcase-cta-wrap">
           <div className="features-showcase-cta">
-            <h3 className="text-lg font-bold text-surface sm:text-xl">Descubra El Valor UF Hoy Chile</h3>
+            <h3 className="text-lg font-bold text-surface sm:text-xl">Descubra El Valor UF hoy Chile</h3>
             <p className="mt-2 text-sm leading-relaxed text-[color-mix(in_oklab,var(--surface)_72%,transparent)]">
               Consulte el valor actual de la UF y convierta al instante con datos actualizados.
             </p>

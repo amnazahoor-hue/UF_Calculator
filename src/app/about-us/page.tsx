@@ -1,11 +1,17 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { LegalPage } from "@/components/LegalPage";
-import { siteName } from "@/lib/site";
+import { aboutUsArticleSchemaGraph } from "@/lib/jsonLd";
+import { buildPageMetadata } from "@/lib/pageMetadata";
+import { aboutBreadcrumbs } from "@/lib/breadcrumbs";
+import { bcchUfUrl, officialUfRateUrl, siteName } from "@/lib/site";
 
-export const metadata: Metadata = {
-  title: "Sobre nosotros",
-  description: `Conoce la misión de ${siteName}: convertir UF y pesos chilenos con claridad, datos públicos y una experiencia pensada para Chile.`,
-};
+export const metadata: Metadata = buildPageMetadata({
+  title: "Sobre la Calculadora UF Chile",
+  description:
+    "Conoce Calculadora UF Chile: misión, datos públicos del Banco Central y cómo convertimos UF y pesos con claridad para arriendos, créditos y contratos indexados.",
+  path: "/about-us",
+});
 
 const relatedLinks = [
   { href: "/author", label: "Conocer a la autora" },
@@ -32,13 +38,29 @@ const sections = [
     heading: "Qué ofrecemos",
     paragraphs: [
       "Conversión bidireccional UF ↔ CLP con valor actualizado desde indicadores públicos. Tablas de referencia, preguntas frecuentes y casos de uso que explican cuándo importa el día hábil, el redondeo y la diferencia entre valor de referencia y valor contractual.",
-      "El acceso es gratuito. Financiamos el proyecto con publicidad responsable y, en el futuro, posibles enlaces de afiliados siempre señalados con transparencia.",
+      "El acceso es gratuito. Financiamos el proyecto con publicidad responsable y, cuando corresponda, enlaces de afiliados siempre señalados con transparencia.",
     ],
   },
   {
     heading: "Datos y transparencia",
     paragraphs: [
-      "Los valores mostrados se obtienen de fuentes públicas como mindicador, vinculadas al ecosistema del Banco Central de Chile. Pueden existir diferencias de minutos u horas respecto a sistemas internos de bancos o notarías por políticas de actualización y redondeo.",
+      <>
+        Los valores mostrados se obtienen de fuentes públicas como{" "}
+        <a
+          href={officialUfRateUrl}
+          className="content-page-inline-link"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          mindicador.cl
+        </a>
+        , vinculadas al ecosistema del{" "}
+        <a href={bcchUfUrl} className="content-page-inline-link" target="_blank" rel="noopener noreferrer">
+          Banco Central de Chile
+        </a>
+        . Pueden existir diferencias de minutos u horas respecto a sistemas internos de bancos o notarías por políticas
+        de actualización y redondeo.
+      </>,
       "Si la fuente principal falla, activamos un modo de respaldo para que la calculadora siga disponible. Ese valor debe verificarse antes de pagos o firmas importantes.",
     ],
   },
@@ -46,7 +68,7 @@ const sections = [
     heading: "Cómo trabajamos el contenido",
     paragraphs: [
       "Cada texto pasa por revisión editorial con foco en claridad, tono cercano y utilidad práctica. Evitamos prometer certeza donde solo hay estimación y enlazamos a políticas legales cuando el tema lo requiere.",
-      "Puedes conocer a nuestra autora editorial ficticia en la página de autora. Los artículos y FAQ se actualizan cuando cambian hábitos de uso de la UF o surgen preguntas recurrentes de los lectores.",
+      "Los artículos y FAQ se actualizan cuando cambian hábitos de uso de la UF o surgen preguntas recurrentes de los lectores.",
     ],
   },
   {
@@ -60,12 +82,20 @@ const sections = [
 
 export default function AboutUsPage() {
   return (
-    <LegalPage
-      eyebrow="Proyecto · Chile"
-      title="Sobre nosotros"
-      intro={`${siteName} es una calculadora y guía informativa sobre la Unidad de Fomento. Aquí explicamos para quién es el proyecto, qué puedes esperar y cómo validamos la información.`}
-      sections={sections}
-      relatedLinks={relatedLinks}
-    />
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(aboutUsArticleSchemaGraph()) }}
+      />
+      <LegalPage
+        eyebrow="Proyecto · Chile"
+        title="Sobre la Calculadora UF Chile"
+        takeaways={`${siteName} es una herramienta gratuita para convertir UF y pesos chilenos con datos públicos del Banco Central. Explicamos la misión del proyecto, cómo validamos cifras y para quién está pensada la calculadora en Chile.`}
+        intro={`${siteName} es una calculadora y guía informativa sobre la Unidad de Fomento. Aquí explicamos para quién es el proyecto, qué puedes esperar y cómo validamos la información con fuentes oficiales.`}
+        sections={sections}
+        relatedLinks={relatedLinks}
+        breadcrumbs={aboutBreadcrumbs}
+      />
+    </>
   );
 }

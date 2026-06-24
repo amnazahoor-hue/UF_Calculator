@@ -1,23 +1,29 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { LegalPage } from "@/components/LegalPage";
+import { buildPageMetadata } from "@/lib/pageMetadata";
 import { siteName } from "@/lib/site";
 
-export const metadata: Metadata = {
-  title: "Política de privacidad",
-  description: `Política de privacidad de ${siteName}: cookies, datos de uso de la calculadora UF y publicidad.`,
-};
-
-const relatedLinks = [
-  { href: "/terms-and-conditions", label: "Términos y condiciones" },
-  { href: "/disclaimer", label: "Descargo de responsabilidad" },
-  { href: "/contact", label: "Contáctanos" },
-];
+export const metadata: Metadata = buildPageMetadata({
+  title: "Política de Privacidad de la Calculadora UF",
+  description:
+    "Política de privacidad de Calculadora UF Chile: cookies, datos de uso de la calculadora UF, formulario de contacto y publicidad responsable en el sitio web.",
+  path: "/privacy-policy",
+  index: false,
+});
 
 const sections = [
   {
     heading: "Alcance y compromiso",
     paragraphs: [
-      `${siteName} respeta tu privacidad mientras usas la calculadora UF ↔ CLP, las tablas de conversión y el contenido educativo del sitio. Esta política explica qué datos podemos recopilar, por qué lo hacemos y qué opciones tienes.`,
+      <>
+        {siteName} respeta tu privacidad mientras usas la{" "}
+        <Link href="/" className="content-page-inline-link">
+          calculadora UF Chile
+        </Link>
+        , las tablas de conversión y el contenido educativo del sitio. Esta política explica qué datos podemos
+        recopilar, por qué lo hacemos y qué opciones tienes.
+      </>,
       "La herramienta principal no exige registro ni cuenta. Puedes convertir UF a pesos chilenos y viceversa sin entregar datos personales obligatorios. Solo solicitamos información adicional si decides escribirnos por el formulario de contacto.",
     ],
   },
@@ -31,8 +37,8 @@ const sections = [
   {
     heading: "Cookies, analítica y publicidad",
     paragraphs: [
-      "Podemos usar cookies para recordar preferencias básicas, medir visitas a secciones como FAQ o casos de uso, y mantener la estabilidad del sitio. Puedes bloquear cookies desde tu navegador, aunque algunas funciones podrían verse afectadas.",
-      "En el futuro el sitio podría mostrar publicidad (por ejemplo Google AdSense) o enlaces de afiliados. Esos proveedores pueden usar identificadores propios según sus políticas. Te informaremos mediante avisos visibles cuando activemos esos servicios.",
+      "Usamos cookies para recordar preferencias básicas, medir visitas a secciones como FAQ o casos de uso, y mantener la estabilidad del sitio. Puedes bloquear cookies desde tu navegador; algunas funciones del sitio se verán afectadas.",
+      "Cuando activemos publicidad o enlaces de afiliados, lo señalaremos con avisos visibles. Esos proveedores pueden usar identificadores propios según sus políticas.",
     ],
   },
   {
@@ -62,10 +68,13 @@ export default function PrivacyPolicyPage() {
   return (
     <LegalPage
       eyebrow="Legal · Privacidad"
-      title="Política de privacidad"
+      title="Política de Privacidad de la Calculadora UF"
       intro={`Cómo ${siteName} trata datos personales, cookies y analítica en el contexto de una calculadora gratuita de UF y pesos chilenos.`}
       sections={sections}
-      relatedLinks={relatedLinks}
+      breadcrumbs={[
+        { name: "Inicio", path: "/" },
+        { name: "Política de privacidad", path: "/privacy-policy" },
+      ]}
     />
   );
 }

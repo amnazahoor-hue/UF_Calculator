@@ -4,7 +4,7 @@ import { usePathname } from "next/navigation";
 import { useEffect } from "react";
 import { scrollToPageSection } from "@/lib/calculatorNav";
 
-const HASH_SECTIONS = new Set(["tool", "how-it-works", "faq", "live-rate", "contact"]);
+const HASH_SECTIONS = new Set(["home", "tool", "how-it-works", "faq", "live-rate", "contact"]);
 
 export function HashScrollHandler() {
   const pathname = usePathname();

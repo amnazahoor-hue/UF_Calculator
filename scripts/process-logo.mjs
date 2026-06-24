@@ -8,6 +8,8 @@ const logoWebpPath = path.resolve("public/images/site-logo.webp");
 const legacyLogoWebpPath = path.resolve("public/images/logo.webp");
 const faviconWebpPath = path.resolve("public/images/favicon.webp");
 const appleTouchWebpPath = path.resolve("public/images/apple-touch-icon.webp");
+const ogLogoPngPath = path.resolve("public/images/og-logo.png");
+const ogLogoWebpPath = path.resolve("public/images/og-logo.webp");
 const legacyIconPngPath = path.resolve("src/app/icon.png");
 const legacyApplePngPath = path.resolve("src/app/apple-icon.png");
 
@@ -154,6 +156,25 @@ const appleResult = await writeWebpUnderLimit(await exportWebpIcon(logoPipeline,
   webp: { effort: 6 },
 });
 
+await logoPipeline
+  .clone()
+  .resize(256, 256, {
+    fit: "contain",
+    background: { r: 0, g: 0, b: 0, alpha: 0 },
+  })
+  .png()
+  .toFile(ogLogoPngPath);
+
+const ogWebpResult = await writeWebpUnderLimit(
+  sharp(ogLogoPngPath),
+  ogLogoWebpPath,
+  {
+    widthSteps: [256, 220, 180],
+    qualities: [88, 82, 76, 70],
+    webp: { effort: 6 },
+  },
+);
+
 for (const legacyPath of [legacyIconPngPath, legacyApplePngPath]) {
   if (fs.existsSync(legacyPath)) {
     fs.unlinkSync(legacyPath);
@@ -165,3 +186,5 @@ console.log(
 );
 console.log(`Wrote ${faviconWebpPath} (${formatKb(faviconResult.bytes)})`);
 console.log(`Wrote ${appleTouchWebpPath} (${formatKb(appleResult.bytes)})`);
+console.log(`Wrote ${ogLogoPngPath}`);
+console.log(`Wrote ${ogLogoWebpPath} (${formatKb(ogWebpResult.bytes)})`);

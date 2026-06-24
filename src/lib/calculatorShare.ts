@@ -98,8 +98,8 @@ function drawCard(
   y: number,
   w: number,
   h: number,
-  fill = COLORS.surface,
-  stroke = COLORS.border,
+  fill: string = COLORS.surface,
+  stroke: string = COLORS.border,
 ) {
   doc.setFillColor(fill);
   doc.setDrawColor(stroke);

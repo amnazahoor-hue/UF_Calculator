@@ -1,13 +1,35 @@
 "use client";
 
-import { fixedUfConversionTable, fixedUfReferenceLabel, formatFixedUfAmount } from "@/lib/conversionTable";
+import { useMemo } from "react";
+import { imageCatalog } from "@/lib/images";
+import {
+  buildConversionReferenceLabel,
+  buildConversionTable,
+  formatFixedUfAmount,
+} from "@/lib/conversionTable";
+import { useUfRate } from "@/components/UfRateProvider";
+import { UfRateValueSkeleton } from "@/components/UfRatePanelSkeleton";
 import { SectionEyebrow } from "./SectionEyebrow";
 import { SectionReveal } from "./SectionReveal";
 
 export function StatsStrip() {
+  const { rate, loading } = useUfRate();
+  const liveRate = rate ?? 40804;
+  const conversionTable = useMemo(() => buildConversionTable(liveRate), [liveRate]);
+  const referenceLabel = useMemo(() => buildConversionReferenceLabel(liveRate), [liveRate]);
+
   return (
-    <section className="section-stats relative overflow-hidden" aria-labelledby="conversion-table-title">
-      <div aria-hidden className="section-stats-bg" />
+    <section
+      id="conversion-table"
+      className="section-stats relative overflow-hidden"
+      aria-labelledby="conversion-table-title"
+    >
+      <div
+        className="section-stats-bg"
+        role="img"
+        aria-label={imageCatalog.conversionTableBg.description}
+        title={imageCatalog.conversionTableBg.title}
+      />
       <div aria-hidden className="section-stats-pattern" />
 
       <div className="relative z-[1] mx-auto max-w-content-narrow px-4 py-10 sm:px-6 sm:py-12 lg:py-14">
@@ -20,11 +42,14 @@ export function StatsStrip() {
             Tabla De Conversión De UF A Pesos Chilenos (CLP)
           </h2>
           <p className="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-[color-mix(in_oklab,var(--surface)_72%,transparent)] sm:text-base">
-            Si te lo estás preguntando a cuánto está la unidad de fomento, entonces esta tabla te ayudará;
+            Si te lo estás preguntando a cuánto está la unidad de fomento, entonces esta tabla te ayudará.
           </p>
-          <p className="conversion-rate-chip mx-auto mt-5 inline-flex items-center gap-2 rounded-full border border-[color-mix(in_oklab,var(--accent)_28%,var(--border))] bg-[color-mix(in_oklab,var(--accent)_10%,var(--surface))] px-4 py-2 text-sm font-medium text-ink">
-            <span className="h-2 w-2 rounded-full bg-accent" aria-hidden />
-            1 UF = <strong className="font-bold text-accent">{fixedUfReferenceLabel}</strong>
+          <p className="conversion-rate-chip mx-auto mt-5 inline-flex min-h-[2.5rem] min-w-[14.5rem] items-center justify-center gap-2 rounded-full border border-[color-mix(in_oklab,var(--accent)_28%,var(--border))] bg-[color-mix(in_oklab,var(--accent)_10%,var(--surface))] px-4 py-2 text-sm font-medium text-ink">
+            <span className="h-2 w-2 shrink-0 rounded-full bg-accent" aria-hidden />
+            1 UF ={" "}
+            <strong className="uf-rate-value-display font-bold text-accent">
+              {loading ? <UfRateValueSkeleton /> : referenceLabel}
+            </strong>
           </p>
         </SectionReveal>
 
@@ -40,7 +65,7 @@ export function StatsStrip() {
                   </tr>
                 </thead>
                 <tbody>
-                  {fixedUfConversionTable.map((row, index) => (
+                  {conversionTable.map((row, index) => (
                     <tr key={row.uf} className={index % 2 === 1 ? "conversion-table-row--alt" : undefined}>
                       <td>
                         <span className="conversion-uf-pill">{formatFixedUfAmount(row.uf)}</span>
@@ -55,7 +80,7 @@ export function StatsStrip() {
             </div>
           </div>
           <p className="mt-5 text-center text-xs text-[color-mix(in_oklab,var(--surface)_65%,transparent)] sm:text-sm">
-            Valores de referencia fijos según 1 UF = {fixedUfReferenceLabel} CLP.
+            Valores calculados con la tasa UF vigente: 1 UF = {referenceLabel} CLP.
           </p>
         </SectionReveal>
       </div>

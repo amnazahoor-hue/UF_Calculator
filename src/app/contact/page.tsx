@@ -1,12 +1,16 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { LegalPage } from "@/components/LegalPage";
-import { siteName } from "@/lib/site";
+import { buildPageMetadata } from "@/lib/pageMetadata";
+import { contactBreadcrumbs } from "@/lib/breadcrumbs";
+import { contactEmail, siteName } from "@/lib/site";
 
-export const metadata: Metadata = {
-  title: "Contacto",
-  description: `Contacta con ${siteName} para soporte, reportes de datos UF, privacidad, alianzas y comentarios.`,
-};
+export const metadata: Metadata = buildPageMetadata({
+  title: "Contacto y Soporte de la Calculadora UF Chile",
+  description:
+    "Contacta Calculadora UF Chile: reporta errores de conversión UF, consultas de privacidad, alianzas y soporte técnico. Respuesta en uno a tres días hábiles.",
+  path: "/contact",
+});
 
 const relatedLinks = [
   { href: "/privacy-policy", label: "Política de privacidad" },
@@ -49,15 +53,23 @@ export default function ContactPage() {
   return (
     <LegalPage
       eyebrow="Soporte"
-      title="Contáctanos"
+      title="Contacto y Soporte de la Calculadora UF Chile"
+      takeaways={`Escríbenos para reportar errores en la conversión UF, consultas de privacidad o sugerencias sobre ${siteName}. También puedes escribir directamente a ${contactEmail}; respondemos en uno a tres días hábiles.`}
       intro={`Escríbenos si necesitas ayuda con la calculadora UF, quieres reportar un dato incorrecto o tienes una consulta sobre privacidad y términos de ${siteName}.`}
       sections={sections}
       relatedLinks={relatedLinks}
+      breadcrumbs={contactBreadcrumbs}
     >
       <section className="content-page-panel" aria-labelledby="contact-form-title">
         <h2 id="contact-form-title" className="content-page-panel-title">
           Enviar mensaje
         </h2>
+        <p className="mb-4 text-sm leading-relaxed text-ink-soft">
+          Correo directo:{" "}
+          <a href={`mailto:${contactEmail}`} className="font-semibold text-accent hover:text-accent-2">
+            {contactEmail}
+          </a>
+        </p>
         <form className="content-page-form" aria-label="Formulario de contacto">
           <label className="content-page-label">
             Nombre

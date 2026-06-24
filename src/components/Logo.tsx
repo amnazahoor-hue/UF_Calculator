@@ -1,5 +1,5 @@
-import Image from "next/image";
-import { siteImages } from "@/lib/images";
+import { imageCatalog } from "@/lib/images";
+import { SiteImage } from "@/components/SiteImage";
 import { siteName, siteShortName } from "@/lib/site";
 
 type LogoProps = {
@@ -28,9 +28,12 @@ export function Logo({
   const labelClass =
     variant === "inverse"
       ? "truncate text-base font-bold tracking-tight text-surface sm:text-lg"
-      : "truncate text-sm font-bold tracking-tight text-ink sm:text-base";
+      : footer
+        ? "footer-logo-label truncate text-sm font-bold tracking-tight text-ink sm:text-base"
+        : "truncate text-sm font-bold tracking-tight text-ink sm:text-base";
 
   const imageSize = footer ? 96 : compact ? 88 : 96;
+  const hasVisibleLabel = showLabel && (header || footer || !compact);
 
   return (
     <span
@@ -39,9 +42,9 @@ export function Logo({
       }`}
     >
       <span className="shrink-0">
-        <Image
-          src={siteImages.logo}
-          alt={siteName}
+        <SiteImage
+          image={imageCatalog.logo}
+          describe={!hasVisibleLabel}
           width={imageSize}
           height={imageSize}
           unoptimized
@@ -54,8 +57,8 @@ export function Logo({
       {showLabel ? (
         header ? (
           <>
+            <span className={`${labelClass} text-xs sm:text-sm xl:hidden`}>{siteShortName}</span>
             <span className={`${labelClass} hidden xl:inline`}>{siteName}</span>
-            <span className={`${labelClass} hidden sm:inline xl:hidden`}>{siteShortName}</span>
           </>
         ) : (
           <span className={labelClass}>{siteName}</span>

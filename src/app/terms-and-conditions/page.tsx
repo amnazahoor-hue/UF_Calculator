@@ -1,23 +1,29 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { LegalPage } from "@/components/LegalPage";
+import { buildPageMetadata } from "@/lib/pageMetadata";
 import { siteName } from "@/lib/site";
 
-export const metadata: Metadata = {
-  title: "Términos y condiciones",
-  description: `Términos de uso de ${siteName}: calculadora UF, API pública y contenido educativo para Chile.`,
-};
-
-const relatedLinks = [
-  { href: "/privacy-policy", label: "Política de privacidad" },
-  { href: "/disclaimer", label: "Descargo de responsabilidad" },
-  { href: "/about-us", label: "Sobre nosotros" },
-];
+export const metadata: Metadata = buildPageMetadata({
+  title: "Términos y Condiciones de la Calculadora UF",
+  description:
+    "Términos de uso de Calculadora UF Chile: calculadora UF gratuita, fuentes públicas mindicador, límites de responsabilidad y contenido educativo para lectores en Chile.",
+  path: "/terms-and-conditions",
+  index: false,
+});
 
 const sections = [
   {
     heading: "Aceptación y elegibilidad",
     paragraphs: [
-      `Al usar ${siteName}, aceptas estos términos. Si no estás de acuerdo, debes dejar de utilizar el sitio. El servicio está dirigido a personas que necesitan convertir o consultar la UF con fines informativos en Chile.`,
+      <>
+        Al usar{" "}
+        <Link href="/" className="content-page-inline-link">
+          {siteName}
+        </Link>
+        , aceptas estos términos. Si no estás de acuerdo, debes dejar de utilizar el sitio. El servicio está dirigido
+        a personas que necesitan convertir o consultar la UF con fines informativos en Chile.
+      </>,
       "Debes usar la plataforma de forma lícita. Podemos limitar el acceso ante abuso automatizado, intentos de intrusión o uso que degrade la disponibilidad de la calculadora para otros usuarios.",
     ],
   },
@@ -62,10 +68,13 @@ export default function TermsPage() {
   return (
     <LegalPage
       eyebrow="Legal · Términos"
-      title="Términos y condiciones"
+      title="Términos y Condiciones de la Calculadora UF"
       intro={`Reglas de uso de la calculadora UF, el contenido educativo y los servicios digitales de ${siteName}.`}
       sections={sections}
-      relatedLinks={relatedLinks}
+      breadcrumbs={[
+        { name: "Inicio", path: "/" },
+        { name: "Términos y condiciones", path: "/terms-and-conditions" },
+      ]}
     />
   );
 }

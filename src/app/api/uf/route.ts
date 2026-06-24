@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { siteUrl } from "@/lib/site";
 import { normalizeUfHistory, type UfRateDay } from "@/lib/ufRate";
 
 const MINDICADOR_UF_URL = "https://mindicador.cl/api/uf";
@@ -25,7 +26,7 @@ export async function GET() {
       next: { revalidate: 1800 },
       headers: {
         Accept: "application/json",
-        "User-Agent": "CalculadoraUFChile/1.0 (+https://uf-calculator-chile.vercel.app)",
+        "User-Agent": `CalculadoraUFChile/1.0 (+${siteUrl})`,
       },
     });
 

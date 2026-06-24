@@ -1,13 +1,20 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
+import { KeyTakeaways } from "@/components/KeyTakeaways";
+import { SiteImage } from "@/components/SiteImage";
 import { siteAuthor } from "@/lib/author";
+import { authorPageSchemaGraph } from "@/lib/jsonLd";
+import { buildPageMetadata } from "@/lib/pageMetadata";
+import { imageCatalog } from "@/lib/images";
 import { siteName } from "@/lib/site";
 
-export const metadata: Metadata = {
-  title: "Autora",
-  description: `Conoce a ${siteAuthor.name}, editora financiera detrás del contenido de ${siteName}.`,
-};
+export const metadata: Metadata = buildPageMetadata({
+  title: "Autora Editorial de Calculadora UF Chile",
+  description:
+    "Perfil editorial de Camila Escobar Vera en Calculadora UF Chile: criterios de revisión, temas sobre UF, contratos indexados y finanzas personales en Chile.",
+  path: "/author",
+  index: false,
+});
 
 const expertiseTopics = [
   "Unidad de Fomento (UF) y su vínculo con el IPC",
@@ -28,10 +35,18 @@ const editorialStandards = [
 export default function AuthorPage() {
   return (
     <main className="content-page flex-1">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(authorPageSchemaGraph()) }}
+      />
       <div className="content-page-inner mx-auto w-full max-w-content px-4 py-10 sm:px-6 sm:py-12 lg:px-8 lg:py-14">
         <header className="content-page-hero">
           <p className="content-page-eyebrow">Equipo editorial</p>
-          <h1 className="content-page-title">Autora</h1>
+          <h1 className="content-page-title">Autora Editorial de Calculadora UF Chile</h1>
+          <KeyTakeaways>
+            {siteAuthor.name} es la voz editorial ficticia detrás de {siteName}. Define criterios de claridad, revisión de
+            datos UF y tono accesible para lectores en Chile que convierten pesos y UF cada día.
+          </KeyTakeaways>
           <p className="content-page-intro">
             Personaje editorial ficticio creado para {siteName}. El retrato y la biografía son ilustrativos y no
             representan a una persona real. El contenido del sitio sigue estándares editoriales independientes de esta
@@ -41,13 +56,12 @@ export default function AuthorPage() {
 
         <article className="author-card mt-8">
           <div className="author-card-media">
-            <Image
-              src={siteAuthor.image}
-              alt={siteAuthor.imageAlt}
+            <SiteImage
+              image={imageCatalog.authorPortrait}
               width={640}
               height={640}
+              loading="lazy"
               className="author-card-photo"
-              priority
             />
           </div>
           <div className="author-card-copy">

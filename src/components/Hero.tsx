@@ -68,7 +68,10 @@ export function Hero() {
   }, []);
 
   return (
-    <section id="home" className="overflow-x-hidden bg-bg-warm-2 pb-0 pt-0">
+    <section
+      id="home"
+      className="overflow-x-hidden bg-bg-warm-2 pb-0 -mt-[var(--header-offset)] pt-[calc(var(--header-offset)+0.5rem)] sm:pt-[calc(var(--header-offset)+0.625rem)]"
+    >
       <div className="hero-panel hero-panel-grid relative w-full rounded-none">
         <div aria-hidden className="hero-panel-glows">
           <span className="hero-panel-glow hero-panel-glow--1" />
@@ -80,7 +83,7 @@ export function Hero() {
         <div aria-hidden className="pointer-events-none absolute -right-6 top-16 z-[2] h-36 w-36 rounded-full bg-[color-mix(in_oklab,var(--accent-2)_28%,transparent)] blur-3xl sm:-right-16 sm:h-44 sm:w-44" />
         <div aria-hidden className="pointer-events-none absolute -left-4 bottom-24 z-[2] h-28 w-28 rounded-full bg-[color-mix(in_oklab,var(--accent)_14%,transparent)] blur-3xl sm:-left-12 sm:h-36 sm:w-36" />
 
-        <div className="relative z-10 px-5 py-9 text-center sm:px-10 sm:py-11 md:px-12 md:py-12">
+        <div className="relative z-10 px-5 pb-9 pt-2 text-center sm:px-10 sm:pb-11 sm:pt-3 md:px-12 md:pb-12">
           <motion.div variants={stagger} initial="hidden" animate="show" className="mx-auto max-w-content-narrow">
             <motion.div variants={fadeUp}>
               <TrustPill />

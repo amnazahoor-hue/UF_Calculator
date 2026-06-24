@@ -7,7 +7,7 @@ export function HeaderBrand() {
     <Link
       href="/"
       aria-label={`${siteName} — inicio`}
-      className="header-brand flex min-w-0 shrink-0 items-center py-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
+      className="header-brand header-brand-link flex min-w-0 shrink-0 items-center py-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
     >
       <Logo compact header priority />
     </Link>

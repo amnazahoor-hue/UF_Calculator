@@ -1,10 +1,10 @@
 "use client";
 
-import Image from "next/image";
 import { emitCalculatorNav, scrollToPageSection } from "@/lib/calculatorNav";
-import { siteImages } from "@/lib/images";
+import { imageCatalog } from "@/lib/images";
 import { SectionEyebrow } from "./SectionEyebrow";
 import { SectionReveal } from "./SectionReveal";
+import { SiteImage } from "./SiteImage";
 
 function openClpToUfCalculator() {
   emitCalculatorNav("CLP_TO_UF");
@@ -55,13 +55,13 @@ export function WhyUfChanges() {
 
           <SectionReveal delay={0.08} className="why-uf-visual">
             <div className="why-uf-image-frame">
-              <Image
-                src={siteImages.whyUfThinking}
-                alt="Persona reflexionando sobre el valor diario de la UF en Chile"
+              <SiteImage
+                image={imageCatalog.whyUfThinking}
                 width={960}
                 height={1200}
                 sizes="(max-width: 1023px) 80vw, 420px"
                 quality={88}
+                loading="lazy"
                 className="why-uf-image-photo"
               />
             </div>
