@@ -1,6 +1,6 @@
 import { execSync } from "node:child_process";
 
-const isVercel = process.env.VERCEL === "1";
+const isVercel = process.env.VERCEL === "1" || Boolean(process.env.VERCEL_ENV);
 
 if (isVercel) {
   console.log("Vercel build: using committed assets, skipping local prebuild steps.");

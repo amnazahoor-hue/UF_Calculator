@@ -45,3 +45,17 @@ export async function writeWebpUnderLimit(pipeline, outputPath, options = {}) {
 export function formatKb(bytes) {
   return `${(bytes / 1024).toFixed(1)} KB`;
 }
+
+/** Rename when possible; copy+unlink across filesystems (e.g. /tmp → project on Vercel). */
+export function moveFileSync(src, dest) {
+  try {
+    fs.renameSync(src, dest);
+  } catch (err) {
+    if (err && typeof err === "object" && "code" in err && err.code === "EXDEV") {
+      fs.copyFileSync(src, dest);
+      fs.unlinkSync(src);
+      return;
+    }
+    throw err;
+  }
+}

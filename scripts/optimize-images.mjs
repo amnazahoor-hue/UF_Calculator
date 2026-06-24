@@ -1,8 +1,7 @@
 import fs from "node:fs";
-import os from "node:os";
 import path from "node:path";
 import sharp from "sharp";
-import { formatKb, MAX_IMAGE_BYTES, writeWebpUnderLimit } from "./image-utils.mjs";
+import { formatKb, MAX_IMAGE_BYTES, moveFileSync, writeWebpUnderLimit } from "./image-utils.mjs";
 
 const imagesRoot = path.resolve("public/images");
 const rasterExt = new Set([".webp", ".jpeg", ".jpg", ".png", ".gif"]);
@@ -40,17 +39,14 @@ async function optimizeFile(filePath) {
   widthSteps.push(null);
 
   const pipeline = sharp(filePath);
-  const tempPath = path.join(
-    os.tmpdir(),
-    `uf-cal-${Date.now()}-${Math.random().toString(36).slice(2)}.webp`,
-  );
+  const tempPath = path.join(dir, `.uf-cal-${baseName}.tmp.webp`);
 
   const result = await writeWebpUnderLimit(pipeline, tempPath, {
     widthSteps,
     webp: ext === ".png" || metadata.hasAlpha ? { effort: 6, alphaQuality: 100 } : { effort: 6 },
   });
 
-  fs.renameSync(tempPath, webpPath);
+  moveFileSync(tempPath, webpPath);
 
   if (filePath !== webpPath && fs.existsSync(filePath)) {
     fs.unlinkSync(filePath);
