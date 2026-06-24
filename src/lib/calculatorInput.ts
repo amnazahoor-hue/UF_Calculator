@@ -1,11 +1,56 @@
 export type CalcMode = "UF_TO_CLP" | "CLP_TO_UF";
 
 export const INPUT_MAX_LENGTH = 16;
-export const MAX_UF = 99_999;
-export const MAX_CLP = 999_999_999_999;
+export const MAX_UF = 9_999_999_999;
+export const MAX_CLP = 9_999_999_999_999_999;
 
 const UF_DECIMALS = 4;
 const CLP_DECIMALS = 0;
+
+export const RESULT_CLP_DECIMALS = 2;
+export const RESULT_UF_DECIMALS = 2;
+
+export function roundConversionResult(value: number, mode: CalcMode): number {
+  const factor = 10 ** (mode === "UF_TO_CLP" ? RESULT_CLP_DECIMALS : RESULT_UF_DECIMALS);
+  return Math.round(value * factor) / factor;
+}
+
+export function formatConversionResult(value: number, mode: CalcMode): string {
+  if (Number.isNaN(value)) return "--";
+  const decimals = mode === "UF_TO_CLP" ? RESULT_CLP_DECIMALS : RESULT_UF_DECIMALS;
+  return new Intl.NumberFormat("es-CL", {
+    minimumFractionDigits: decimals,
+    maximumFractionDigits: decimals,
+  }).format(value);
+}
+
+export function formatConversionInputDisplay(value: string, mode: CalcMode): string {
+  const parsed = parseAmount(value);
+  if (Number.isNaN(parsed)) return value;
+
+  if (mode === "UF_TO_CLP") {
+    return new Intl.NumberFormat("es-CL", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }).format(parsed);
+  }
+
+  return new Intl.NumberFormat("es-CL", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(parsed);
+}
+
+export function formatConversionSummary(mode: CalcMode, input: string, result: number): string {
+  const inputLabel = formatConversionInputDisplay(input, mode);
+  const resultLabel = formatConversionResult(result, mode);
+
+  if (mode === "UF_TO_CLP") {
+    return `${inputLabel} UF = $ ${resultLabel} pesos chilenos`;
+  }
+
+  return `${inputLabel} pesos chilenos = ${resultLabel} unidad(es) de fomento`;
+}
 
 export function sanitizeAmount(raw: string, mode: CalcMode): string {
   let value = raw.replace(/[^\d.]/g, "");

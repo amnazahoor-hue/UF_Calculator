@@ -6,7 +6,7 @@ const nextConfig: NextConfig = {
     optimizePackageImports: ["framer-motion"],
   },
   images: {
-    qualities: [70, 75],
+    qualities: [70, 75, 88],
   },
 };
 

@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import sharp from "sharp";
+import { formatKb, writeWebpUnderLimit } from "./image-utils.mjs";
 
 const WIDTH = 1920;
 const HEIGHT = 1080;
@@ -101,9 +102,10 @@ const svg = `<?xml version="1.0" encoding="UTF-8"?>
   </g>
 </svg>`;
 
-await sharp(Buffer.from(svg))
-  .webp({ quality: 88, effort: 6 })
-  .toFile(outputPath);
+await writeWebpUnderLimit(sharp(Buffer.from(svg)), outputPath, {
+  widthSteps: [1920, 1600, 1400, 1200],
+  qualities: [88, 84, 80, 76, 72, 68, 64, 58],
+});
 
 const stats = fs.statSync(outputPath);
-console.log(`Wrote ${outputPath} (${Math.round(stats.size / 1024)} KB)`);
+console.log(`Wrote ${outputPath} (${formatKb(stats.size)})`);

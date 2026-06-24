@@ -2,8 +2,10 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { Footer } from "@/components/Footer";
+import { FooterBrand } from "@/components/FooterBrand";
 import { HashScrollHandler } from "@/components/HashScrollHandler";
 import { Header } from "@/components/Header";
+import { HeaderBrand } from "@/components/HeaderBrand";
 import { webApplicationJsonLd, webSiteJsonLd } from "@/lib/jsonLd";
 import { defaultDescription, homeTitle, siteName, siteUrl } from "@/lib/site";
 
@@ -50,6 +52,10 @@ export const metadata: Metadata = {
     description: defaultDescription,
     images: ["/opengraph-image"],
   },
+  icons: {
+    icon: [{ url: "/images/favicon.webp", type: "image/webp", sizes: "48x48" }],
+    apple: [{ url: "/images/apple-touch-icon.webp", type: "image/webp", sizes: "180x180" }],
+  },
 };
 
 export default function RootLayout({
@@ -70,10 +76,10 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
         />
-        <Header />
+        <Header brand={<HeaderBrand />} />
         <HashScrollHandler />
         {children}
-        <Footer />
+        <Footer brand={<FooterBrand />} />
       </body>
     </html>
   );

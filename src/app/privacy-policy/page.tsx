@@ -1,52 +1,59 @@
 import type { Metadata } from "next";
 import { LegalPage } from "@/components/LegalPage";
+import { siteName } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy",
-  description: "Read the privacy policy for UF Calculator Chile, including cookies, analytics, and advertising disclosures.",
+  title: "Política de privacidad",
+  description: `Política de privacidad de ${siteName}: cookies, datos de uso de la calculadora UF y publicidad.`,
 };
+
+const relatedLinks = [
+  { href: "/terms-and-conditions", label: "Términos y condiciones" },
+  { href: "/disclaimer", label: "Descargo de responsabilidad" },
+  { href: "/contact", label: "Contáctanos" },
+];
 
 const sections = [
   {
-    heading: "1. Scope and Commitment",
+    heading: "Alcance y compromiso",
     paragraphs: [
-      "UF Calculator Chile is committed to protecting personal data in a transparent and practical way. This Privacy Policy explains what information is collected when you use the website, how that information is processed, and what controls are available to you. The policy applies to all pages, including the converter tool, contact route, legal pages, and informational content. By accessing the website, you confirm that you understand these practices and accept them within the limits described here.",
-      "This project is designed to operate with minimal personal data exposure. Core conversion functionality does not require registration and can be used without creating an account. We do not sell personal information, and we do not intentionally collect sensitive financial credentials, national identity numbers, or banking passwords. If you submit information through a contact form, you should provide only what is necessary for your request.",
+      `${siteName} respeta tu privacidad mientras usas la calculadora UF ↔ CLP, las tablas de conversión y el contenido educativo del sitio. Esta política explica qué datos podemos recopilar, por qué lo hacemos y qué opciones tienes.`,
+      "La herramienta principal no exige registro ni cuenta. Puedes convertir UF a pesos chilenos y viceversa sin entregar datos personales obligatorios. Solo solicitamos información adicional si decides escribirnos por el formulario de contacto.",
     ],
   },
   {
-    heading: "2. Data We Collect",
+    heading: "Datos que podemos recopilar",
     paragraphs: [
-      "We may collect technical data automatically through standard web infrastructure. This can include IP address, browser type, operating system, device class, approximate region, referrer URL, page views, and interaction timestamps. This information is typically used for security, diagnostics, and aggregated analytics. We also collect event-level information tied to product usage, such as tool interactions, page depth, and click behavior, to improve performance and usability over time.",
-      "When you contact us through the contact page, we may collect your name, email address, and message body. This information is used only for support, quality monitoring, and compliance recordkeeping. We ask users not to include confidential legal, tax, banking, or investment records in open text fields. If such data is submitted, we will handle it with care but cannot guarantee immediate deletion from all backup systems.",
+      "Al navegar el sitio, nuestros servidores y proveedores técnicos pueden registrar datos como dirección IP, tipo de navegador, sistema operativo, idioma, páginas visitadas y marcas de tiempo. Esto ayuda a mantener la seguridad, medir rendimiento y detectar abusos en los endpoints de la API de UF.",
+      "Si usas el conversor, no almacenamos de forma permanente los montos que ingresas para calcular, salvo registros técnicos agregados o anonimizados para diagnóstico. Al contactarnos, podemos recibir tu nombre, correo y mensaje.",
     ],
   },
   {
-    heading: "3. Cookies, Analytics, and Advertising",
+    heading: "Cookies, analítica y publicidad",
     paragraphs: [
-      "The website may use cookies and similar technologies to store session preferences, understand usage trends, and support technical reliability. Cookies may be first-party or set by trusted third-party tools used for analytics and website operations. You can control cookie behavior through your browser settings, including blocking or deleting stored cookies; however, some features may not function optimally if all cookies are disabled.",
-      "We may use analytics tools to measure traffic quality, interaction patterns, and feature adoption. Analytics data is generally aggregated and pseudonymized, but it may still be considered personal data under local law depending on jurisdiction. We also disclose that the site may run Google AdSense or other affiliate/advertising programs in the future. These providers can use cookies or device identifiers to serve relevant ads and report campaign performance.",
+      "Podemos usar cookies para recordar preferencias básicas, medir visitas a secciones como FAQ o casos de uso, y mantener la estabilidad del sitio. Puedes bloquear cookies desde tu navegador, aunque algunas funciones podrían verse afectadas.",
+      "En el futuro el sitio podría mostrar publicidad (por ejemplo Google AdSense) o enlaces de afiliados. Esos proveedores pueden usar identificadores propios según sus políticas. Te informaremos mediante avisos visibles cuando activemos esos servicios.",
     ],
   },
   {
-    heading: "4. How and Why We Use Data",
+    heading: "Finalidad del tratamiento",
     paragraphs: [
-      "Collected data supports service delivery, fraud prevention, uptime monitoring, troubleshooting, and product improvement. We may analyze anonymous usage behavior to identify navigation friction, improve mobile layout quality, and refine legal disclosures. Data may also be used to respond to inquiries, enforce terms, and comply with legal obligations. We do not profile users for automated credit scoring or financial eligibility decisions.",
-      "Our legal basis for processing can include legitimate interests, consent where required, and compliance with statutory obligations. Where consent is necessary for analytics or marketing identifiers, users should be informed through a consent mechanism when implemented. Data use is limited to reasonable business operations and user communication related to this website. We avoid collection practices that are excessive relative to the stated purpose.",
+      "Usamos la información para operar la calculadora, mejorar textos sobre la UF en Chile, responder consultas, cumplir obligaciones legales y proteger la infraestructura frente a bots o scraping abusivo.",
+      "No vendemos datos personales ni utilizamos la calculadora para decisiones automatizadas de crédito, scoring financiero o elegibilidad bancaria.",
     ],
   },
   {
-    heading: "5. Retention, Security, and International Transfer",
+    heading: "Conservación y seguridad",
     paragraphs: [
-      "We retain personal data only as long as needed for support, legal compliance, security investigation, and operational continuity. Contact records may be stored for a limited period to resolve repeated issues, prevent abuse, and maintain an auditable communication trail. Aggregated analytics may be retained longer for trend analysis, but those reports generally do not identify individual users directly.",
-      "Reasonable technical and organizational safeguards are implemented to reduce unauthorized access, misuse, alteration, or disclosure of information. No online service can guarantee absolute security, and users acknowledge residual risk when transmitting data over the internet. Some infrastructure providers may process data in regions outside Chile. By using the service, you understand that cross-border transfer may occur under provider contractual safeguards.",
+      "Conservamos mensajes de contacto el tiempo necesario para resolver incidencias y mantener registros de cumplimiento. Los informes analíticos agregados pueden conservarse más tiempo sin identificar usuarios de forma directa.",
+      "Aplicamos medidas razonables de seguridad, pero ningún servicio en internet es 100 % invulnerable. Evita enviar claves bancarias, RUT completos innecesarios o documentos confidenciales por el formulario abierto.",
     ],
   },
   {
-    heading: "6. Your Rights and Contact",
+    heading: "Tus derechos y contacto",
     paragraphs: [
-      "Depending on your jurisdiction, you may have rights to request access, correction, deletion, restriction, objection, or portability of personal data. You may also request clarification about data sources, processing purposes, and third-party recipients. We will evaluate requests in good faith and respond within a reasonable timeframe, subject to identity verification and legal exceptions.",
-      "If you have concerns about privacy practices, contact us via the Contact page. You may also request details about affiliate disclosures, analytics partners, and cookie categories. This policy may be updated as legal or operational requirements evolve. Material changes will be reflected by updating the effective date and publishing revised content on this page.",
+      "Según la normativa aplicable, puedes solicitar acceso, rectificación, eliminación u oposición al tratamiento de tus datos. Evaluaremos cada solicitud de buena fe y podremos pedir verificación de identidad.",
+      "Para dudas sobre privacidad relacionadas con el uso de la calculadora UF, escríbenos desde la página de contacto. Actualizaremos esta política cuando cambien nuestras prácticas o requisitos legales.",
     ],
   },
 ];
@@ -54,9 +61,11 @@ const sections = [
 export default function PrivacyPolicyPage() {
   return (
     <LegalPage
-      title="Privacy Policy"
-      intro="This Privacy Policy explains how UF Calculator Chile handles personal data, cookies, analytics, and advertising disclosures in a financial-tool context."
+      eyebrow="Legal · Privacidad"
+      title="Política de privacidad"
+      intro={`Cómo ${siteName} trata datos personales, cookies y analítica en el contexto de una calculadora gratuita de UF y pesos chilenos.`}
       sections={sections}
+      relatedLinks={relatedLinks}
     />
   );
 }

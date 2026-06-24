@@ -1,10 +1,13 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
+  formatConversionResult,
+  formatConversionSummary,
   isValidAmount,
   parseAmount,
+  roundConversionResult,
   sanitizeAmount,
   stepAmount,
   type CalcMode,
@@ -16,18 +19,26 @@ import {
   openWhatsAppShare,
 } from "@/lib/calculatorShare";
 import { CALCULATOR_NAV_EVENT, emitCalculatorNav, type CalculatorNavTarget } from "@/lib/calculatorNav";
+import { siteUrl } from "@/lib/site";
+import {
+  formatClpRate,
+  formatUfDayChangeLabel,
+  formatUfLongDate,
+  getTodayDateKey,
+  getUfDayChange,
+  isTodayDate,
+  prepareStripHistory,
+  type UfRateDay,
+  type UfRatesResponse,
+} from "@/lib/ufRate";
 import { SectionEyebrow } from "./SectionEyebrow";
 import { SectionReveal } from "./SectionReveal";
+import { UfDateStrip } from "./UfDateStrip";
+import { UfDayChangeNotice } from "./UfDayChange";
 
 export type CalculatorProps = {
   variant?: "hero" | "section";
 };
-
-function formatNumber(value: number, mode: CalcMode) {
-  if (Number.isNaN(value)) return "--";
-  const max = mode === "UF_TO_CLP" ? 2 : 4;
-  return new Intl.NumberFormat("es-CL", { minimumFractionDigits: 2, maximumFractionDigits: max }).format(value);
-}
 
 function WhatsAppIcon() {
   return (
@@ -54,6 +65,17 @@ function PdfIcon() {
     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden>
       <path d="M8 3h8l4 4v14H8V3z" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
       <path d="M16 3v4h4M10 13h6M10 17h4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function RestoreIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
+      <path d="M4 7V3h4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M4 7a9 9 0 0114.52-2.47" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+      <path d="M20 17v4h-4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M20 17A9 9 0 015.48 19.47" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
     </svg>
   );
 }
@@ -117,11 +139,32 @@ export function Calculator({ variant = "section" }: CalculatorProps) {
   const isHero = variant === "hero";
   const [mode, setMode] = useState<CalcMode>("UF_TO_CLP");
   const [input, setInput] = useState("1");
-  const [rate, setRate] = useState<number | null>(null);
-  const [rateDate, setRateDate] = useState<string>("");
+  const [history, setHistory] = useState<UfRateDay[]>([]);
+  const [latestDate, setLatestDate] = useState("");
+  const [selectedDate, setSelectedDate] = useState<string>("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string>("");
   const [fallback, setFallback] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  const stripDays = useMemo(() => prepareStripHistory(history), [history]);
+
+  const selectedDay = useMemo(
+    () =>
+      stripDays.find((day) => day.date === selectedDate) ??
+      stripDays.find((day) => isTodayDate(day.date)) ??
+      stripDays[stripDays.length - 1] ??
+      null,
+    [stripDays, selectedDate],
+  );
+  const rate = selectedDay?.rate ?? null;
+  const rateDate = selectedDay?.date ?? "";
+
+  const dayChange = useMemo(() => {
+    if (!rateDate || selectedDay?.projected) return null;
+    return getUfDayChange(history, rateDate);
+  }, [history, rateDate, selectedDay?.projected]);
+
   const [calculatedResult, setCalculatedResult] = useState<number | null>(null);
   const [calcError, setCalcError] = useState<string>("");
 
@@ -157,18 +200,39 @@ export function Calculator({ variant = "section" }: CalculatorProps) {
       try {
         const res = await fetch("/api/uf");
         if (!res.ok) throw new Error("Unable to load UF rate");
-        const data = (await res.json()) as { rate: number; date: string; fallback?: boolean };
-        setRate(data.rate);
-        setRateDate(data.date);
+        const data = (await res.json()) as UfRatesResponse;
+        if (!data.history?.length || !data.rate) {
+          throw new Error("invalid payload");
+        }
+        setHistory(data.history);
+        setLatestDate(data.date);
+        setSelectedDate(data.date);
         setFallback(Boolean(data.fallback));
       } catch {
-        setError("We couldn't fetch the live UF rate. Please try again in a moment.");
+        setError("No pudimos cargar el valor UF. Intenta de nuevo en un momento.");
       } finally {
         setLoading(false);
       }
     };
     loadRate();
   }, []);
+
+  const handleDateSelect = (dateKey: string) => {
+    setSelectedDate(dateKey);
+    resetResult();
+  };
+
+  const handleCopyRate = async () => {
+    if (!rate) return;
+    const text = `1 UF = $${formatClpRate(rate)} CLP`;
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 2000);
+    } catch {
+      setCopied(false);
+    }
+  };
 
   const handleCalculate = () => {
     if (!rate) {
@@ -180,7 +244,10 @@ export function Calculator({ variant = "section" }: CalculatorProps) {
       setCalculatedResult(null);
       return;
     }
-    const result = mode === "UF_TO_CLP" ? parsed * rate : parsed / rate;
+    const result = roundConversionResult(
+      mode === "UF_TO_CLP" ? parsed * rate : parsed / rate,
+      mode,
+    );
     setCalculatedResult(result);
     setCalcError("");
   };
@@ -193,6 +260,20 @@ export function Calculator({ variant = "section" }: CalculatorProps) {
     emitCalculatorNav(next);
   };
 
+  const handleRestore = () => {
+    const todayKey =
+      history.find((day) => isTodayDate(day.date))?.date ??
+      (latestDate || history[0]?.date || getTodayDateKey());
+
+    setMode("UF_TO_CLP");
+    setInput("1");
+    setSelectedDate(todayKey);
+    setCalculatedResult(null);
+    setCalcError("");
+    setCopied(false);
+    emitCalculatorNav("UF_TO_CLP");
+  };
+
   const sharePayload =
     rate && calculatedResult !== null && !invalid
       ? {
@@ -201,7 +282,9 @@ export function Calculator({ variant = "section" }: CalculatorProps) {
           result: calculatedResult,
           rate,
           rateDate,
-          siteUrl: typeof window !== "undefined" ? window.location.origin : "https://uf-calculator-chile.vercel.app",
+          siteUrl,
+          summaryLine: formatConversionSummary(mode, input, calculatedResult),
+          dayChangeLabel: dayChange ? formatUfDayChangeLabel(dayChange, rateDate) : undefined,
         }
       : null;
 
@@ -226,8 +309,39 @@ export function Calculator({ variant = "section" }: CalculatorProps) {
     <div
       className={`calculator-card text-left ${isHero ? "hero-calculator-card rounded-[20px] p-4 sm:rounded-[24px] sm:p-6" : "rounded-[28px] p-5 sm:p-8"}`}
     >
-            {loading ? <p className="text-sm text-ink-soft">Loading UF rate...</p> : null}
+            {loading ? <p className="text-sm text-ink-soft">Cargando valor UF...</p> : null}
             {error ? <p className="mt-4 rounded-xl bg-error/10 p-3 text-sm text-error">{error}</p> : null}
+
+            {!loading && !error && history.length > 0 ? (
+              <div className="uf-rate-panel">
+                <div className="uf-rate-panel-head">
+                  <div>
+                    <p className="uf-rate-panel-eyebrow">
+                      {selectedDate && isTodayDate(selectedDate) ? "Valor UF hoy" : "Valor UF del día"}
+                    </p>
+                    {selectedDate ? (
+                      <p className="uf-rate-panel-date">{formatUfLongDate(selectedDate)}</p>
+                    ) : null}
+                  </div>
+                  <button
+                    type="button"
+                    onClick={handleCopyRate}
+                    disabled={!rate}
+                    className="uf-rate-copy-btn"
+                    aria-label="Copiar valor UF"
+                  >
+                    {copied ? "Copiado" : "Copiar"}
+                  </button>
+                </div>
+                <p className="uf-rate-panel-value">
+                  1 UF = <strong>${rate ? formatClpRate(rate) : "--"}</strong> CLP
+                </p>
+                {dayChange ? (
+                  <UfDayChangeNotice change={dayChange} referenceDate={rateDate} compact />
+                ) : null}
+                <UfDateStrip history={history} selectedDate={selectedDate} onSelect={handleDateSelect} />
+              </div>
+            ) : null}
 
             <div
               className={`grid min-w-0 gap-5 lg:grid-cols-[1fr_auto_1fr] lg:items-stretch lg:gap-4 ${loading && !error ? "mt-3" : isHero ? "mt-0" : "mt-5"}`}
@@ -240,18 +354,30 @@ export function Calculator({ variant = "section" }: CalculatorProps) {
                   onUserEdit={resetResult}
                   label={mode === "UF_TO_CLP" ? "UF Amount" : "CLP Amount"}
                 />
-                <motion.button
-                  type="button"
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  onClick={handleCalculate}
-                  disabled={loading || Boolean(error) || !rate}
-                  className="calc-submit-btn mt-4 inline-flex w-full items-center justify-center rounded-2xl bg-ink px-6 py-3.5 text-base font-semibold text-surface transition enabled:hover:bg-[color-mix(in_oklab,var(--ink)_88%,var(--accent))] disabled:cursor-not-allowed disabled:opacity-50"
-                >
-                  Calculate
-                </motion.button>
+                <div className="mt-4 flex flex-col gap-2 sm:flex-row">
+                  <motion.button
+                    type="button"
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={handleCalculate}
+                    disabled={loading || Boolean(error) || !rate}
+                    className="calc-submit-btn inline-flex flex-1 items-center justify-center rounded-2xl bg-ink px-6 py-3.5 text-base font-semibold text-surface transition enabled:hover:bg-[color-mix(in_oklab,var(--ink)_88%,var(--accent))] disabled:cursor-not-allowed disabled:opacity-50"
+                  >
+                    Calcular
+                  </motion.button>
+                  <button
+                    type="button"
+                    onClick={handleRestore}
+                    disabled={loading || Boolean(error)}
+                    className="calc-restore-btn inline-flex items-center justify-center gap-2 rounded-2xl border border-border bg-surface px-5 py-3.5 text-base font-semibold text-ink-soft transition enabled:hover:border-accent enabled:hover:text-accent disabled:cursor-not-allowed disabled:opacity-50 sm:min-w-[9.5rem]"
+                    aria-label="Restaurar calculadora"
+                  >
+                    <RestoreIcon />
+                    Restaurar
+                  </button>
+                </div>
                 <p className="mt-3 text-xs leading-relaxed text-ink-soft">
-                  Max {mode === "UF_TO_CLP" ? "99,999 UF" : "999,999,999,999 CLP"} · No auto-calculation
+                  Sin cálculo automático — presiona Calcular para ver el resultado.
                 </p>
               </div>
 
@@ -269,27 +395,52 @@ export function Calculator({ variant = "section" }: CalculatorProps) {
               </div>
 
               <div className={`calc-result-panel min-w-0 ${hasResult ? "calc-result-panel--active" : ""}`}>
-                <p className="text-xs font-semibold uppercase tracking-wide text-ink-soft">Result</p>
+                <p className="text-xs font-semibold uppercase tracking-wide text-ink-soft">Resultado</p>
                 <div className="calc-result-body mt-2">
                   {hasResult ? (
-                    <motion.p
-                      key={`${mode}-${calculatedResult}`}
-                      initial={{ opacity: 0, y: 8 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-                      className="text-xl font-bold leading-snug text-ink sm:text-2xl"
-                    >
-                      <span className="block break-words">{formatNumber(calculatedResult!, mode)}</span>
-                      <span className="mt-1 block text-base font-semibold text-accent sm:text-lg">
-                        {mode === "UF_TO_CLP" ? "CLP" : "UF"}
-                      </span>
-                    </motion.p>
+                    <div>
+                      <motion.p
+                        key={`${mode}-${calculatedResult}`}
+                        initial={{ opacity: 0, y: 8 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+                        className="text-xl font-bold leading-snug sm:text-2xl"
+                      >
+                        <span className="calc-result-value block break-words">
+                          {formatConversionResult(calculatedResult!, mode)}
+                        </span>
+                        <span className="mt-1 block text-base font-semibold text-ink-soft sm:text-lg">
+                          {mode === "UF_TO_CLP" ? "CLP" : "UF"}
+                        </span>
+                      </motion.p>
+                      {dayChange ? (
+                        <motion.div
+                          initial={{ opacity: 0, y: 6 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ duration: 0.35, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
+                          className="mt-4"
+                        >
+                          <p className="mb-2 text-[0.6875rem] font-semibold uppercase tracking-wide text-ink-soft">
+                            Variación UF
+                          </p>
+                          <UfDayChangeNotice change={dayChange} referenceDate={rateDate} />
+                        </motion.div>
+                      ) : null}
+                    </div>
                   ) : (
-                    <p className="text-sm leading-relaxed text-ink-soft">Press Calculate to see your conversion result here.</p>
+                    <p className="text-sm leading-relaxed text-ink-soft">
+                      Presiona Calcular para ver tu conversión aquí.
+                    </p>
                   )}
                 </div>
               </div>
             </div>
+
+            {hasResult ? (
+              <p className="calc-result-summary mt-4 text-center text-sm leading-relaxed text-ink-soft sm:text-base">
+                {formatConversionSummary(mode, input, calculatedResult!)}
+              </p>
+            ) : null}
 
             {calcError ? <p className="mt-4 text-sm text-error">{calcError}</p> : null}
 
@@ -331,20 +482,22 @@ export function Calculator({ variant = "section" }: CalculatorProps) {
                   </button>
                 </div>
                 <p className="mt-3 text-xs text-ink-soft">
-                  PDF includes your branding, input, output, and rate. You can forward the file on WhatsApp after download.
+                  El PDF incluye el logo oficial, el detalle de la conversión, información del valor UF y datos de la herramienta. Puedes reenviarlo por WhatsApp después de descargarlo.
                 </p>
               </motion.div>
               ) : null}
             </AnimatePresence>
 
-            <div className="mt-6 flex flex-wrap items-center gap-3 text-xs text-ink-soft">
+            <div id="live-rate" className="mt-6 flex flex-wrap items-center gap-3 text-xs text-ink-soft">
               <span className="rounded-full bg-[color-mix(in_oklab,var(--accent)_12%,var(--surface))] px-3 py-1 font-medium text-accent">
-                Rate: {rate ? new Intl.NumberFormat("es-CL").format(rate) : "--"} CLP
+                Tasa: {rate ? formatClpRate(rate) : "--"} CLP
               </span>
-              <span>Last updated: {rateDate ? new Date(rateDate).toLocaleDateString("es-CL") : "--"}</span>
+              <span>
+                Fecha: {rateDate ? formatUfLongDate(rateDate) : "--"}
+              </span>
               {fallback ? (
                 <span className="rounded-full bg-[color-mix(in_oklab,var(--accent-2)_25%,var(--surface))] px-3 py-1 text-accent">
-                  Fallback rate active
+                  Valor de respaldo
                 </span>
               ) : null}
             </div>

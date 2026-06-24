@@ -9,14 +9,19 @@
     "lint": "eslint",
     "process:logo": "node scripts/process-logo.mjs",
     "generate:conversion-bg": "node scripts/generate-conversion-bg.mjs",
-    "download:faq-images": "node scripts/download-faq-images.mjs"
+    "generate:why-uf-bg": "node scripts/generate-why-uf-bg.mjs",
+    "generate:assets": "node scripts/generate-why-uf-bg.mjs && node scripts/generate-conversion-bg.mjs",
+    "download:faq-images": "node scripts/download-faq-images.mjs",
+    "optimize:images": "node scripts/optimize-images.mjs",
+    "prebuild": "npm run generate:why-uf-bg && npm run process:logo && npm run download:faq-images && npm run optimize:images"
   },
   "dependencies": {
     "framer-motion": "^12.16.0",
     "jspdf": "^4.2.1",
     "next": "16.2.7",
     "react": "19.2.4",
-    "react-dom": "19.2.4"
+    "react-dom": "19.2.4",
+    "react-icons": "^5.6.0"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

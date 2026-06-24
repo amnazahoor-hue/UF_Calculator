@@ -137,74 +137,72 @@ function FeatureVisual({ type }: { type: (typeof highlights)[number]["visual"] }
 export function CalculatorFeatures() {
   return (
     <section id="caracteristicas" className="section-features relative overflow-hidden pb-12 pt-10 sm:pb-14 sm:pt-12">
-      <div className="relative mx-auto w-full max-w-content px-4 sm:px-6 lg:px-8">
-        <div className="features-showcase-panel">
-          <div aria-hidden className="features-showcase-panel-glow" />
-          <div aria-hidden className="features-showcase-panel-noise" />
+      <div aria-hidden className="features-showcase-panel-glow" />
+      <div aria-hidden className="features-showcase-panel-noise" />
 
-          <SectionReveal>
-            <div className="features-showcase-header">
-              <div className="features-showcase-header-copy">
-                <SectionEyebrow variant="dark">Características</SectionEyebrow>
-                <h2 className="mt-4 text-[clamp(1.85rem,3.8vw,2.75rem)] font-bold leading-tight tracking-[-0.02em] text-surface">
-                  Características Destacadas De Nuestra Calculadora UF
-                </h2>
-              </div>
-              <p className="features-showcase-intro">
-                Calculadora UF es única en su clase y hace más que simples cálculos. Hemos diseñado nuestra herramienta
-                para manejar todo cuando trabajamos con Unidad de Fomento: conversiones instantáneas, datos actualizados,
-                tablas cotidianas y herramientas prácticas.
-              </p>
+      <div className="relative z-[1] mx-auto w-full max-w-content px-4 sm:px-6 lg:px-8">
+        <SectionReveal>
+          <div className="features-showcase-header">
+            <div className="features-showcase-header-copy">
+              <SectionEyebrow variant="dark">Características</SectionEyebrow>
+              <h2 className="mt-4 text-[clamp(1.85rem,3.8vw,2.75rem)] font-bold leading-tight tracking-[-0.02em] text-surface">
+                Características Destacadas De Nuestra Calculadora UF
+              </h2>
             </div>
-          </SectionReveal>
-
-          <div className="features-showcase-grid">
-            {highlights.map((item, index) => (
-              <SectionReveal key={item.title} delay={index * 0.08}>
-                <motion.article
-                  className="features-showcase-col group"
-                  whileHover={{ y: -6 }}
-                  transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-                >
-                  <span className="features-showcase-col-icon">
-                    <HighlightIcon type={item.icon} />
-                  </span>
-                  <h3 className="features-showcase-col-title">{item.title}</h3>
-                  <p className="features-showcase-col-body">{item.body}</p>
-                  <FeatureVisual type={item.visual} />
-                </motion.article>
-              </SectionReveal>
-            ))}
+            <p className="features-showcase-intro">
+              Calculadora UF es única en su clase y hace más que simples cálculos. Hemos diseñado nuestra herramienta
+              para manejar todo cuando trabajamos con Unidad de Fomento: conversiones instantáneas, datos actualizados,
+              tablas cotidianas y herramientas prácticas.
+            </p>
           </div>
+        </SectionReveal>
 
-          <SectionReveal delay={0.32} className="features-showcase-cta-wrap">
-            <div className="features-showcase-cta">
-              <h3 className="text-lg font-bold text-surface sm:text-xl">Descubra El Valor UF Hoy Chile</h3>
-              <p className="mt-2 text-sm leading-relaxed text-[color-mix(in_oklab,var(--surface)_72%,transparent)]">
-                Consulte el valor actual de la UF y convierta al instante con datos actualizados.
-              </p>
-              <a
-                href="#tool"
-                onClick={(e) => {
-                  e.preventDefault();
-                  scrollToPageSection("tool");
-                }}
-                className="mt-5 inline-flex items-center gap-2 rounded-full bg-accent px-5 py-2.5 text-sm font-semibold text-surface transition hover:bg-[color-mix(in_oklab,var(--accent)_88%,var(--ink))] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-2 focus-visible:ring-offset-2 focus-visible:ring-offset-[#121212]"
+        <div className="features-showcase-grid">
+          {highlights.map((item, index) => (
+            <SectionReveal key={item.title} delay={index * 0.08}>
+              <motion.article
+                className="features-showcase-col group"
+                whileHover={{ y: -6 }}
+                transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
               >
-                Ver valor UF hoy
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden>
-                  <path
-                    d="M5 12h14M13 6l6 6-6 6"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              </a>
-            </div>
-          </SectionReveal>
+                <span className="features-showcase-col-icon">
+                  <HighlightIcon type={item.icon} />
+                </span>
+                <h3 className="features-showcase-col-title">{item.title}</h3>
+                <p className="features-showcase-col-body">{item.body}</p>
+                <FeatureVisual type={item.visual} />
+              </motion.article>
+            </SectionReveal>
+          ))}
         </div>
+
+        <SectionReveal delay={0.32} className="features-showcase-cta-wrap">
+          <div className="features-showcase-cta">
+            <h3 className="text-lg font-bold text-surface sm:text-xl">Descubra El Valor UF Hoy Chile</h3>
+            <p className="mt-2 text-sm leading-relaxed text-[color-mix(in_oklab,var(--surface)_72%,transparent)]">
+              Consulte el valor actual de la UF y convierta al instante con datos actualizados.
+            </p>
+            <a
+              href="#tool"
+              onClick={(e) => {
+                e.preventDefault();
+                scrollToPageSection("tool");
+              }}
+              className="mt-5 inline-flex items-center gap-2 rounded-full bg-accent px-5 py-2.5 text-sm font-semibold text-surface transition hover:bg-[color-mix(in_oklab,var(--accent)_88%,var(--ink))] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-2 focus-visible:ring-offset-2 focus-visible:ring-offset-[#121212]"
+            >
+              Ver valor UF hoy
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden>
+                <path
+                  d="M5 12h14M13 6l6 6-6 6"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </a>
+          </div>
+        </SectionReveal>
       </div>
     </section>
   );

@@ -18,7 +18,7 @@ const fadeUp = {
 const previewTabs = [
   { id: "UF_TO_CLP", label: "UF → CLP" },
   { id: "CLP_TO_UF", label: "CLP → UF" },
-  { id: "RATE", label: "Live Rate" },
+  { id: "RATE", label: "Valor UF hoy" },
   { id: "FREE", label: "Free Tool" },
 ] as const;
 

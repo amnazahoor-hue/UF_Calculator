@@ -1,101 +1,115 @@
 import type { Metadata } from "next";
+import Link from "next/link";
+import { LegalPage } from "@/components/LegalPage";
+import { siteName } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "Contact",
-  description: "Contact UF Calculator Chile for support, compliance questions, partnership inquiries, and feedback.",
+  title: "Contacto",
+  description: `Contacta con ${siteName} para soporte, reportes de datos UF, privacidad, alianzas y comentarios.`,
 };
+
+const relatedLinks = [
+  { href: "/privacy-policy", label: "Política de privacidad" },
+  { href: "/disclaimer", label: "Descargo de responsabilidad" },
+  { href: "/#faq", label: "Preguntas frecuentes" },
+];
+
+const sections = [
+  {
+    heading: "Antes de escribirnos",
+    paragraphs: [
+      `Usa este canal para dudas sobre ${siteName}, errores en la conversión UF, sugerencias de contenido o consultas legales generales. No somos banco ni asesoría regulada; para plazos de pago urgentes valida el valor directamente con tu institución.`,
+      "Revisa la política de privacidad y los términos antes de enviar datos sensibles. No compartas contraseñas, datos bancarios completos ni documentos confidenciales por este formulario.",
+    ],
+  },
+  {
+    heading: "Qué incluir en tu mensaje",
+    paragraphs: [
+      "Para reportar un problema técnico: URL de la página, fecha y hora, dispositivo, navegador y una descripción breve. Si el tema es el valor UF, indica el monto mostrado, el valor esperado y la fuente con la que comparas.",
+      "Para avisos legales o privacidad: nombre completo, rol u organización, jurisdicción y base de tu solicitud. Podemos pedir verificación adicional para proteger datos de otros usuarios.",
+    ],
+  },
+  {
+    heading: "Temas que atendemos",
+    paragraphs: [
+      "Usabilidad de la calculadora, diferencias por redondeo o caché, aclaraciones del FAQ, solicitudes de eliminación de datos, reportes de abuso automatizado y propuestas de alianzas alineadas con educación financiera transparente.",
+      "Las respuestas suelen llegar en uno a tres días hábiles según volumen. La calculadora sigue disponible mientras procesamos tu caso.",
+    ],
+  },
+  {
+    heading: "Publicidad y alianzas",
+    paragraphs: [
+      "Si tu consulta es sobre un anuncio o enlace patrocinado, indica la página y la ubicación del elemento. La monetización no cambia el carácter informativo de la herramienta.",
+      "Para integraciones o colaboraciones editoriales, describe tu organización, alcance, plazo y requisitos técnicos. Priorizamos propuestas que aporten valor claro a lectores en Chile.",
+    ],
+  },
+];
 
 export default function ContactPage() {
   return (
-    <main className="mx-auto w-full max-w-content-narrow flex-1 px-4 py-10 sm:px-6 lg:px-8">
-      <h1 className="text-4xl font-bold text-text-primary sm:text-5xl">Contact UF Calculator Chile</h1>
-      <p className="mt-4 text-width text-base text-text-secondary">
-        If you need help with UF Calculator Chile, want to report a data issue, or have legal/compliance questions, you can contact
-        our team through the form below. For quick context, visit the{" "}
-        <a href="/privacy-policy" className="font-semibold text-primary underline">
-          Privacy Policy
-        </a>{" "}
-        and{" "}
-        <a href="/terms-and-conditions" className="font-semibold text-primary underline">
-          Terms & Conditions
-        </a>{" "}
-        before sending sensitive requests.
-      </p>
-
-      <section className="mt-8 rounded-2xl border border-border bg-surface p-6 shadow-glass">
-        <h2 className="text-2xl font-semibold text-text-primary">Send a message</h2>
-        <form className="mt-4 grid gap-4" aria-label="Contact form">
-          <label className="text-sm text-text-secondary">
-            Name
-            <input className="mt-1 w-full rounded-lg border border-border px-3 py-2 text-text-primary" />
+    <LegalPage
+      eyebrow="Soporte"
+      title="Contáctanos"
+      intro={`Escríbenos si necesitas ayuda con la calculadora UF, quieres reportar un dato incorrecto o tienes una consulta sobre privacidad y términos de ${siteName}.`}
+      sections={sections}
+      relatedLinks={relatedLinks}
+    >
+      <section className="content-page-panel" aria-labelledby="contact-form-title">
+        <h2 id="contact-form-title" className="content-page-panel-title">
+          Enviar mensaje
+        </h2>
+        <form className="content-page-form" aria-label="Formulario de contacto">
+          <label className="content-page-label">
+            Nombre
+            <input
+              type="text"
+              name="name"
+              autoComplete="name"
+              className="content-page-input"
+              placeholder="Tu nombre"
+            />
           </label>
-          <label className="text-sm text-text-secondary">
-            Email
-            <input type="email" className="mt-1 w-full rounded-lg border border-border px-3 py-2 text-text-primary" />
+          <label className="content-page-label">
+            Correo electrónico
+            <input
+              type="email"
+              name="email"
+              autoComplete="email"
+              className="content-page-input"
+              placeholder="tu@correo.cl"
+            />
           </label>
-          <label className="text-sm text-text-secondary">
-            Message
-            <textarea rows={5} className="mt-1 w-full rounded-lg border border-border px-3 py-2 text-text-primary" />
+          <label className="content-page-label">
+            Asunto
+            <select name="topic" className="content-page-input" defaultValue="general">
+              <option value="general">Consulta general</option>
+              <option value="data">Valor UF o conversión incorrecta</option>
+              <option value="privacy">Privacidad o datos personales</option>
+              <option value="legal">Aviso legal</option>
+              <option value="partnership">Alianza o publicidad</option>
+            </select>
           </label>
-          <button type="button" className="w-fit rounded-lg bg-button px-5 py-2 text-sm font-medium text-white">
-            Submit
+          <label className="content-page-label">
+            Mensaje
+            <textarea
+              name="message"
+              rows={5}
+              className="content-page-input"
+              placeholder="Describe tu consulta con el mayor detalle posible…"
+            />
+          </label>
+          <button type="button" className="content-page-submit">
+            Enviar mensaje
           </button>
         </form>
-      </section>
-
-      <section className="mt-8 space-y-4 text-base text-text-secondary">
-        <h2 className="text-2xl font-semibold text-text-primary">Support and Compliance Information</h2>
-        <p>
-          We provide support for usability issues, conversion display questions, content clarifications, and legal notice requests.
-          Typical response windows are one to three business days depending on volume and the complexity of the inquiry. If your
-          question involves a transaction deadline, we recommend validating values directly with an official institution immediately,
-          because website support channels are not a real-time execution service.
-        </p>
-        <p>
-          Please include clear details when contacting us: page URL, timestamp, device type, browser version, and a concise
-          description of the observed issue. Structured details help us reproduce errors quickly and improve the platform. We may ask
-          follow-up questions to verify context before taking operational action. For legal notices, include your full name, role,
-          organization, and relevant jurisdiction so we can route your request appropriately.
-        </p>
-        <p>
-          UF Calculator Chile is intended for informational conversion support and educational content. We are not a legal office,
-          accounting firm, lender, or regulated financial advisory service. Communication sent through this page does not create a
-          fiduciary relationship, attorney-client privilege, or guaranteed response obligation beyond reasonable effort. Messages are
-          handled with care, but users should avoid sending confidential credentials, payment card data, personal identification
-          numbers, or highly sensitive banking records through open-text forms.
-        </p>
-        <p>
-          If your request concerns data quality, include the UF value shown, expected value, and the source used for comparison. Keep
-          in mind that differences may occur due to update timing, caching intervals, and institutional rounding policy. The site is
-          designed for fast public reference and resilience, including fallback behavior when upstream data providers are temporarily
-          unavailable. For contractual obligations such as mortgage settlement, rent adjustment, or invoice issuance, always verify
-          numbers with the institution that governs your contract.
-        </p>
-        <p>
-          Cookies and analytics may be used to understand aggregate traffic and improve reliability. If your message includes a privacy
-          concern, identify the specific behavior observed and the jurisdiction you want us to consider. We will review requests in
-          good faith, subject to legal obligations and practical verification constraints. We may retain communication logs for security,
-          abuse prevention, and compliance recordkeeping. Additional retention details are documented in our Privacy Policy.
-        </p>
-        <p>
-          This website may display advertising or affiliate disclosures, including potential future use of AdSense placements. If your
-          inquiry relates to sponsored content, identify the affected page and placement so we can review labeling and presentation.
-          Monetization does not alter the informational purpose of the conversion tool. Users are encouraged to perform independent
-          evaluation before acting on any promoted services or third-party references.
-        </p>
-        <p>
-          For partnerships, media requests, or business integration discussions, include your organization profile, project scope,
-          expected timeline, and technical requirements. We prioritize proposals that align with transparent financial education,
-          responsible product communication, and clear user value for Chilean audiences. Not all partnership inquiries can be accepted,
-          but we review each submission with a focus on trust, compliance, and long-term user benefit.
-        </p>
-        <p>
-          If you need to submit a formal legal or regulatory notice, clearly state the legal basis of your request and include
-          supporting evidence where applicable. We may seek identity verification to protect user data and prevent unauthorized claims.
-          Nothing on this page limits your statutory rights under applicable law. This contact information is provided to enable
-          transparent communication while preserving platform integrity and user safety.
+        <p className="mt-4 text-sm leading-relaxed text-ink-soft">
+          Al enviar aceptas que tratemos tu mensaje según nuestra{" "}
+          <Link href="/privacy-policy" className="font-semibold text-accent hover:text-accent-2">
+            política de privacidad
+          </Link>
+          . Este formulario es informativo; la respuesta no constituye asesoría financiera ni legal.
         </p>
       </section>
-    </main>
+    </LegalPage>
   );
 }

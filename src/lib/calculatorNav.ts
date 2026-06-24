@@ -1,5 +1,4 @@
 import type { CalcMode } from "./calculatorInput";
-import { officialUfRateUrl } from "./site";
 
 export type CalculatorNavTarget = CalcMode | "RATE" | "FREE";
 
@@ -36,7 +35,7 @@ function focusCalculatorInput() {
 
 export function navigateFromHeroTab(tabId: CalculatorNavTarget) {
   if (tabId === "RATE") {
-    window.location.assign(officialUfRateUrl);
+    scrollToPageSection("tool");
     return;
   }
 

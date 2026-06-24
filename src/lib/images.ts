@@ -1,11 +1,13 @@
 export const siteImages = {
-  logo: "/images/logo.webp",
+  logo: "/images/site-logo.webp",
   conversionTableBg: "/images/conversion-table-bg.webp",
+  whyUfSectionBg: "/images/why-uf-section-bg.webp",
+  whyUfThinking: "/images/why-uf-thinking.webp",
   faq: {
     mortgagePlanning: "/images/faq/mortgage-planning.webp",
     bankingFinance: "/images/faq/banking-finance.webp",
-    financialMeeting: "/images/faq/financial-meeting.webp",
-    marketAnalysis: "/images/faq/market-analysis.webp",
+    financialMeeting: "/images/faq/finance-education.webp",
+    questionsAnswers: "/images/faq/questions-answers.webp",
   },
   howItWorks: {
     softwareDeveloper: "/images/how-it-works/software-developer.webp",

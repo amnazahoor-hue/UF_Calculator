@@ -2,40 +2,20 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
-import { useCallback, useEffect, useState, type MouseEvent } from "react";
+import { usePathname } from "next/navigation";
+import type { ReactNode } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { headerNavLinks } from "@/lib/navigation";
 import { scrollToPageSection } from "@/lib/calculatorNav";
-import { useActiveSection, type NavSectionId } from "@/lib/useActiveSection";
-import { Logo } from "./Logo";
 
-const navLinks = [
-  { href: "/", label: "Home", sectionId: "home" as const },
-  { href: "/#tool", label: "Tool", sectionId: "tool" as const },
-  { href: "/#how-it-works", label: "How It Works", sectionId: "how-it-works" as const },
-  { href: "/#faq", label: "FAQ", sectionId: "faq" as const },
-  { href: "/contact", label: "Contact", sectionId: "contact" as const },
-] as const;
+function isPageActive(pathname: string, pageId: string) {
+  return pathname === `/${pageId}`;
+}
 
-type SectionId = NavSectionId;
-
-export function Header() {
+export function Header({ brand }: { brand: ReactNode }) {
   const pathname = usePathname();
-  const router = useRouter();
-  const isHome = pathname === "/";
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [manualActiveId, setManualActiveId] = useState<SectionId | null>(null);
-  const [trackedPath, setTrackedPath] = useState(pathname);
-  const observedActiveId = useActiveSection(isHome);
-
-  if (pathname !== trackedPath) {
-    setTrackedPath(pathname);
-    if (manualActiveId !== null) {
-      setManualActiveId(null);
-    }
-  }
-
-  const activeId = manualActiveId ?? (pathname === "/contact" ? "contact" : observedActiveId);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 10);
@@ -43,12 +23,6 @@ export function Header() {
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
-
-  useEffect(() => {
-    if (!manualActiveId) return;
-    const timer = window.setTimeout(() => setManualActiveId(null), 900);
-    return () => window.clearTimeout(timer);
-  }, [manualActiveId]);
 
   useEffect(() => {
     document.body.style.overflow = menuOpen ? "hidden" : "";
@@ -59,79 +33,29 @@ export function Header() {
 
   const closeMenu = useCallback(() => setMenuOpen(false), []);
 
-  const goToSection = useCallback(
-    (sectionId: SectionId, e?: MouseEvent<HTMLElement>) => {
-      e?.preventDefault();
-      setManualActiveId(sectionId);
+  const handleCalculateNow = useCallback(
+    (e: { preventDefault: () => void }) => {
+      e.preventDefault();
       closeMenu();
 
-      if (sectionId === "contact") {
-        router.push("/contact");
+      if (pathname === "/") {
+        scrollToPageSection("tool");
+        window.setTimeout(() => {
+          document.querySelector<HTMLInputElement>("#tool .calc-amount-input")?.focus({ preventScroll: true });
+        }, 450);
         return;
       }
 
-      if (!isHome) {
-        router.push(sectionId === "home" ? "/" : `/#${sectionId}`);
-        return;
-      }
-
-      scrollToPageSection(sectionId);
+      window.location.href = "/#tool";
     },
-    [closeMenu, isHome, router],
+    [closeMenu, pathname],
   );
 
-  const renderNavItem = (item: (typeof navLinks)[number], mobile = false) => {
-    const isActive = activeId === item.sectionId;
-    const linkClass = `header-nav-link relative rounded-full px-3.5 py-2 text-sm transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 ${
+  const renderNavItem = (item: (typeof headerNavLinks)[number], mobile = false) => {
+    const isActive = isPageActive(pathname, item.pageId);
+    const linkClass = `header-nav-link relative rounded-full px-2.5 py-1.5 text-xs transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 xl:px-3.5 xl:py-2 xl:text-sm ${
       isActive ? "header-nav-link--active font-semibold text-ink" : "font-medium text-ink-soft hover:text-ink"
-    } ${mobile ? "block w-full rounded-xl text-left" : ""}`;
-
-    const activeHighlight = isActive ? (
-      <motion.span
-        layoutId="header-nav-active"
-        className="header-nav-pill absolute inset-0 rounded-full"
-        transition={{ type: "spring", stiffness: 400, damping: 34 }}
-        aria-hidden
-      />
-    ) : null;
-
-    const content = (
-      <>
-        {activeHighlight}
-        <span className="relative">{item.label}</span>
-      </>
-    );
-
-    if (item.sectionId === "contact") {
-      return (
-        <Link
-          key={item.href}
-          href={item.href}
-          className={linkClass}
-          aria-current={isActive ? "page" : undefined}
-          onClick={() => {
-            setManualActiveId("contact");
-            closeMenu();
-          }}
-        >
-          {content}
-        </Link>
-      );
-    }
-
-    if (isHome) {
-      return (
-        <a
-          key={item.href}
-          href={item.href}
-          className={linkClass}
-          aria-current={isActive ? (item.sectionId === "home" ? "page" : "true") : undefined}
-          onClick={(e) => goToSection(item.sectionId, e)}
-        >
-          {content}
-        </a>
-      );
-    }
+    } ${mobile ? "block w-full rounded-xl px-3.5 py-2.5 text-left text-sm" : "shrink-0 whitespace-nowrap"}`;
 
     return (
       <Link
@@ -139,12 +63,17 @@ export function Header() {
         href={item.href}
         className={linkClass}
         aria-current={isActive ? "page" : undefined}
-        onClick={() => {
-          setManualActiveId(item.sectionId);
-          closeMenu();
-        }}
+        onClick={() => closeMenu()}
       >
-        {content}
+        {isActive ? (
+          <motion.span
+            layoutId="header-nav-active"
+            className="header-nav-pill absolute inset-0 rounded-full"
+            transition={{ type: "spring", stiffness: 400, damping: 34 }}
+            aria-hidden
+          />
+        ) : null}
+        <span className="relative">{item.label}</span>
       </Link>
     );
   };
@@ -152,53 +81,52 @@ export function Header() {
   return (
     <header className="header-shell sticky top-0 z-50 w-full py-3 sm:py-4">
       <div aria-hidden className="header-shell-glow" />
-      <div className="relative mx-auto w-full max-w-content px-4 sm:px-6 lg:px-8">
+      <div className="relative mx-auto w-full max-w-shell px-3 sm:px-5 lg:px-8 xl:px-10">
         <div
           className={`header-bar flex w-full items-center gap-2 rounded-full border-2 px-3 py-2 transition-all duration-300 sm:gap-3 sm:px-4 sm:py-2.5 lg:px-5 ${
             scrolled ? "header-bar--scrolled" : ""
           }`}
         >
-          <Link
-            href="/"
-            aria-label="UF Calculator home"
-            className="flex shrink-0 items-center gap-2.5 rounded-full py-1 pl-1 pr-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
-            onClick={(e) => {
-              if (isHome) {
-                e.preventDefault();
-                goToSection("home");
-              } else {
-                setManualActiveId("home");
-              }
-            }}
-          >
-            <Logo compact showLabel priority />
-          </Link>
+          {brand}
 
-          <div className="hidden h-6 w-px bg-[color-mix(in_oklab,var(--border)_90%,transparent)] lg:block" aria-hidden />
+          <div className="hidden h-6 w-px shrink-0 bg-[color-mix(in_oklab,var(--border)_90%,transparent)] lg:block" aria-hidden />
 
           <nav
-            aria-label="Main navigation"
-            className="header-desktop-nav hidden min-w-0 flex-1 items-center justify-center gap-0.5 lg:flex lg:gap-1"
+            aria-label="Navegación principal"
+            className="header-desktop-nav ml-auto hidden min-w-0 items-center justify-end gap-1 lg:flex xl:gap-1.5"
           >
-            {navLinks.map((item) => renderNavItem(item))}
+            {headerNavLinks.map((item) => renderNavItem(item))}
+            <a
+              href={pathname === "/" ? "#tool" : "/#tool"}
+              onClick={handleCalculateNow}
+              className="header-cta header-bar-cta ml-1 inline-flex shrink-0 items-center gap-1.5 rounded-full bg-ink px-3.5 py-2 text-xs font-semibold text-surface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 xl:ml-1.5 xl:px-4 xl:py-2.5 xl:text-sm"
+            >
+              Calcular ahora
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden className="xl:h-4 xl:w-4">
+                <path
+                  d="M5 12h14M13 6l6 6-6 6"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </a>
           </nav>
 
           <a
-            href={isHome ? "#tool" : "/#tool"}
-            onClick={(e) => goToSection("tool", e)}
-            className="header-cta ml-auto hidden shrink-0 items-center gap-2 rounded-full bg-ink px-5 py-2.5 text-sm font-semibold text-surface lg:inline-flex"
+            href={pathname === "/" ? "#tool" : "/#tool"}
+            onClick={handleCalculateNow}
+            className="header-cta header-bar-cta ml-auto inline-flex shrink-0 items-center gap-1.5 rounded-full bg-ink px-3.5 py-2 text-xs font-semibold text-surface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 lg:hidden"
           >
-            Get Started
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden>
-              <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
+            Calcular ahora
           </a>
 
           <button
             type="button"
-            className="header-menu-btn ml-auto inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-border text-ink transition hover:border-accent hover:bg-[color-mix(in_oklab,var(--accent)_8%,var(--surface))] lg:hidden"
+            className="header-menu-btn inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-border text-ink transition hover:border-accent hover:bg-[color-mix(in_oklab,var(--accent)_8%,var(--surface))] lg:hidden"
             onClick={() => setMenuOpen((prev) => !prev)}
-            aria-label={menuOpen ? "Close menu" : "Open menu"}
+            aria-label={menuOpen ? "Cerrar menú" : "Abrir menú"}
             aria-expanded={menuOpen}
             aria-controls="mobile-nav-panel"
           >
@@ -220,18 +148,24 @@ export function Header() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -8 }}
               transition={{ duration: 0.22 }}
-              className="header-mobile-panel absolute left-4 right-4 top-[calc(100%+0.5rem)] z-50 overflow-hidden rounded-3xl border-2 border-[color-mix(in_oklab,var(--border)_85%,var(--accent)_15%)] bg-surface p-4 shadow-[0_24px_56px_color-mix(in_oklab,var(--ink)_22%,transparent)] sm:left-6 sm:right-6 md:left-1/2 md:right-auto md:w-[min(100%,28rem)] md:-translate-x-1/2 lg:hidden"
+              className="header-mobile-panel absolute left-4 right-4 top-[calc(100%+0.5rem)] z-50 max-h-[min(80vh,32rem)] overflow-y-auto rounded-3xl border-2 border-[color-mix(in_oklab,var(--border)_85%,var(--accent)_15%)] bg-surface p-4 shadow-[0_24px_56px_color-mix(in_oklab,var(--ink)_22%,transparent)] sm:left-6 sm:right-6 md:left-1/2 md:right-auto md:w-[min(100%,28rem)] md:-translate-x-1/2 lg:hidden"
             >
-              <nav aria-label="Mobile navigation" className="flex flex-col gap-1">
-                {navLinks.map((item) => renderNavItem(item, true))}
+              <nav aria-label="Navegación móvil" className="flex flex-col gap-1">
+                {headerNavLinks.map((item) => renderNavItem(item, true))}
                 <a
-                  href={isHome ? "#tool" : "/#tool"}
-                  onClick={(e) => goToSection("tool", e)}
-                  className="header-cta mt-2 inline-flex w-full items-center justify-center gap-2 rounded-full bg-ink px-5 py-3 text-sm font-semibold text-surface"
+                  href={pathname === "/" ? "#tool" : "/#tool"}
+                  onClick={handleCalculateNow}
+                  className="header-cta mt-2 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-ink px-4 py-3 text-sm font-semibold text-surface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
                 >
-                  Get Started
+                  Calcular ahora
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden>
-                    <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                    <path
+                      d="M5 12h14M13 6l6 6-6 6"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
                   </svg>
                 </a>
               </nav>

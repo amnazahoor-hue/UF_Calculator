@@ -1,46 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { fixedUfConversionTable, fixedUfReferenceLabel, formatFixedUfAmount } from "@/lib/conversionTable";
 import { SectionEyebrow } from "./SectionEyebrow";
 import { SectionReveal } from "./SectionReveal";
 
-const ufAmounts = [1, 2, 5, 10, 25, 30, 50, 80, 100, 500, 1000] as const;
-
-function formatClp(value: number) {
-  return new Intl.NumberFormat("es-CL", {
-    style: "currency",
-    currency: "CLP",
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  }).format(value);
-}
-
-function formatUf(amount: number) {
-  return `${new Intl.NumberFormat("es-CL", { maximumFractionDigits: 0 }).format(amount)} UF`;
-}
-
 export function StatsStrip() {
-  const [rate, setRate] = useState<number | null>(null);
-
-  useEffect(() => {
-    let cancelled = false;
-
-    fetch("/api/uf")
-      .then((res) => res.json())
-      .then((data: { rate?: number }) => {
-        if (!cancelled && typeof data.rate === "number") {
-          setRate(data.rate);
-        }
-      })
-      .catch(() => {
-        if (!cancelled) setRate(null);
-      });
-
-    return () => {
-      cancelled = true;
-    };
-  }, []);
-
   return (
     <section className="section-stats relative overflow-hidden" aria-labelledby="conversion-table-title">
       <div aria-hidden className="section-stats-bg" />
@@ -58,12 +22,10 @@ export function StatsStrip() {
           <p className="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-[color-mix(in_oklab,var(--surface)_72%,transparent)] sm:text-base">
             Si te lo estás preguntando a cuánto está la unidad de fomento, entonces esta tabla te ayudará;
           </p>
-          {rate ? (
-            <p className="conversion-rate-chip mx-auto mt-5 inline-flex items-center gap-2 rounded-full border border-[color-mix(in_oklab,var(--accent)_28%,var(--border))] bg-[color-mix(in_oklab,var(--accent)_10%,var(--surface))] px-4 py-2 text-sm font-medium text-ink">
-              <span className="h-2 w-2 rounded-full bg-accent" aria-hidden />
-              UF hoy: <strong className="font-bold text-accent">{formatClp(rate)}</strong>
-            </p>
-          ) : null}
+          <p className="conversion-rate-chip mx-auto mt-5 inline-flex items-center gap-2 rounded-full border border-[color-mix(in_oklab,var(--accent)_28%,var(--border))] bg-[color-mix(in_oklab,var(--accent)_10%,var(--surface))] px-4 py-2 text-sm font-medium text-ink">
+            <span className="h-2 w-2 rounded-full bg-accent" aria-hidden />
+            1 UF = <strong className="font-bold text-accent">{fixedUfReferenceLabel}</strong>
+          </p>
         </SectionReveal>
 
         <SectionReveal delay={0.08} className="mt-8 sm:mt-10">
@@ -78,13 +40,13 @@ export function StatsStrip() {
                   </tr>
                 </thead>
                 <tbody>
-                  {ufAmounts.map((amount, index) => (
-                    <tr key={amount} className={index % 2 === 1 ? "conversion-table-row--alt" : undefined}>
+                  {fixedUfConversionTable.map((row, index) => (
+                    <tr key={row.uf} className={index % 2 === 1 ? "conversion-table-row--alt" : undefined}>
                       <td>
-                        <span className="conversion-uf-pill">{formatUf(amount)}</span>
+                        <span className="conversion-uf-pill">{formatFixedUfAmount(row.uf)}</span>
                       </td>
                       <td>
-                        <span className="conversion-clp-value">{rate ? formatClp(amount * rate) : "—"}</span>
+                        <span className="conversion-clp-value">{row.clpLabel}</span>
                       </td>
                     </tr>
                   ))}
@@ -92,11 +54,9 @@ export function StatsStrip() {
               </table>
             </div>
           </div>
-          {rate ? (
-            <p className="mt-5 text-center text-xs text-[color-mix(in_oklab,var(--surface)_65%,transparent)] sm:text-sm">
-              Valores calculados con la UF del día ({formatClp(rate)} por 1 UF).
-            </p>
-          ) : null}
+          <p className="mt-5 text-center text-xs text-[color-mix(in_oklab,var(--surface)_65%,transparent)] sm:text-sm">
+            Valores de referencia fijos según 1 UF = {fixedUfReferenceLabel} CLP.
+          </p>
         </SectionReveal>
       </div>
     </section>

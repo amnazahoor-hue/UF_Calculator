@@ -1,9 +1,11 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { useCallback, useEffect, useState } from "react";
 import { scrollToPageSection } from "@/lib/calculatorNav";
 import { SectionEyebrow } from "./SectionEyebrow";
 import { SectionReveal } from "./SectionReveal";
+import { UfUseCasesAnimation } from "./UfUseCasesAnimation";
 
 const useCases = [
   {
@@ -28,46 +30,33 @@ const useCases = [
   },
 ] as const;
 
-function UfGrowthIllustration() {
-  return (
-    <svg className="use-cases-illustration" viewBox="0 0 420 380" fill="none" aria-hidden>
-      <ellipse cx="210" cy="340" rx="160" ry="28" fill="#dbeafe" opacity="0.55" />
-      <path
-        d="M120 290 C 160 250, 200 220, 250 170 S 310 120, 330 95"
-        stroke="url(#ufTrail)"
-        strokeWidth="28"
-        strokeLinecap="round"
-      />
-      <defs>
-        <linearGradient id="ufTrail" x1="120" y1="290" x2="330" y2="95" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stopColor="#f2a07b" />
-          <stop offset="100%" stopColor="#e8744a" />
-        </linearGradient>
-      </defs>
-      <g transform="translate(248, 58)">
-        <path d="M36 8 L68 120 L52 120 L58 156 L20 92 L36 92 Z" fill="#3b82f6" />
-        <path d="M30 24 L52 24 L48 72 L34 72 Z" fill="#60a5fa" opacity="0.45" />
-        <circle cx="44" cy="52" r="10" fill="#eff6ff" />
-        <text x="44" y="56" textAnchor="middle" fontSize="11" fontWeight="700" fill="#1d4ed8">
-          UF
-        </text>
-      </g>
-      <rect x="72" y="248" width="88" height="58" rx="12" fill="#ffffff" stroke="#bfdbfe" strokeWidth="2" />
-      <text x="88" y="272" fontSize="11" fontWeight="700" fill="#e8744a">
-        CLP
-      </text>
-      <text x="88" y="292" fontSize="14" fontWeight="700" fill="#1a1a1a">
-        $408.040
-      </text>
-      <circle cx="48" cy="72" r="3" fill="#ffffff" opacity="0.9" />
-      <circle cx="360" cy="48" r="4" fill="#ffffff" opacity="0.85" />
-      <path d="M350 36 l4 8 -8 0 z" fill="#ffffff" opacity="0.75" />
-      <path d="M58 120 l4 8 -8 0 z" fill="#ffffff" opacity="0.7" />
-    </svg>
-  );
-}
-
 export function UfUseCases() {
+  const [activeCase, setActiveCase] = useState(0);
+  const [ufRate, setUfRate] = useState<number | null>(null);
+
+  const handleActiveChange = useCallback((index: number) => {
+    setActiveCase(index);
+  }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    fetch("/api/uf")
+      .then((res) => res.json())
+      .then((data: { rate?: number }) => {
+        if (!cancelled && typeof data.rate === "number") {
+          setUfRate(data.rate);
+        }
+      })
+      .catch(() => {
+        if (!cancelled) setUfRate(null);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   return (
     <section id="casos-de-uso" className="section-use-cases relative overflow-hidden pb-12 pt-10 sm:pb-14 sm:pt-12">
       <div aria-hidden className="use-cases-sky" />
@@ -92,9 +81,11 @@ export function UfUseCases() {
               {useCases.map((item, index) => (
                 <SectionReveal key={item.title} delay={index * 0.06}>
                   <motion.article
-                    className="use-cases-item"
-                    whileHover={{ x: 4 }}
+                    className={`use-cases-item${activeCase === index ? " use-cases-item--active" : ""}`}
                     transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+                    onMouseEnter={() => setActiveCase(index)}
+                    onFocus={() => setActiveCase(index)}
+                    tabIndex={0}
                   >
                     <span className="use-cases-item-num" aria-hidden>
                       {index + 1}
@@ -109,7 +100,7 @@ export function UfUseCases() {
             </div>
 
             <SectionReveal delay={0.12} className="use-cases-visual-wrap">
-              <UfGrowthIllustration />
+              <UfUseCasesAnimation active={activeCase} onActiveChange={handleActiveChange} ufRate={ufRate} />
             </SectionReveal>
           </div>
 

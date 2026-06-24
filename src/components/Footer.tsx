@@ -2,35 +2,26 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { FooterSocialGlyph, type SocialIconId } from "./FooterSocialIcons";
-import { Logo } from "./Logo";
+import type { ReactNode } from "react";
+import { FooterSocialIcon, type SocialIconId } from "./FooterSocialIcons";
 import { SectionReveal } from "./SectionReveal";
-
-const productLinks = [
-  { href: "/#tool", label: "UF ↔ CLP Tool", sectionId: "tool" as const },
-  { href: "/#how-it-works", label: "How It Works", sectionId: "how-it-works" as const },
-  { href: "/#faq", label: "FAQ", sectionId: "faq" as const },
-  { href: "/contact", label: "Contact", sectionId: null },
-];
-
-const legalLinks = [
-  { href: "/privacy-policy", label: "Privacy Policy" },
-  { href: "/terms-and-conditions", label: "Terms & Conditions" },
-  { href: "/disclaimer", label: "Disclaimer" },
-];
+import { footerConnectLinks, footerLegalLinks, footerProductLinks } from "@/lib/navigation";
+import { siteName } from "@/lib/site";
 
 const trustPills = [
-  { label: "Official BCCh-linked rate" },
-  { label: "100% free" },
-  { label: "No signup required" },
+  { label: "Valor vinculado al BCCh" },
+  { label: "100% gratuita" },
+  { label: "Sin registro" },
 ];
 
-/** Replace # with your profile URLs before publishing */
 const footerSocialLinks: { id: SocialIconId; label: string; href: string }[] = [
-  { id: "linkedin", label: "LinkedIn", href: "#" },
+  { id: "x", label: "X", href: "#" },
+  { id: "reddit", label: "Reddit", href: "#" },
+  { id: "quora", label: "Quora", href: "#" },
   { id: "youtube", label: "YouTube", href: "#" },
   { id: "facebook", label: "Facebook", href: "#" },
   { id: "instagram", label: "Instagram", href: "#" },
+  { id: "pinterest", label: "Pinterest", href: "#" },
 ];
 
 function scrollToTool(e: { preventDefault: () => void }) {
@@ -38,109 +29,93 @@ function scrollToTool(e: { preventDefault: () => void }) {
   document.getElementById("tool")?.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
-export function Footer() {
+export function Footer({ brand }: { brand: ReactNode }) {
   return (
-    <footer id="contact" className="section-footer footer-premium relative text-surface">
-      <div className="footer-top-glow" aria-hidden />
-
-      <div className="relative mx-auto w-full max-w-content px-4 pt-6 sm:px-6 sm:pt-8 lg:px-8">
-        <SectionReveal>
-          <motion.div
-            className="footer-cta-bar"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-          >
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-widest text-accent">Ready to convert?</p>
-              <p className="mt-2 text-lg font-bold text-surface sm:text-xl">Live UF ↔ CLP in seconds</p>
-            </div>
-            <motion.a
-              href="#tool"
-              onClick={scrollToTool}
-              whileHover={{ scale: 1.04, y: -2 }}
-              whileTap={{ scale: 0.98 }}
-              className="inline-flex shrink-0 items-center justify-center rounded-full bg-accent px-6 py-3 text-sm font-semibold text-surface shadow-[0_8px_24px_color-mix(in_oklab,var(--accent)_35%,transparent)] transition hover:bg-[color-mix(in_oklab,var(--accent)_88%,var(--ink))] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-2 focus-visible:ring-offset-2 focus-visible:ring-offset-ink"
+    <footer id="contact" className="footer-shell relative pb-4 pt-2 sm:pb-5 sm:pt-3">
+      <div aria-hidden className="footer-shell-glow" />
+      <div className="relative mx-auto w-full max-w-shell px-3 sm:px-5 lg:px-8 xl:px-10">
+        <div className="footer-bar">
+          <SectionReveal>
+            <motion.div
+              className="footer-cta-bar"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
             >
-              Open Calculator
-            </motion.a>
-          </motion.div>
-        </SectionReveal>
-
-        <div className="mt-8 flex flex-wrap gap-2 sm:mt-9">
-          {trustPills.map((pill) => (
-            <span
-              key={pill.label}
-              className="inline-flex items-center gap-1.5 rounded-full border border-[color-mix(in_oklab,var(--surface)_12%,transparent)] bg-[color-mix(in_oklab,var(--surface)_6%,transparent)] px-3 py-1.5 text-xs text-[color-mix(in_oklab,var(--surface)_80%,transparent)]"
-            >
-              <span className="h-1.5 w-1.5 rounded-full bg-accent" aria-hidden />
-              {pill.label}
-            </span>
-          ))}
-        </div>
-
-        <div className="mt-10 grid gap-10 sm:grid-cols-2 lg:mt-11 lg:grid-cols-12 lg:gap-8">
-          <SectionReveal className="lg:col-span-5">
-            <Logo />
-            <p className="mt-5 max-w-sm text-sm leading-relaxed text-[color-mix(in_oklab,var(--surface)_78%,transparent)]">
-              UF Calculator Chile delivers real-time UF and CLP conversions with reliable public indicator data and a
-              premium, mobile-first experience built for everyday financial decisions.
-            </p>
-            <p className="mt-4 text-sm text-[color-mix(in_oklab,var(--surface)_55%,transparent)]">
-              Data sourced from Chile&apos;s public indicators via mindicador.
-            </p>
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-widest text-accent">¿Listo para convertir?</p>
+                <p className="mt-2 text-lg font-bold text-ink sm:text-xl">UF ↔ CLP en segundos, con valor actualizado</p>
+              </div>
+              <motion.a
+                href="#tool"
+                onClick={scrollToTool}
+                whileHover={{ scale: 1.04, y: -2 }}
+                whileTap={{ scale: 0.98 }}
+                className="inline-flex shrink-0 items-center justify-center rounded-full bg-ink px-6 py-3 text-sm font-semibold text-surface shadow-[0_8px_24px_color-mix(in_oklab,var(--ink)_20%,transparent)] transition hover:bg-[color-mix(in_oklab,var(--ink)_88%,var(--accent))] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
+              >
+                Abrir calculadora
+              </motion.a>
+            </motion.div>
           </SectionReveal>
 
-          <SectionReveal delay={0.06} className="lg:col-span-2">
-            <h3 className="text-sm font-semibold uppercase tracking-wider text-[color-mix(in_oklab,var(--surface)_90%,transparent)]">
-              Product
-            </h3>
-            <nav className="mt-4 space-y-2.5">
-              {productLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className="block text-sm text-[color-mix(in_oklab,var(--surface)_72%,transparent)] transition-colors hover:text-accent"
-                >
-                  {link.label}
-                </Link>
-              ))}
-            </nav>
-          </SectionReveal>
+          <div className="mt-8 flex flex-wrap gap-2 sm:mt-9">
+            {trustPills.map((pill) => (
+              <span key={pill.label} className="footer-trust-pill">
+                <span className="h-1.5 w-1.5 rounded-full bg-accent" aria-hidden />
+                {pill.label}
+              </span>
+            ))}
+          </div>
 
-          <SectionReveal delay={0.1} className="lg:col-span-2">
-            <h3 className="text-sm font-semibold uppercase tracking-wider text-[color-mix(in_oklab,var(--surface)_90%,transparent)]">
-              Legal
-            </h3>
-            <nav className="mt-4 space-y-2.5">
-              {legalLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className="block text-sm text-[color-mix(in_oklab,var(--surface)_72%,transparent)] transition-colors hover:text-accent"
-                >
-                  {link.label}
-                </Link>
-              ))}
-            </nav>
-          </SectionReveal>
+          <div className="mt-10 grid gap-10 sm:grid-cols-2 lg:mt-11 lg:grid-cols-12 lg:gap-8">
+            <SectionReveal className="lg:col-span-4">
+              {brand}
+              <p className="mt-5 max-w-sm text-sm leading-relaxed text-ink-soft">
+                {siteName} te ayuda a convertir UF y pesos chilenos con datos públicos, una interfaz clara y contenido
+                pensado para decisiones financieras cotidianas en Chile.
+              </p>
+              <p className="mt-4 text-sm text-ink-soft">
+                Datos obtenidos de indicadores públicos de Chile vía mindicador.
+              </p>
+            </SectionReveal>
 
-          <SectionReveal delay={0.14} className="lg:col-span-3">
-            <h3 className="text-sm font-semibold uppercase tracking-wider text-[color-mix(in_oklab,var(--surface)_90%,transparent)]">
-              Connect
-            </h3>
-            <p className="mt-4 text-sm text-[color-mix(in_oklab,var(--surface)_65%,transparent)]">
-              Questions or feedback? Reach us through the contact page.
-            </p>
-            <Link
-              href="/contact"
-              className="mt-3 inline-flex text-sm font-medium text-accent transition hover:text-accent-2"
-            >
-              Get in touch →
-            </Link>
+            <SectionReveal delay={0.06} className="lg:col-span-2">
+              <h3 className="footer-column-title">Producto</h3>
+              <nav className="mt-4 space-y-2.5" aria-label="Enlaces del producto">
+                {footerProductLinks.map((link) => (
+                  <Link key={link.href} href={link.href} className="footer-link">
+                    {link.label}
+                  </Link>
+                ))}
+              </nav>
+            </SectionReveal>
 
-            <p className="footer-social-heading">Follow us</p>
+            <SectionReveal delay={0.1} className="lg:col-span-3">
+              <h3 className="footer-column-title">Legal e información</h3>
+              <nav className="mt-4 space-y-2.5" aria-label="Enlaces legales e informativos">
+                {footerLegalLinks.map((link) => (
+                  <Link key={link.href} href={link.href} className="footer-link">
+                    {link.label}
+                  </Link>
+                ))}
+              </nav>
+            </SectionReveal>
+
+            <SectionReveal delay={0.14} className="lg:col-span-3">
+              <h3 className="footer-column-title">Conectar</h3>
+              <nav className="mt-4 space-y-2.5" aria-label="Enlaces de contacto">
+                {footerConnectLinks.map((link) => (
+                  <Link key={link.href} href={link.href} className="footer-link">
+                    {link.label}
+                  </Link>
+                ))}
+              </nav>
+            </SectionReveal>
+          </div>
+
+          <SectionReveal delay={0.18} className="footer-social-row">
+            <p className="footer-social-heading">Síguenos</p>
             <ul className="footer-social" role="list">
               {footerSocialLinks.map((item) => (
                 <li key={item.id}>
@@ -148,23 +123,21 @@ export function Footer() {
                     href={item.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    aria-label={`Follow us on ${item.label}`}
-                    className="footer-social-link"
+                    aria-label={`Síguenos en ${item.label}`}
+                    className={`footer-social-link footer-social-link--${item.id}`}
                   >
-                    <FooterSocialGlyph id={item.id} className="footer-social-glyph" />
+                    <FooterSocialIcon id={item.id} className="footer-social-glyph" />
                   </a>
                 </li>
               ))}
             </ul>
           </SectionReveal>
-        </div>
-      </div>
 
-      <div className="footer-bottom-bar relative mt-10 border-t border-[color-mix(in_oklab,var(--surface)_10%,transparent)]">
-        <div className="mx-auto flex w-full max-w-content justify-center px-4 py-6 sm:px-6 lg:px-8">
-          <p className="text-center text-xs text-[color-mix(in_oklab,var(--surface)_50%,transparent)]" suppressHydrationWarning>
-            &copy; {new Date().getFullYear()} UF Calculator Chile. All rights reserved.
-          </p>
+          <div className="footer-bottom-bar mt-10 border-t border-[color-mix(in_oklab,var(--border)_85%,transparent)] pt-6">
+            <p className="text-center text-xs text-ink-soft" suppressHydrationWarning>
+              &copy; {new Date().getFullYear()} {siteName}. Todos los derechos reservados.
+            </p>
+          </div>
         </div>
       </div>
     </footer>
