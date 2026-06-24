@@ -1,6 +1,6 @@
 import { buildPageMetadata } from "@/lib/pageMetadata";
 import { fetchUfRate } from "@/lib/fetchUfRate";
-import { faqPageNode } from "@/lib/jsonLd";
+import { homePageSchemaGraph } from "@/lib/jsonLd";
 import { homeDescription, homeTitle } from "@/lib/site";
 import { HomePageContent } from "@/components/HomePageContent";
 
@@ -21,7 +21,7 @@ export default async function Home() {
     // fallback rate for schema when API is unavailable at build time
   }
 
-  const structuredData = faqPageNode(faqRate);
+  const structuredData = homePageSchemaGraph(faqRate);
 
   return (
     <>

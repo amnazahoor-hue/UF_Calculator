@@ -2,6 +2,7 @@ import { buildFaqItems } from "@/lib/faqContent";
 import { siteAuthor } from "@/lib/author";
 import {
   bcchUrl,
+  contactEmail,
   contentLastUpdated,
   defaultDescription,
   officialUfRateUrl,
@@ -37,6 +38,18 @@ export type BreadcrumbItem = {
   path: string;
 };
 
+export function absoluteSiteUrl(path = "/") {
+  if (path === "/" || path === "") return siteUrl;
+  return `${siteUrl}${path.startsWith("/") ? path : `/${path}`}`;
+}
+
+export function jsonLdGraph(...nodes: Record<string, unknown>[]) {
+  return {
+    "@context": "https://schema.org",
+    "@graph": nodes,
+  };
+}
+
 function organizationNode() {
   return {
     "@type": "Organization",
@@ -45,9 +58,16 @@ function organizationNode() {
     url: siteUrl,
     logo: {
       "@type": "ImageObject",
-      url: `${siteUrl}/images/site-logo.webp`,
+      url: absoluteSiteUrl("/images/site-logo.webp"),
     },
     description: defaultDescription,
+    email: contactEmail,
+    contactPoint: {
+      "@type": "ContactPoint",
+      contactType: "customer support",
+      email: contactEmail,
+      availableLanguage: ["Spanish", "es"],
+    },
     sameAs: [
       socialProfiles.x,
       socialProfiles.youtube,
@@ -98,23 +118,25 @@ function webApplicationNode() {
 }
 
 export function breadcrumbListNode(items: BreadcrumbItem[]) {
+  const pagePath = items[items.length - 1]?.path ?? "/";
+
   return {
     "@type": "BreadcrumbList",
-    "@id": `${siteUrl}${items[items.length - 1]?.path ?? "/"}#breadcrumb`,
+    "@id": `${absoluteSiteUrl(pagePath)}#breadcrumb`,
     itemListElement: items.map((item, index) => ({
       "@type": "ListItem",
       position: index + 1,
       name: item.name,
-      item: `${siteUrl}${item.path === "/" ? "" : item.path}`,
+      item: absoluteSiteUrl(item.path),
     })),
   };
 }
 
 export function faqPageNode(rate: number) {
   return {
-    "@context": "https://schema.org",
     "@type": "FAQPage",
     "@id": `${siteUrl}/#faq`,
+    url: `${siteUrl}/#faq`,
     isPartOf: { "@id": websiteId },
     mainEntity: buildFaqItems(rate).map((item) => ({
       "@type": "Question",
@@ -130,6 +152,7 @@ export function faqPageNode(rate: number) {
 type SiteSchemaOptions = {
   breadcrumbs?: BreadcrumbItem[];
   faqRate?: number;
+  additionalNodes?: Record<string, unknown>[];
 };
 
 export function siteSchemaGraph(options: SiteSchemaOptions = {}) {
@@ -143,10 +166,18 @@ export function siteSchemaGraph(options: SiteSchemaOptions = {}) {
     graph.push(faqPageNode(options.faqRate));
   }
 
-  return {
-    "@context": "https://schema.org",
-    "@graph": graph,
-  };
+  if (options.additionalNodes?.length) {
+    graph.push(...options.additionalNodes);
+  }
+
+  return jsonLdGraph(...graph);
+}
+
+export function homePageSchemaGraph(faqRate: number) {
+  return siteSchemaGraph({
+    breadcrumbs: [{ name: "Inicio", path: "/" }],
+    faqRate,
+  });
 }
 
 /** @deprecated Use siteSchemaGraph() */
@@ -162,17 +193,16 @@ export function faqPageJsonLd(rate = 40804) {
 export function authorPageSchemaGraph() {
   const authorPageId = `${siteUrl}/author#webpage`;
 
-  return {
-    "@context": "https://schema.org",
-    "@graph": [
-      breadcrumbListNode([
-        { name: "Inicio", path: "/" },
-        { name: "Autora", path: "/author" },
-      ]),
+  return siteSchemaGraph({
+    breadcrumbs: [
+      { name: "Inicio", path: "/" },
+      { name: "Autora", path: "/author" },
+    ],
+    additionalNodes: [
       {
         "@type": "ProfilePage",
         "@id": authorPageId,
-        url: `${siteUrl}/author`,
+        url: absoluteSiteUrl("/author"),
         name: `Autora editorial | ${siteName}`,
         description: `Perfil editorial de ${siteAuthor.name} en ${siteName}.`,
         inLanguage: "es-CL",
@@ -186,8 +216,8 @@ export function authorPageSchemaGraph() {
         name: siteAuthor.name,
         jobTitle: siteAuthor.role,
         description: siteAuthor.shortBio,
-        image: `${siteUrl}${siteAuthor.image}`,
-        url: `${siteUrl}/author`,
+        image: absoluteSiteUrl(siteAuthor.image),
+        url: absoluteSiteUrl("/author"),
         homeLocation: {
           "@type": "Place",
           name: siteAuthor.location,
@@ -197,7 +227,7 @@ export function authorPageSchemaGraph() {
         mainEntityOfPage: { "@id": authorPageId },
       },
     ],
-  };
+  });
 }
 
 const aboutUsArticleDescription =
@@ -206,22 +236,25 @@ const aboutUsArticleDescription =
 export function aboutUsArticleSchemaGraph() {
   const aboutArticleId = `${siteUrl}/about-us#article`;
 
-  return {
-    "@context": "https://schema.org",
-    "@graph": [
+  return siteSchemaGraph({
+    breadcrumbs: [
+      { name: "Inicio", path: "/" },
+      { name: "Sobre nosotros", path: "/about-us" },
+    ],
+    additionalNodes: [
       {
         "@type": "Article",
         "@id": aboutArticleId,
         headline: "Sobre la Calculadora UF Chile",
         description: aboutUsArticleDescription,
-        url: `${siteUrl}/about-us`,
+        url: absoluteSiteUrl("/about-us"),
         inLanguage: "es-CL",
         dateModified: contentLastUpdated,
         author: { "@id": authorPersonId },
         publisher: { "@id": organizationId },
         isPartOf: { "@id": websiteId },
-        mainEntityOfPage: `${siteUrl}/about-us`,
+        mainEntityOfPage: absoluteSiteUrl("/about-us"),
       },
     ],
-  };
+  });
 }

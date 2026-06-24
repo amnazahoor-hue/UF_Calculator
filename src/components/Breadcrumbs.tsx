@@ -1,20 +1,23 @@
 import Link from "next/link";
-import { breadcrumbListNode, type BreadcrumbItem } from "@/lib/jsonLd";
+import { siteSchemaGraph, type BreadcrumbItem } from "@/lib/jsonLd";
 
 type BreadcrumbsProps = {
   items: BreadcrumbItem[];
   className?: string;
+  withSchema?: boolean;
 };
 
-export function Breadcrumbs({ items, className = "" }: BreadcrumbsProps) {
+export function Breadcrumbs({ items, className = "", withSchema = true }: BreadcrumbsProps) {
   if (items.length === 0) return null;
 
-  const schema = breadcrumbListNode(items);
+  const schema = withSchema ? siteSchemaGraph({ breadcrumbs: items }) : null;
   const rootClass = ["site-breadcrumbs", className].filter(Boolean).join(" ");
 
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
+      {schema ? (
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
+      ) : null}
       <nav aria-label="Breadcrumb" className={rootClass}>
         <ol className="site-breadcrumbs-list">
           {items.map((item, index) => {

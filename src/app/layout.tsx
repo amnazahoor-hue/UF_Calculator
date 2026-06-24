@@ -6,7 +6,6 @@ import { FooterBrand } from "@/components/FooterBrand";
 import { HashScrollHandler } from "@/components/HashScrollHandler";
 import { Header } from "@/components/Header";
 import { HeaderBrand } from "@/components/HeaderBrand";
-import { siteSchemaGraph } from "@/lib/jsonLd";
 import { imageCatalog } from "@/lib/images";
 import { siteOpenGraphImage, siteTwitterImage } from "@/lib/metadata";
 import { defaultDescription, homeTitle, siteName, siteUrl } from "@/lib/site";
@@ -64,8 +63,6 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const structuredData = siteSchemaGraph();
-
   return (
     <html lang="es" className={`${inter.variable} h-full overflow-x-clip antialiased`} suppressHydrationWarning>
       <head>
@@ -73,10 +70,6 @@ export default function RootLayout({
         <link rel="dns-prefetch" href="https://mindicador.cl" />
       </head>
       <body className="flex min-h-full w-full max-w-full flex-col overflow-x-clip bg-bg-base" suppressHydrationWarning>
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-        />
         <Header brand={<HeaderBrand />} />
         <HashScrollHandler />
         {children}

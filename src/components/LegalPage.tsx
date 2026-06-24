@@ -17,6 +17,7 @@ type LegalPageProps = {
   sections: Section[];
   relatedLinks?: { href: string; label: string }[];
   breadcrumbs?: BreadcrumbItem[];
+  breadcrumbSchema?: boolean;
   children?: ReactNode;
 };
 
@@ -28,13 +29,14 @@ export function LegalPage({
   sections,
   relatedLinks,
   breadcrumbs,
+  breadcrumbSchema = true,
   children,
 }: LegalPageProps) {
   return (
     <main className="content-page flex-1">
       <div className="content-page-inner mx-auto w-full max-w-content px-4 py-10 sm:px-6 sm:py-12 lg:px-8 lg:py-14">
         {breadcrumbs?.length ? (
-          <Breadcrumbs items={breadcrumbs} className="content-page-breadcrumbs" />
+          <Breadcrumbs items={breadcrumbs} className="content-page-breadcrumbs" withSchema={breadcrumbSchema} />
         ) : null}
 
         <header className="content-page-hero">

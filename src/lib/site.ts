@@ -1,4 +1,4 @@
-export const siteUrl = "https://icalculadorauf.cl";
+export const siteUrl = "http://icalculadorauf.cl";
 export const siteName = "Calculadora UF Chile";
 export const siteShortName = "Calculadora UF";
 export const contactEmail = "support@icalculadorauf.cl";

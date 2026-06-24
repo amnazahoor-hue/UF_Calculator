@@ -95,6 +95,7 @@ export default function AboutUsPage() {
         sections={sections}
         relatedLinks={relatedLinks}
         breadcrumbs={aboutBreadcrumbs}
+        breadcrumbSchema={false}
       />
     </>
   );
