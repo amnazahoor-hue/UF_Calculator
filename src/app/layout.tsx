@@ -5,7 +5,7 @@ import { Footer } from "@/components/Footer";
 import { HashScrollHandler } from "@/components/HashScrollHandler";
 import { Header } from "@/components/Header";
 import { webApplicationJsonLd, webSiteJsonLd } from "@/lib/jsonLd";
-import { defaultDescription, siteName, siteUrl } from "@/lib/site";
+import { defaultDescription, homeTitle, siteName, siteUrl } from "@/lib/site";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -19,37 +19,34 @@ const inter = Inter({
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "UF Calculator Chile | Real-Time UF to CLP Converter",
+    default: homeTitle,
     template: `%s | ${siteName}`,
   },
   description: defaultDescription,
   keywords: [
-    "UF calculator",
-    "UF to CLP",
-    "CLP to UF",
+    "calculadora UF",
+    "UF a CLP",
+    "CLP a UF",
     "Chile UF",
     "valor UF hoy",
     "convertidor UF",
+    "calculadora uf chile",
     "mindicador UF",
   ],
   alternates: { canonical: "/" },
   robots: { index: true, follow: true },
-  icons: {
-    icon: [{ url: "/icon.svg", type: "image/svg+xml" }],
-    apple: [{ url: "/apple-icon.svg", type: "image/svg+xml" }],
-  },
   openGraph: {
-    title: "UF Calculator Chile | Real-Time UF to CLP Converter",
+    title: homeTitle,
     description: defaultDescription,
     url: siteUrl,
     siteName,
-    locale: "en_CL",
+    locale: "es_CL",
     type: "website",
     images: [{ url: "/opengraph-image", width: 1200, height: 630, alt: siteName }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "UF Calculator Chile | Real-Time UF to CLP Converter",
+    title: homeTitle,
     description: defaultDescription,
     images: ["/opengraph-image"],
   },
@@ -63,7 +60,7 @@ export default function RootLayout({
   const structuredData = [webSiteJsonLd, webApplicationJsonLd];
 
   return (
-    <html lang="en" className={`${inter.variable} h-full overflow-x-clip antialiased`} suppressHydrationWarning>
+    <html lang="es" className={`${inter.variable} h-full overflow-x-clip antialiased`} suppressHydrationWarning>
       <head>
         <link rel="preconnect" href="https://mindicador.cl" />
         <link rel="dns-prefetch" href="https://mindicador.cl" />

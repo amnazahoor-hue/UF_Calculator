@@ -1,8 +1,8 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { useState } from "react";
-import { navigateFromHeroTab, scrollToPageSection } from "@/lib/calculatorNav";
+import { useEffect, useState } from "react";
+import { CALCULATOR_NAV_EVENT, navigateFromHeroTab, scrollToPageSection } from "@/lib/calculatorNav";
 import { Calculator } from "./Calculator";
 
 const stagger = {
@@ -24,27 +24,6 @@ const previewTabs = [
 
 type TabId = (typeof previewTabs)[number]["id"];
 
-function InlineBrandIcon() {
-  return (
-    <span
-      aria-hidden
-      className="relative mx-1.5 inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-[12px] bg-gradient-to-br from-accent to-accent-2 align-middle shadow-[0_10px_28px_color-mix(in_oklab,var(--accent)_40%,transparent),inset_0_1px_0_color-mix(in_oklab,var(--surface)_35%,transparent)] sm:mx-2 sm:h-11 sm:w-11"
-      style={{ verticalAlign: "middle" }}
-    >
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" className="relative z-10">
-        <path
-          d="M6 17L11 12L15 15L19 10"
-          stroke="var(--surface)"
-          strokeWidth="2.4"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-        <circle cx="19" cy="10" r="2" fill="var(--surface)" />
-      </svg>
-    </span>
-  );
-}
-
 function TrustPill() {
   return (
     <span className="inline-flex items-center gap-2 rounded-full border border-[color-mix(in_oklab,var(--accent)_22%,var(--border))] bg-[color-mix(in_oklab,var(--bg-warm-2)_75%,var(--bg-warm))] px-4 py-2 text-xs font-medium text-ink-soft shadow-[0_4px_16px_color-mix(in_oklab,var(--accent)_12%,transparent)] sm:text-sm">
@@ -57,7 +36,7 @@ function TrustPill() {
         />
         <path d="M9 12l2 2 4-4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
       </svg>
-      Trusted by thousands in Chile 🇨🇱
+      Confiada por miles en Chile 🇨🇱
     </span>
   );
 }
@@ -68,9 +47,25 @@ export function Hero() {
   const openTool = () => scrollToPageSection("tool");
 
   const handleTabClick = (tabId: TabId) => {
-    setActiveTab(tabId);
+    if (tabId === "RATE") {
+      navigateFromHeroTab(tabId);
+      return;
+    }
+
+    setActiveTab(tabId === "CLP_TO_UF" ? "CLP_TO_UF" : "UF_TO_CLP");
     navigateFromHeroTab(tabId);
   };
+
+  useEffect(() => {
+    const onNav = (event: Event) => {
+      const target = (event as CustomEvent<{ target: TabId }>).detail?.target;
+      if (target === "UF_TO_CLP" || target === "CLP_TO_UF") {
+        setActiveTab(target);
+      }
+    };
+    window.addEventListener(CALCULATOR_NAV_EVENT, onNav);
+    return () => window.removeEventListener(CALCULATOR_NAV_EVENT, onNav);
+  }, []);
 
   return (
     <section id="home" className="overflow-x-hidden bg-bg-warm-2 pb-0 pt-0">
@@ -86,55 +81,40 @@ export function Hero() {
         <div aria-hidden className="pointer-events-none absolute -left-4 bottom-24 z-[2] h-28 w-28 rounded-full bg-[color-mix(in_oklab,var(--accent)_14%,transparent)] blur-3xl sm:-left-12 sm:h-36 sm:w-36" />
 
         <div className="relative z-10 px-5 py-9 text-center sm:px-10 sm:py-11 md:px-12 md:py-12">
-          <motion.div variants={stagger} initial="hidden" animate="show" className="mx-auto max-w-[920px]">
+          <motion.div variants={stagger} initial="hidden" animate="show" className="mx-auto max-w-content-narrow">
             <motion.div variants={fadeUp}>
               <TrustPill />
             </motion.div>
 
             <motion.h1
               variants={fadeUp}
-              className="mx-auto mt-5 max-w-[840px] text-[clamp(2.5rem,5vw,4rem)] font-bold leading-[1.08] tracking-[-0.02em] text-ink sm:mt-6"
+              initial="show"
+              className="mx-auto mt-5 max-w-[920px] text-[clamp(2rem,4.5vw,3.35rem)] font-bold leading-[1.12] tracking-[-0.02em] text-ink sm:mt-6"
             >
-              The only UF
-              <span className="inline sm:whitespace-nowrap">
-                {" "}
-                <span aria-hidden className="text-accent">
-                  ↔
-                </span>{" "}
-              </span>
-              CLP calculator
-              <InlineBrandIcon />
-              you&apos;ll ever need
+              Calculadora De UF: Convierte UF Pesos Chilenos Al Instante.
             </motion.h1>
 
             <motion.p
               variants={fadeUp}
-              className="mx-auto mt-4 max-w-[580px] text-[0.95rem] leading-relaxed text-ink-soft sm:mt-5 sm:text-base"
+              className="mx-auto mt-4 max-w-[800px] text-[0.95rem] leading-relaxed text-ink-soft sm:mt-5 sm:text-base"
             >
-              Convert Unidad de Fomento and Chilean Pesos in real time using the official BCCh-linked public rate —
-              fast, accurate, and completely free.
+              Convierte UF a Pesos Chilenos al Instante (Unidad de Fomento) y de UF a pesos chilenos al instante. Con
+              nuestra herramienta, puede consultar fácilmente los pagos de hipotecas, precios de propiedades, alquileres,
+              préstamos y todos los demás contratos financieros en Chile. Calculadora UF se actualiza diariamente para
+              reflejar la inflación y le proporciona cálculos precisos y rápidos.
             </motion.p>
 
             <motion.div variants={fadeUp} className="mt-6 sm:mt-7">
-              <motion.a
+              <a
                 href="#tool"
                 onClick={(e) => {
                   e.preventDefault();
                   openTool();
                 }}
-                whileHover={{ scale: 1.03, boxShadow: "0 24px 56px color-mix(in oklab, var(--ink) 38%, transparent)" }}
-                whileTap={{ scale: 0.98 }}
-                className="group inline-flex items-center gap-2 rounded-2xl bg-ink px-8 py-3.5 text-base font-semibold text-surface shadow-[0_16px_40px_color-mix(in_oklab,var(--ink)_28%,transparent),0_4px_12px_color-mix(in_oklab,var(--ink)_18%,transparent)] transition-[box-shadow] duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--bg-warm-2)]"
+                className="header-cta inline-flex items-center gap-2 rounded-full bg-ink px-5 py-2.5 text-sm font-semibold text-surface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--bg-warm-2)]"
               >
-                Use calculator
-                <svg
-                  width="18"
-                  height="18"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  aria-hidden
-                  className="transition-transform duration-300 group-hover:translate-x-1"
-                >
+                Ingrese su valor hoy calcula ahora
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden>
                   <path
                     d="M5 12h14M13 6l6 6-6 6"
                     stroke="currentColor"
@@ -143,7 +123,7 @@ export function Hero() {
                     strokeLinejoin="round"
                   />
                 </svg>
-              </motion.a>
+              </a>
             </motion.div>
 
             <motion.div variants={fadeUp} className="relative mt-7 sm:mt-8">
@@ -190,13 +170,13 @@ export function Hero() {
                   <path d="M4 24 C 14 10, 26 20, 42 8" strokeLinecap="round" />
                   <path d="M38 8 L42 8 L42 12" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
-                <span>Works with official BCCh data</span>
+                <span>Datos oficiales vinculados al BCCh</span>
               </div>
             </motion.div>
           </motion.div>
 
           <motion.div
-            className="relative mx-auto mt-8 w-full max-w-[960px] pb-2 sm:mt-10 sm:pb-6"
+            className="relative mx-auto mt-8 w-full max-w-content-narrow pb-2 sm:mt-10 sm:pb-6"
             variants={fadeUp}
             initial="hidden"
             animate="show"

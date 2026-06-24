@@ -15,7 +15,7 @@ import {
   openEmailShare,
   openWhatsAppShare,
 } from "@/lib/calculatorShare";
-import { CALCULATOR_NAV_EVENT, type CalculatorNavTarget } from "@/lib/calculatorNav";
+import { CALCULATOR_NAV_EVENT, emitCalculatorNav, type CalculatorNavTarget } from "@/lib/calculatorNav";
 import { SectionEyebrow } from "./SectionEyebrow";
 import { SectionReveal } from "./SectionReveal";
 
@@ -136,8 +136,14 @@ export function Calculator({ variant = "section" }: CalculatorProps) {
   useEffect(() => {
     const onNav = (event: Event) => {
       const target = (event as CustomEvent<{ target: CalculatorNavTarget }>).detail?.target;
-      if (target === "UF_TO_CLP" || target === "CLP_TO_UF") {
-        setMode(target);
+      if (target === "UF_TO_CLP") {
+        setMode("UF_TO_CLP");
+        setInput("1");
+        setCalculatedResult(null);
+        setCalcError("");
+      } else if (target === "CLP_TO_UF") {
+        setMode("CLP_TO_UF");
+        setInput("100000");
         setCalculatedResult(null);
         setCalcError("");
       }
@@ -180,8 +186,11 @@ export function Calculator({ variant = "section" }: CalculatorProps) {
   };
 
   const handleSwap = () => {
-    setMode((prev) => (prev === "UF_TO_CLP" ? "CLP_TO_UF" : "UF_TO_CLP"));
+    const next: CalcMode = mode === "UF_TO_CLP" ? "CLP_TO_UF" : "UF_TO_CLP";
+    setMode(next);
+    setInput(next === "UF_TO_CLP" ? "1" : "100000");
     resetResult();
+    emitCalculatorNav(next);
   };
 
   const sharePayload =
@@ -356,7 +365,7 @@ export function Calculator({ variant = "section" }: CalculatorProps) {
       <div className="section-tool-blob" aria-hidden />
       <div className="section-tool-rings" aria-hidden />
 
-      <div className="relative z-10 mx-auto w-full max-w-4xl px-4 sm:px-6 lg:px-8">
+      <div className="relative z-10 mx-auto w-full max-w-content-narrow px-4 sm:px-6 lg:px-8">
         <SectionReveal className="text-center">
           <SectionEyebrow>Live calculator</SectionEyebrow>
           <h2 className="mt-4 text-3xl font-bold text-ink sm:text-4xl">UF ↔ CLP Tool</h2>

@@ -6,7 +6,7 @@ export const webSiteJsonLd = {
   name: siteName,
   url: siteUrl,
   description: defaultDescription,
-  inLanguage: "en",
+  inLanguage: "es",
 };
 
 export const webApplicationJsonLd = {

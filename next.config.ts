@@ -7,18 +7,6 @@ const nextConfig: NextConfig = {
   },
   images: {
     qualities: [70, 75],
-    remotePatterns: [
-      {
-        protocol: "https",
-        hostname: "media.istockphoto.com",
-        pathname: "/**",
-      },
-      {
-        protocol: "https",
-        hostname: "images.unsplash.com",
-        pathname: "/**",
-      },
-    ],
   },
 };
 

@@ -3,9 +3,7 @@ import dynamic from "next/dynamic";
 import { Hero } from "@/components/Hero";
 import { StatsStrip } from "@/components/StatsStrip";
 import { faqItems } from "@/components/faqData";
-const homeTitle = "Calculadora UF Chile | Convierte UF a CLP y CLP a UF";
-const homeDescription =
-  "Convierta UF a pesos chilenos y pesos a UF con nuestra calculadora UF. Obtenga al instante el valor de UF, actualizaciones diarias y cálculos precisos.";
+import { homeDescription, homeTitle } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: homeTitle,
@@ -21,8 +19,14 @@ export const metadata: Metadata = {
   },
 };
 
+const CalculatorFeatures = dynamic(() =>
+  import("@/components/CalculatorFeatures").then((m) => ({ default: m.CalculatorFeatures })),
+);
 const HowItWorks = dynamic(() => import("@/components/HowItWorks").then((m) => ({ default: m.HowItWorks })));
 const InfoCards = dynamic(() => import("@/components/InfoCards").then((m) => ({ default: m.InfoCards })));
+const UfUseCases = dynamic(() => import("@/components/UfUseCases").then((m) => ({ default: m.UfUseCases })));
+const WhyUfChanges = dynamic(() => import("@/components/WhyUfChanges").then((m) => ({ default: m.WhyUfChanges })));
+const UfBenefits = dynamic(() => import("@/components/UfBenefits").then((m) => ({ default: m.UfBenefits })));
 const Faq = dynamic(() => import("@/components/Faq").then((m) => ({ default: m.Faq })));
 
 const faqSchema = {
@@ -40,8 +44,12 @@ export default function Home() {
     <main className="flex-1">
       <Hero />
       <StatsStrip />
-      <HowItWorks />
       <InfoCards />
+      <CalculatorFeatures />
+      <HowItWorks />
+      <UfUseCases />
+      <WhyUfChanges />
+      <UfBenefits />
       <Faq />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
     </main>

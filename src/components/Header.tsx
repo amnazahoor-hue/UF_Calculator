@@ -152,7 +152,7 @@ export function Header() {
   return (
     <header className="header-shell sticky top-0 z-50 w-full py-3 sm:py-4">
       <div aria-hidden className="header-shell-glow" />
-      <div className="relative mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
+      <div className="relative mx-auto w-full max-w-content px-4 sm:px-6 lg:px-8">
         <div
           className={`header-bar flex w-full items-center gap-2 rounded-full border-2 px-3 py-2 transition-all duration-300 sm:gap-3 sm:px-4 sm:py-2.5 lg:px-5 ${
             scrolled ? "header-bar--scrolled" : ""
@@ -171,7 +171,7 @@ export function Header() {
               }
             }}
           >
-            <Logo compact width={118} height={34} />
+            <Logo compact showLabel priority />
           </Link>
 
           <div className="hidden h-6 w-px bg-[color-mix(in_oklab,var(--border)_90%,transparent)] lg:block" aria-hidden />

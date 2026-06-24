@@ -1,112 +1,103 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
 import { SectionEyebrow } from "./SectionEyebrow";
 import { SectionReveal } from "./SectionReveal";
 
-const ease = [0.22, 1, 0.36, 1] as const;
+const ufAmounts = [1, 2, 5, 10, 25, 30, 50, 80, 100, 500, 1000] as const;
 
-const stats = [
-  {
-    icon: (
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden>
-        <path d="M12 3l8 4v6c0 4.5-3.5 7.8-8 9-4.5-1.2-8-4.5-8-9V7l8-4z" stroke="currentColor" strokeWidth="1.8" />
-        <path d="M9 12l2 2 4-4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-      </svg>
-    ),
-    label: "Official BCCh rate",
-    value: "Verified",
-  },
-  {
-    icon: (
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden>
-        <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.8" />
-        <path d="M12 7v5l3 2" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-      </svg>
-    ),
-    label: "Updated daily",
-    value: "24h",
-  },
-  {
-    icon: (
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden>
-        <path d="M12 3v18M3 12h18" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-        <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.8" />
-      </svg>
-    ),
-    label: "100% free",
-    value: "$0",
-  },
-  {
-    icon: (
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden>
-        <path d="M4 12a8 8 0 0116 0" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-        <path d="M8 12h8M12 8v8" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-      </svg>
-    ),
-    label: "No signup",
-    value: "Instant",
-  },
-];
+function formatClp(value: number) {
+  return new Intl.NumberFormat("es-CL", {
+    style: "currency",
+    currency: "CLP",
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(value);
+}
 
-const container = {
-  hidden: {},
-  show: { transition: { staggerChildren: 0.1, delayChildren: 0.15 } },
-};
-
-const cardVariant = {
-  hidden: { opacity: 0, y: 28, scale: 0.96 },
-  show: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.5, ease } },
-};
+function formatUf(amount: number) {
+  return `${new Intl.NumberFormat("es-CL", { maximumFractionDigits: 0 }).format(amount)} UF`;
+}
 
 export function StatsStrip() {
-  return (
-    <section className="section-stats relative overflow-hidden" aria-label="Trust statistics">
-      <div className="section-stats-glow" aria-hidden />
-      <div aria-hidden className="section-stats-orb section-stats-orb--1" />
-      <div aria-hidden className="section-stats-orb section-stats-orb--2" />
+  const [rate, setRate] = useState<number | null>(null);
 
-      <div className="relative mx-auto max-w-[1100px] px-4 py-10 sm:px-6 sm:py-12">
-        <SectionReveal className="text-center">
-          <SectionEyebrow variant="dark">Why trust this tool</SectionEyebrow>
-          <motion.p
-            initial={{ opacity: 0, y: 12 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.45, delay: 0.08, ease }}
-            className="mx-auto mt-4 max-w-lg text-sm text-[color-mix(in_oklab,var(--surface)_75%,transparent)] sm:text-base"
+  useEffect(() => {
+    let cancelled = false;
+
+    fetch("/api/uf")
+      .then((res) => res.json())
+      .then((data: { rate?: number }) => {
+        if (!cancelled && typeof data.rate === "number") {
+          setRate(data.rate);
+        }
+      })
+      .catch(() => {
+        if (!cancelled) setRate(null);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  return (
+    <section className="section-stats relative overflow-hidden" aria-labelledby="conversion-table-title">
+      <div aria-hidden className="section-stats-bg" />
+      <div aria-hidden className="section-stats-pattern" />
+
+      <div className="relative z-[1] mx-auto max-w-content-narrow px-4 py-10 sm:px-6 sm:py-12 lg:py-14">
+        <SectionReveal className="section-stats-intro text-center">
+          <SectionEyebrow variant="dark">Tabla de conversión</SectionEyebrow>
+          <h2
+            id="conversion-table-title"
+            className="mt-4 text-[clamp(1.5rem,3.5vw,2.25rem)] font-bold leading-tight tracking-[-0.02em] text-surface"
           >
-            Built for clarity, speed, and confidence when converting Chile&apos;s most important indexed unit.
-          </motion.p>
+            Tabla De Conversión De UF A Pesos Chilenos (CLP)
+          </h2>
+          <p className="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-[color-mix(in_oklab,var(--surface)_72%,transparent)] sm:text-base">
+            Si te lo estás preguntando a cuánto está la unidad de fomento, entonces esta tabla te ayudará;
+          </p>
+          {rate ? (
+            <p className="conversion-rate-chip mx-auto mt-5 inline-flex items-center gap-2 rounded-full border border-[color-mix(in_oklab,var(--accent)_28%,var(--border))] bg-[color-mix(in_oklab,var(--accent)_10%,var(--surface))] px-4 py-2 text-sm font-medium text-ink">
+              <span className="h-2 w-2 rounded-full bg-accent" aria-hidden />
+              UF hoy: <strong className="font-bold text-accent">{formatClp(rate)}</strong>
+            </p>
+          ) : null}
         </SectionReveal>
 
-        <motion.div
-          className="mt-8 grid gap-4 sm:grid-cols-2 sm:mt-10 lg:grid-cols-4"
-          variants={container}
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true, margin: "-50px" }}
-        >
-          {stats.map((item) => (
-            <motion.article
-              key={item.label}
-              variants={cardVariant}
-              whileHover={{ y: -6, scale: 1.02 }}
-              className="stats-card group"
-            >
-              <span className="stats-card-accent" aria-hidden />
-              <motion.div
-                className="stats-card-icon"
-                whileHover={{ rotate: [0, -6, 6, 0] }}
-                transition={{ duration: 0.45 }}
-              >
-                {item.icon}
-              </motion.div>
-              <p className="stats-card-value">{item.value}</p>
-              <p className="stats-card-label">{item.label}</p>
-            </motion.article>
-          ))}
-        </motion.div>
+        <SectionReveal delay={0.08} className="mt-8 sm:mt-10">
+          <div className="conversion-table-wrap">
+            <div className="conversion-table-accent" aria-hidden />
+            <div className="overflow-x-auto">
+              <table className="conversion-table w-full min-w-[320px] border-collapse text-left">
+                <thead>
+                  <tr>
+                    <th scope="col">Cantidad UF</th>
+                    <th scope="col">Valor en pesos chilenos (CLP)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {ufAmounts.map((amount, index) => (
+                    <tr key={amount} className={index % 2 === 1 ? "conversion-table-row--alt" : undefined}>
+                      <td>
+                        <span className="conversion-uf-pill">{formatUf(amount)}</span>
+                      </td>
+                      <td>
+                        <span className="conversion-clp-value">{rate ? formatClp(amount * rate) : "—"}</span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+          {rate ? (
+            <p className="mt-5 text-center text-xs text-[color-mix(in_oklab,var(--surface)_65%,transparent)] sm:text-sm">
+              Valores calculados con la UF del día ({formatClp(rate)} por 1 UF).
+            </p>
+          ) : null}
+        </SectionReveal>
       </div>
     </section>
   );

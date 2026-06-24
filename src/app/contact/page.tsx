@@ -7,7 +7,7 @@ export const metadata: Metadata = {
 
 export default function ContactPage() {
   return (
-    <main className="mx-auto w-full max-w-4xl flex-1 px-4 py-10 sm:px-6 lg:px-8">
+    <main className="mx-auto w-full max-w-content-narrow flex-1 px-4 py-10 sm:px-6 lg:px-8">
       <h1 className="text-4xl font-bold text-text-primary sm:text-5xl">Contact UF Calculator Chile</h1>
       <p className="mt-4 text-width text-base text-text-secondary">
         If you need help with UF Calculator Chile, want to report a data issue, or have legal/compliance questions, you can contact

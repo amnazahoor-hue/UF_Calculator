@@ -1,4 +1,5 @@
 import type { CalcMode } from "./calculatorInput";
+import { officialUfRateUrl } from "./site";
 
 export type CalculatorNavTarget = CalcMode | "RATE" | "FREE";
 
@@ -26,13 +27,21 @@ export function emitCalculatorNav(target: CalculatorNavTarget) {
   window.dispatchEvent(new CustomEvent(CALCULATOR_NAV_EVENT, { detail: { target } }));
 }
 
-export function navigateFromHeroTab(tabId: CalculatorNavTarget) {
-  emitCalculatorNav(tabId);
+function focusCalculatorInput() {
+  window.setTimeout(() => {
+    const input = document.querySelector<HTMLInputElement>("#tool .calc-amount-input");
+    input?.focus({ preventScroll: true });
+  }, 450);
+}
 
+export function navigateFromHeroTab(tabId: CalculatorNavTarget) {
   if (tabId === "RATE") {
-    scrollToPageSection("live-rate");
+    window.location.assign(officialUfRateUrl);
     return;
   }
 
+  const mode: CalcMode = tabId === "CLP_TO_UF" ? "CLP_TO_UF" : "UF_TO_CLP";
+  emitCalculatorNav(mode);
   scrollToPageSection("tool");
+  focusCalculatorInput();
 }

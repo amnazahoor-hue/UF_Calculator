@@ -43,7 +43,7 @@ export function Footer() {
     <footer id="contact" className="section-footer footer-premium relative text-surface">
       <div className="footer-top-glow" aria-hidden />
 
-      <div className="relative mx-auto w-full max-w-6xl px-4 pt-6 sm:px-6 sm:pt-8 lg:px-8">
+      <div className="relative mx-auto w-full max-w-content px-4 pt-6 sm:px-6 sm:pt-8 lg:px-8">
         <SectionReveal>
           <motion.div
             className="footer-cta-bar"
@@ -82,7 +82,7 @@ export function Footer() {
 
         <div className="mt-10 grid gap-10 sm:grid-cols-2 lg:mt-11 lg:grid-cols-12 lg:gap-8">
           <SectionReveal className="lg:col-span-5">
-            <Logo variant="light" width={168} height={48} />
+            <Logo />
             <p className="mt-5 max-w-sm text-sm leading-relaxed text-[color-mix(in_oklab,var(--surface)_78%,transparent)]">
               UF Calculator Chile delivers real-time UF and CLP conversions with reliable public indicator data and a
               premium, mobile-first experience built for everyday financial decisions.
@@ -161,7 +161,7 @@ export function Footer() {
       </div>
 
       <div className="footer-bottom-bar relative mt-10 border-t border-[color-mix(in_oklab,var(--surface)_10%,transparent)]">
-        <div className="mx-auto flex w-full max-w-6xl justify-center px-4 py-6 sm:px-6 lg:px-8">
+        <div className="mx-auto flex w-full max-w-content justify-center px-4 py-6 sm:px-6 lg:px-8">
           <p className="text-center text-xs text-[color-mix(in_oklab,var(--surface)_50%,transparent)]" suppressHydrationWarning>
             &copy; {new Date().getFullYear()} UF Calculator Chile. All rights reserved.
           </p>
