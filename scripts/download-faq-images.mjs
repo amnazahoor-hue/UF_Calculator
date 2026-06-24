@@ -38,13 +38,18 @@ for (const legacy of legacyFiles) {
 }
 
 for (const image of faqImages) {
+  const outputPath = path.join(outDir, image.file);
+  if (fs.existsSync(outputPath)) {
+    console.log(`Skip ${image.file} (already exists)`);
+    continue;
+  }
+
   const response = await fetch(image.url);
   if (!response.ok) {
     throw new Error(`Failed to download ${image.url}: ${response.status}`);
   }
 
   const buffer = Buffer.from(await response.arrayBuffer());
-  const outputPath = path.join(outDir, image.file);
 
   const pipeline = sharp(buffer)
     .resize(WIDTH, HEIGHT, { fit: "cover", position: "center", kernel: sharp.kernel.lanczos3 })

@@ -13,7 +13,7 @@
     "generate:assets": "node scripts/generate-why-uf-bg.mjs && node scripts/generate-conversion-bg.mjs",
     "download:faq-images": "node scripts/download-faq-images.mjs",
     "optimize:images": "node scripts/optimize-images.mjs",
-    "prebuild": "npm run generate:why-uf-bg && npm run process:logo && npm run download:faq-images && npm run optimize:images"
+    "prebuild": "node scripts/prebuild.mjs"
   },
   "dependencies": {
     "framer-motion": "^12.16.0",
