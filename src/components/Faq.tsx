@@ -58,7 +58,7 @@ export function Faq() {
       const panelStyles = getComputedStyle(panel);
       const paddingY = parseFloat(panelStyles.paddingTop) + parseFloat(panelStyles.paddingBottom);
 
-      // Reserve tallest answer up front so expand/collapse never shifts the footer.
+      // Lock panel height so expand/collapse never shifts images or footer.
       setPanelMinHeight(Math.ceil(triggersHeight + gaps + maxAnswerHeight + paddingY));
     };
 
@@ -87,25 +87,17 @@ export function Faq() {
           <SectionReveal delay={0.06} className="faq-visual">
             <div className="faq-images-grid">
               {faqImages.map((img, index) => (
-                <motion.div
-                  key={img.src}
-                  initial={{ opacity: 0, y: 16 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: index * 0.08, ease: accordionEase }}
-                  className="faq-img-frame faq-img-frame--grid"
-                >
+                <div key={img.src} className="faq-img-frame faq-img-frame--grid">
                   <SiteImage
                     image={img}
-                    width={960}
-                    height={640}
+                    fill
                     sizes="(max-width: 767px) 50vw, (max-width: 1023px) 45vw, 280px"
                     quality={88}
                     loading="lazy"
                     className="faq-img-photo"
                     style={{ objectPosition: "center center" }}
                   />
-                </motion.div>
+                </div>
               ))}
             </div>
           </SectionReveal>
@@ -114,13 +106,17 @@ export function Faq() {
             <div
               ref={panelRef}
               className="faq-accordion-panel"
-              style={panelMinHeight ? { minHeight: panelMinHeight } : undefined}
+              style={panelMinHeight ? { height: panelMinHeight, minHeight: panelMinHeight } : undefined}
             >
               <div ref={measureRef} className="faq-measure-layer" aria-hidden>
                 {faqItems.map((item) => (
-                  <div key={item.q} className="faq-item-answer faq-item-answer--measure" data-faq-measure-answer>
-                    <p className="faq-item-answer-text">{item.a}</p>
-                  </div>
+                  <article key={item.q} className="faq-item faq-item--open faq-item--measure">
+                    <div className="faq-item-answer-wrap">
+                      <div className="faq-item-answer" data-faq-measure-answer>
+                        <p className="faq-item-answer-text">{item.a}</p>
+                      </div>
+                    </div>
+                  </article>
                 ))}
               </div>
 
