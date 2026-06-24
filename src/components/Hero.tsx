@@ -24,23 +24,6 @@ const previewTabs = [
 
 type TabId = (typeof previewTabs)[number]["id"];
 
-function TrustPill() {
-  return (
-    <span className="inline-flex items-center gap-2 rounded-full border border-[color-mix(in_oklab,var(--accent)_22%,var(--border))] bg-[color-mix(in_oklab,var(--bg-warm-2)_75%,var(--bg-warm))] px-4 py-2 text-xs font-medium text-ink-soft shadow-[0_4px_16px_color-mix(in_oklab,var(--accent)_12%,transparent)] sm:text-sm">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden className="text-accent">
-        <path
-          d="M12 3l7 3v6c0 4.4-3 7.5-7 9-4-1.5-7-4.6-7-9V6l7-3z"
-          stroke="currentColor"
-          strokeWidth="1.8"
-          strokeLinejoin="round"
-        />
-        <path d="M9 12l2 2 4-4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-      </svg>
-      Confiada por miles en Chile 🇨🇱
-    </span>
-  );
-}
-
 export function Hero() {
   const [activeTab, setActiveTab] = useState<TabId>("UF_TO_CLP");
 
@@ -70,7 +53,7 @@ export function Hero() {
   return (
     <section
       id="home"
-      className="overflow-x-hidden bg-bg-warm-2 pb-0 -mt-[var(--header-offset)] pt-[calc(var(--header-offset)+0.5rem)] sm:pt-[calc(var(--header-offset)+0.625rem)]"
+      className="overflow-x-hidden bg-bg-warm-2 pb-0 -mt-[var(--header-offset)] pt-[calc(var(--header-offset)+1.5rem)] sm:pt-[calc(var(--header-offset)+2rem)]"
     >
       <div className="hero-panel hero-panel-grid relative w-full rounded-none">
         <div aria-hidden className="hero-panel-glows">
@@ -83,16 +66,12 @@ export function Hero() {
         <div aria-hidden className="pointer-events-none absolute -right-6 top-16 z-[2] h-36 w-36 rounded-full bg-[color-mix(in_oklab,var(--accent-2)_28%,transparent)] blur-3xl sm:-right-16 sm:h-44 sm:w-44" />
         <div aria-hidden className="pointer-events-none absolute -left-4 bottom-24 z-[2] h-28 w-28 rounded-full bg-[color-mix(in_oklab,var(--accent)_14%,transparent)] blur-3xl sm:-left-12 sm:h-36 sm:w-36" />
 
-        <div className="relative z-10 px-5 pb-9 pt-2 text-center sm:px-10 sm:pb-11 sm:pt-3 md:px-12 md:pb-12">
+        <div className="relative z-10 px-5 pb-9 pt-6 text-center sm:px-10 sm:pb-11 sm:pt-8 md:px-12 md:pb-12">
           <motion.div variants={stagger} initial="hidden" animate="show" className="mx-auto max-w-content-narrow">
-            <motion.div variants={fadeUp}>
-              <TrustPill />
-            </motion.div>
-
             <motion.h1
               variants={fadeUp}
               initial="show"
-              className="mx-auto mt-5 max-w-[920px] text-[clamp(2rem,4.5vw,3.35rem)] font-bold leading-[1.12] tracking-[-0.02em] text-ink sm:mt-6"
+              className="mx-auto max-w-[920px] text-[clamp(2rem,4.5vw,3.35rem)] font-bold leading-[1.12] tracking-[-0.02em] text-ink"
             >
               Calculadora De UF: Convierte UF Pesos Chilenos Al Instante.
             </motion.h1>

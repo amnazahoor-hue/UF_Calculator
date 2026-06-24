@@ -58,7 +58,6 @@ export function Faq() {
       const panelStyles = getComputedStyle(panel);
       const paddingY = parseFloat(panelStyles.paddingTop) + parseFloat(panelStyles.paddingBottom);
 
-      // Lock panel height so expand/collapse never shifts images or footer.
       setPanelMinHeight(Math.ceil(triggersHeight + gaps + maxAnswerHeight + paddingY));
     };
 
@@ -72,21 +71,21 @@ export function Faq() {
       <div aria-hidden className="faq-bg-glow" />
 
       <div className="faq-section-inner relative mx-auto w-full px-4 sm:px-6 lg:px-8">
-        <SectionReveal className="faq-intro">
-          <SectionEyebrow>FAQ</SectionEyebrow>
-          <h2 className="mt-4 text-[clamp(2rem,4vw,2.75rem)] font-bold leading-tight tracking-[-0.02em] text-ink">
-            Preguntas Frecuentes | FAQ
-          </h2>
-          <p className="mt-4 max-w-3xl text-sm leading-relaxed text-ink-soft sm:text-base">
-            Respuesta directa: la UF es la unidad reajustable más usada en Chile y su valor en pesos cambia cada día
-            hábil según la inflación publicada por el Banco Central.
-          </p>
-        </SectionReveal>
-
         <div className="faq-layout">
-          <SectionReveal delay={0.06} className="faq-visual">
+          <div className="faq-visual">
+            <SectionReveal className="faq-intro">
+              <SectionEyebrow>FAQ</SectionEyebrow>
+              <h2 className="mt-4 text-[clamp(2rem,4vw,2.75rem)] font-bold leading-tight tracking-[-0.02em] text-ink">
+                Preguntas Frecuentes | FAQ
+              </h2>
+              <p className="faq-intro-text mt-4 text-sm leading-relaxed text-ink-soft sm:text-base">
+                Respuesta directa: la UF es la unidad reajustable más usada en Chile y su valor en pesos cambia cada día
+                hábil según la inflación publicada por el Banco Central.
+              </p>
+            </SectionReveal>
+
             <div className="faq-images-grid">
-              {faqImages.map((img, index) => (
+              {faqImages.map((img) => (
                 <div key={img.src} className="faq-img-frame faq-img-frame--grid">
                   <SiteImage
                     image={img}
@@ -100,7 +99,7 @@ export function Faq() {
                 </div>
               ))}
             </div>
-          </SectionReveal>
+          </div>
 
           <div className="faq-accordion">
             <div
