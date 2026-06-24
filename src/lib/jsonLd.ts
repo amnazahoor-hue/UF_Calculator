@@ -191,17 +191,88 @@ export function siteSchemaGraph(options: SiteSchemaOptions = {}) {
   return jsonLdGraph(...graph);
 }
 
-/** Five standalone blocks so Schema.org Validator lists each type separately. */
+/** Homepage: five root-level schemas in one JSON-LD array for Schema.org Validator. */
 export function homePageSchemas(faqRate: number) {
+  const pageUrl = siteUrl;
   const breadcrumbs = [{ name: "Inicio", path: "/" }];
 
-  return [
-    standaloneJsonLd(organizationNode()),
-    standaloneJsonLd(webPageNode("/")),
-    standaloneJsonLd(webApplicationNode()),
-    standaloneJsonLd(breadcrumbListNode(breadcrumbs)),
-    standaloneJsonLd(faqPageNode(faqRate)),
-  ];
+  const organization = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: siteName,
+    url: pageUrl,
+    logo: {
+      "@type": "ImageObject",
+      url: absoluteSiteUrl("/images/site-logo.webp"),
+    },
+    description: defaultDescription,
+    email: contactEmail,
+    contactPoint: {
+      "@type": "ContactPoint",
+      contactType: "customer support",
+      email: contactEmail,
+      availableLanguage: ["Spanish", "es"],
+    },
+    sameAs: [
+      socialProfiles.x,
+      socialProfiles.youtube,
+      socialProfiles.instagram,
+      officialUfRateUrl,
+      bcchUrl,
+    ],
+  };
+
+  const webPage = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    url: pageUrl,
+    name: homeTitle,
+    description: defaultDescription,
+    inLanguage: "es-CL",
+    dateModified: contentLastUpdated,
+  };
+
+  const webApplication = {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    name: siteName,
+    url: pageUrl,
+    applicationCategory: "FinanceApplication",
+    applicationSubCategory: "Currency Converter",
+    operatingSystem: "Any",
+    browserRequirements: "Requires JavaScript",
+    countriesSupported: "CL",
+    inLanguage: "es-CL",
+    isAccessibleForFree: true,
+    description: defaultDescription,
+    featureList: [...toolFeatures],
+    offers: {
+      "@type": "Offer",
+      price: "0",
+      priceCurrency: "CLP",
+    },
+  };
+
+  const breadcrumbsSchema = {
+    "@context": "https://schema.org",
+    ...breadcrumbListNode(breadcrumbs),
+  };
+
+  const faqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    url: `${pageUrl}/#faq`,
+    mainEntity: buildFaqItems(faqRate).map((item) => ({
+      "@type": "Question",
+      name: item.q,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: item.a,
+      },
+    })),
+  };
+
+  return [organization, webPage, webApplication, breadcrumbsSchema, faqSchema];
 }
 
 export function homePageSchemaGraph(faqRate: number) {

@@ -25,13 +25,10 @@ export default async function Home() {
 
   return (
     <>
-      {structuredData.map((schema, index) => (
-        <script
-          key={`home-schema-${index}`}
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
-        />
-      ))}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+      />
       <HomePageContent />
     </>
   );

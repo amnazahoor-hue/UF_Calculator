@@ -1,4 +1,14 @@
-export const siteUrl = "http://icalculadorauf.cl";
+function resolveSiteUrl() {
+  const fromEnv = process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "");
+  if (fromEnv) return fromEnv;
+
+  const vercelHost = process.env.VERCEL_URL?.replace(/\/$/, "");
+  if (vercelHost) return `https://${vercelHost}`;
+
+  return "http://icalculadorauf.cl";
+}
+
+export const siteUrl = resolveSiteUrl();
 export const siteName = "Calculadora UF Chile";
 export const siteShortName = "Calculadora UF";
 export const contactEmail = "support@icalculadorauf.cl";
