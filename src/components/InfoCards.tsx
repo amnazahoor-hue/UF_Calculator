@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { scrollToPageSection } from "@/lib/calculatorNav";
+import { bcchUrl } from "@/lib/site";
 import { SectionEyebrow } from "./SectionEyebrow";
 import { SectionReveal } from "./SectionReveal";
 
@@ -110,7 +111,24 @@ export function InfoCards() {
                 <span className="info-card-icon">
                   <FeatureIcon type={item.icon} />
                 </span>
-                <p className="info-card-title mt-4 text-base font-bold leading-snug text-ink">{item.title}</p>
+                <p className="info-card-title mt-4 text-base font-bold leading-snug text-ink">
+                  {item.icon === "bcch" ? (
+                    <>
+                      Según los datos oficiales de la UF del{" "}
+                      <a
+                        href={bcchUrl}
+                        className="content-page-inline-link"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        Banco Central de Chile
+                      </a>
+                      .
+                    </>
+                  ) : (
+                    item.title
+                  )}
+                </p>
                 <span className="info-card-accent" aria-hidden />
               </motion.article>
             </SectionReveal>

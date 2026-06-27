@@ -9,12 +9,6 @@ import { scrollToPageSection } from "@/lib/calculatorNav";
 import { footerConnectLinks, footerLegalLinks, footerProductLinks } from "@/lib/navigation";
 import { siteName } from "@/lib/site";
 
-const trustPills = [
-  { label: "Valor vinculado al BCCh" },
-  { label: "100% gratuita" },
-  { label: "Sin registro" },
-];
-
 const footerSocialLinks: { id: SocialIconId; label: string; href: string }[] = [
   { id: "x", label: "X", href: "#" },
   { id: "reddit", label: "Reddit", href: "#" },
@@ -64,15 +58,6 @@ export function Footer({ brand }: { brand: ReactNode }) {
               </motion.a>
             </motion.div>
           </SectionReveal>
-
-          <div className="mt-8 flex flex-wrap gap-2 sm:mt-9">
-            {trustPills.map((pill) => (
-              <span key={pill.label} className="footer-trust-pill">
-                <span className="h-1.5 w-1.5 rounded-full bg-accent" aria-hidden />
-                {pill.label}
-              </span>
-            ))}
-          </div>
 
           <div className="mt-10 grid gap-10 sm:grid-cols-2 lg:mt-11 lg:grid-cols-12 lg:gap-8">
             <SectionReveal className="lg:col-span-4">

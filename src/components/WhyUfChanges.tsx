@@ -2,6 +2,7 @@
 
 import { emitCalculatorNav, scrollToPageSection } from "@/lib/calculatorNav";
 import { imageCatalog } from "@/lib/images";
+import { ineUrl } from "@/lib/site";
 import { SectionEyebrow } from "./SectionEyebrow";
 import { SectionReveal } from "./SectionReveal";
 import { SiteImage } from "./SiteImage";
@@ -28,8 +29,16 @@ export function WhyUfChanges() {
                 ¿Por Qué La UF Cambia Cada Día?
               </h2>
               <p className="mt-4 max-w-xl text-sm leading-relaxed text-ink-soft sm:text-base">
-                La UF nunca será la misma diariamente, y la razón es que está directamente vinculada a la inflación. El
-                INE publicará la inflación del mes anterior (IPC) una vez al mes, por lo que, en lugar de aumentar en un
+                La UF nunca será la misma diariamente, y la razón es que está directamente vinculada a la inflación. El{" "}
+                <a
+                  href={ineUrl}
+                  className="content-page-inline-link"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  INE
+                </a>{" "}
+                publicará la inflación del mes anterior (IPC) una vez al mes, por lo que, en lugar de aumentar en un
                 solo día, se distribuye uniformemente a lo largo de cada día del mes. El Banco Central aplicará estos
                 valores desde el día 10 de un mes hasta el día 9 del mes siguiente, teniendo en cuenta los cambios en el
                 cálculo de la UF.

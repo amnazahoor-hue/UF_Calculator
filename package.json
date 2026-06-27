@@ -11,6 +11,7 @@
     "generate:conversion-bg": "node scripts/generate-conversion-bg.mjs",
     "generate:why-uf-bg": "node scripts/generate-why-uf-bg.mjs",
     "generate:assets": "node scripts/generate-why-uf-bg.mjs && node scripts/generate-conversion-bg.mjs",
+    "generate:faq-images": "node scripts/generate-faq-images.mjs",
     "download:faq-images": "node scripts/download-faq-images.mjs",
     "optimize:images": "node scripts/optimize-images.mjs",
     "prebuild": "node scripts/prebuild.mjs"

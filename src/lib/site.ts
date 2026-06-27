@@ -17,6 +17,7 @@ export const contentLastUpdated = "2026-06-24";
 /** Referencia pública del valor UF (mindicador — datos vinculados al BCCh) */
 export const officialUfRateUrl = "https://mindicador.cl";
 export const bcchUrl = "https://www.bcentral.cl";
+export const ineUrl = "https://www.ine.gob.cl";
 export const bcchUfUrl =
   "https://www.bcentral.cl/web/banco-central/area/estadisticas-y-publicaciones/indicadores-y-estadisticas/cuentas-nacionales/unidad-de-fomento";
 

@@ -10,7 +10,7 @@ if (isVercel) {
 const steps = [
   "npm run generate:why-uf-bg",
   "npm run process:logo",
-  "npm run download:faq-images",
+  "npm run generate:faq-images",
   "npm run optimize:images",
 ];
 
