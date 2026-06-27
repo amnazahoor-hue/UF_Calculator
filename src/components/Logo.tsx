@@ -55,14 +55,9 @@ export function Logo({
         />
       </span>
       {showLabel ? (
-        header ? (
-          <>
-            <span className={`${labelClass} text-xs sm:text-sm xl:hidden`}>{siteShortName}</span>
-            <span className={`${labelClass} hidden xl:inline`}>{siteName}</span>
-          </>
-        ) : (
-          <span className={labelClass}>{siteName}</span>
-        )
+        <span className={`${labelClass}${header ? " text-xs sm:text-sm" : ""}`}>
+          {header || footer ? siteShortName : siteName}
+        </span>
       ) : null}
     </span>
   );
