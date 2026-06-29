@@ -7,16 +7,16 @@ import { FooterSocialIcon, type SocialIconId } from "./FooterSocialIcons";
 import { SectionReveal } from "./SectionReveal";
 import { scrollToPageSection } from "@/lib/calculatorNav";
 import { footerConnectLinks, footerLegalLinks, footerProductLinks } from "@/lib/navigation";
-import { siteName } from "@/lib/site";
+import { siteName, socialProfiles } from "@/lib/site";
 
 const footerSocialLinks: { id: SocialIconId; label: string; href: string }[] = [
-  { id: "x", label: "X", href: "#" },
-  { id: "reddit", label: "Reddit", href: "#" },
-  { id: "quora", label: "Quora", href: "#" },
-  { id: "youtube", label: "YouTube", href: "#" },
-  { id: "facebook", label: "Facebook", href: "#" },
-  { id: "instagram", label: "Instagram", href: "#" },
-  { id: "pinterest", label: "Pinterest", href: "#" },
+  { id: "x", label: "X", href: socialProfiles.x },
+  { id: "reddit", label: "Reddit", href: socialProfiles.reddit },
+  { id: "quora", label: "Quora", href: socialProfiles.quora },
+  { id: "youtube", label: "YouTube", href: socialProfiles.youtube },
+  { id: "facebook", label: "Facebook", href: socialProfiles.facebook },
+  { id: "instagram", label: "Instagram", href: socialProfiles.instagram },
+  { id: "pinterest", label: "Pinterest", href: socialProfiles.pinterest },
 ];
 
 function scrollToTool(e: { preventDefault: () => void }) {

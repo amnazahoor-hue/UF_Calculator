@@ -9,7 +9,7 @@ import {
   officialUfRateUrl,
   siteName,
   siteUrl,
-  socialProfiles,
+  socialProfileUrls,
 } from "@/lib/site";
 
 const organizationId = `${siteUrl}/#organization`;
@@ -69,13 +69,7 @@ function organizationNode() {
       email: contactEmail,
       availableLanguage: ["Spanish", "es"],
     },
-    sameAs: [
-      socialProfiles.x,
-      socialProfiles.youtube,
-      socialProfiles.instagram,
-      officialUfRateUrl,
-      bcchUrl,
-    ],
+    sameAs: [...socialProfileUrls, officialUfRateUrl, bcchUrl],
   };
 }
 
@@ -213,13 +207,7 @@ export function homePageSchemas(faqRate: number) {
       email: contactEmail,
       availableLanguage: ["Spanish", "es"],
     },
-    sameAs: [
-      socialProfiles.x,
-      socialProfiles.youtube,
-      socialProfiles.instagram,
-      officialUfRateUrl,
-      bcchUrl,
-    ],
+    sameAs: [...socialProfileUrls, officialUfRateUrl, bcchUrl],
   };
 
   const webPage = {

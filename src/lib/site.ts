@@ -27,18 +27,21 @@ export const homeDescription =
 
 export const defaultDescription = homeDescription;
 
-/** Perfiles sociales y enlaces de compartir funcionales */
+/** Official social profile URLs (footer links + Schema.org sameAs). */
 export const socialProfiles = {
-  x: "https://x.com/ufcalculatorcl",
-  facebook: "https://www.facebook.com/sharer/sharer.php",
-  reddit: "https://www.reddit.com/submit",
-  youtube: "https://www.youtube.com",
-  instagram: "https://www.instagram.com",
-  pinterest: "https://pinterest.com/pin/create/button/",
-  quora: "https://www.quora.com",
+  instagram: "https://www.instagram.com/calculadorauf/",
+  x: "https://x.com/Calculadorauf",
+  reddit: "https://www.reddit.com/user/Calculadorauf/",
+  quora: "https://www.quora.com/profile/Calculadorauf",
+  youtube: "https://www.youtube.com/@Calculadorauf-l4b",
+  pinterest: "https://www.pinterest.com/Calculadorauf/",
+  facebook: "https://www.facebook.com/share/1E8ZvYnLyb/",
 } as const;
 
-export function buildShareUrl(platform: keyof typeof socialProfiles, pageUrl = siteUrl) {
+export const socialProfileUrls = Object.values(socialProfiles);
+
+/** Share-intent URLs for spreading a page link on social platforms. */
+export function buildShareUrl(platform: "x" | "facebook" | "reddit" | "pinterest", pageUrl = siteUrl) {
   const encodedUrl = encodeURIComponent(pageUrl);
   const encodedText = encodeURIComponent(`${siteName} — convierte UF y pesos chilenos al instante`);
 
@@ -51,7 +54,5 @@ export function buildShareUrl(platform: keyof typeof socialProfiles, pageUrl = s
       return `https://www.reddit.com/submit?url=${encodedUrl}&title=${encodedText}`;
     case "pinterest":
       return `https://pinterest.com/pin/create/button/?url=${encodedUrl}&description=${encodedText}`;
-    default:
-      return socialProfiles[platform];
   }
 }
