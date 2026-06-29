@@ -2,8 +2,9 @@ import type { UfRatesResponse } from "@/lib/ufRate";
 import { siteUrl } from "@/lib/site";
 
 function getApiBaseUrl() {
-  if (process.env.VERCEL_URL) {
-    return `https://${process.env.VERCEL_URL}`;
+  if (process.env.NODE_ENV === "development") {
+    const port = process.env.PORT ?? "3000";
+    return `http://localhost:${port}`;
   }
 
   return siteUrl;

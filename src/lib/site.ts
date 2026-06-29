@@ -1,11 +1,11 @@
+/** Canonical production URL — used for sitemap, canonical tags, JSON-LD, and sharing. */
+export const canonicalSiteUrl = "https://icalculadorauf.cl";
+
 function resolveSiteUrl() {
   const fromEnv = process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "");
   if (fromEnv) return fromEnv;
 
-  const vercelHost = process.env.VERCEL_URL?.replace(/\/$/, "");
-  if (vercelHost) return `https://${vercelHost}`;
-
-  return "http://icalculadorauf.cl";
+  return canonicalSiteUrl;
 }
 
 export const siteUrl = resolveSiteUrl();

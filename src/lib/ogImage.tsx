@@ -1,18 +1,18 @@
 import { ImageResponse } from "next/og";
 import { imageCatalog } from "@/lib/images";
-import { homeDescription, siteName, siteShortName } from "@/lib/site";
+import { homeDescription, siteName, siteShortName, siteUrl } from "@/lib/site";
 
 export const ogImageAlt = siteName;
 export const ogImageSize = { width: 1200, height: 630 };
 export const ogImageContentType = "image/webp";
 
 function getAssetBaseUrl() {
-  if (process.env.VERCEL_URL) {
-    return `https://${process.env.VERCEL_URL}`;
+  if (process.env.NODE_ENV === "development") {
+    const port = process.env.PORT ?? "3000";
+    return `http://localhost:${port}`;
   }
 
-  const port = process.env.PORT ?? "3000";
-  return `http://localhost:${port}`;
+  return siteUrl;
 }
 
 export default async function OgImage() {
