@@ -37,6 +37,9 @@ export const metadata: Metadata = {
     "mindicador UF",
   ],
   robots: { index: true, follow: true },
+  verification: {
+    google: "rE9ijM1AJWkITiYDx-n-nAQ-yAB7BP-G7PKQhSzZlLc",
+  },
   openGraph: {
     title: homeTitle,
     description: defaultDescription,
