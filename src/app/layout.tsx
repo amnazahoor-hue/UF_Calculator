@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { Footer } from "@/components/Footer";
 import { FooterBrand } from "@/components/FooterBrand";
+import { GoogleAnalytics } from "@/components/GoogleAnalytics";
 import { HashScrollHandler } from "@/components/HashScrollHandler";
 import { Header } from "@/components/Header";
 import { HeaderBrand } from "@/components/HeaderBrand";
@@ -71,8 +72,10 @@ export default function RootLayout({
       <head>
         <link rel="preconnect" href="https://mindicador.cl" />
         <link rel="dns-prefetch" href="https://mindicador.cl" />
+        <link rel="preconnect" href="https://www.googletagmanager.com" />
       </head>
       <body className="flex min-h-full w-full max-w-full flex-col overflow-x-clip bg-bg-base" suppressHydrationWarning>
+        <GoogleAnalytics />
         <Header brand={<HeaderBrand />} />
         <HashScrollHandler />
         {children}
