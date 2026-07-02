@@ -59,8 +59,21 @@ export function Faq() {
     };
 
     measurePanel();
-    window.addEventListener("resize", measurePanel);
-    return () => window.removeEventListener("resize", measurePanel);
+
+    let frame = 0;
+    const onResize = () => {
+      if (frame) return;
+      frame = window.requestAnimationFrame(() => {
+        frame = 0;
+        measurePanel();
+      });
+    };
+
+    window.addEventListener("resize", onResize);
+    return () => {
+      window.removeEventListener("resize", onResize);
+      if (frame) window.cancelAnimationFrame(frame);
+    };
   }, [faqItems]);
 
   return (
