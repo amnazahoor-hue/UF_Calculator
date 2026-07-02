@@ -4,7 +4,7 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
   experimental: {
     inlineCss: true,
-    optimizePackageImports: ["framer-motion", "react-icons"],
+    optimizePackageImports: ["framer-motion", "react-icons", "react-icons/fa6"],
   },
   images: {
     qualities: [70, 75, 88],

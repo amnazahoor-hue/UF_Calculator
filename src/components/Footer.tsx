@@ -1,14 +1,10 @@
-"use client";
-
 import Link from "next/link";
 import type { ReactNode } from "react";
-import { FooterSocialIcon, type SocialIconId } from "./FooterSocialIcons";
-import { SectionReveal } from "./SectionReveal";
-import { scrollToPageSection } from "@/lib/calculatorNav";
+import { FooterSocialIcon } from "./FooterSocialIcons";
 import { footerConnectLinks, footerLegalLinks, footerProductLinks } from "@/lib/navigation";
 import { siteName, socialProfiles } from "@/lib/site";
 
-const footerSocialLinks: { id: SocialIconId; label: string; href: string }[] = [
+const footerSocialLinks = [
   { id: "x", label: "X", href: socialProfiles.x },
   { id: "reddit", label: "Reddit", href: socialProfiles.reddit },
   { id: "quora", label: "Quora", href: socialProfiles.quora },
@@ -16,16 +12,23 @@ const footerSocialLinks: { id: SocialIconId; label: string; href: string }[] = [
   { id: "facebook", label: "Facebook", href: socialProfiles.facebook },
   { id: "instagram", label: "Instagram", href: socialProfiles.instagram },
   { id: "pinterest", label: "Pinterest", href: socialProfiles.pinterest },
-];
+] as const;
 
-function scrollToTool(e: { preventDefault: () => void }) {
-  e.preventDefault();
-  scrollToPageSection("tool");
-}
+type SectionRevealShellProps = {
+  children: ReactNode;
+  className?: string;
+  delay?: number;
+};
 
-function scrollToHero(e: { preventDefault: () => void }) {
-  e.preventDefault();
-  scrollToPageSection("home");
+function SectionRevealShell({ children, className = "", delay = 0 }: SectionRevealShellProps) {
+  return (
+    <div
+      className={`section-reveal section-reveal--visible ${className}`.trim()}
+      style={delay ? { transitionDelay: `${delay}s` } : undefined}
+    >
+      {children}
+    </div>
+  );
 }
 
 export function Footer({ brand }: { brand: ReactNode }) {
@@ -34,7 +37,7 @@ export function Footer({ brand }: { brand: ReactNode }) {
       <div aria-hidden className="footer-shell-glow" />
       <div className="relative mx-auto w-full max-w-shell px-3 sm:px-5 lg:px-8 xl:px-10">
         <div className="footer-bar">
-          <SectionReveal>
+          <SectionRevealShell>
             <div className="footer-cta-bar">
               <div>
                 <p className="text-xs font-semibold uppercase tracking-widest text-accent">¿Listo para convertir?</p>
@@ -42,17 +45,16 @@ export function Footer({ brand }: { brand: ReactNode }) {
               </div>
               <a
                 href="#tool"
-                onClick={scrollToTool}
                 className="footer-cta-btn inline-flex shrink-0 items-center justify-center rounded-full bg-ink px-6 py-3 text-sm font-semibold text-surface shadow-[0_8px_24px_color-mix(in_oklab,var(--ink)_20%,transparent)] transition hover:scale-[1.04] hover:bg-[color-mix(in_oklab,var(--ink)_88%,var(--accent))] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
                 aria-label="Abrir la calculadora UF Chile para convertir UF y pesos"
               >
                 Abrir calculadora
               </a>
             </div>
-          </SectionReveal>
+          </SectionRevealShell>
 
           <div className="mt-10 grid gap-10 sm:grid-cols-2 lg:mt-11 lg:grid-cols-12 lg:gap-8">
-            <SectionReveal className="lg:col-span-4">
+            <SectionRevealShell className="lg:col-span-4">
               {brand}
               <p className="mt-5 max-w-sm text-sm leading-relaxed text-ink-soft">
                 {siteName} te ayuda a convertir UF y pesos chilenos con datos públicos, una interfaz clara y contenido
@@ -61,9 +63,9 @@ export function Footer({ brand }: { brand: ReactNode }) {
               <p className="mt-4 text-sm text-ink-soft">
                 Datos obtenidos de indicadores públicos de Chile vía mindicador.
               </p>
-            </SectionReveal>
+            </SectionRevealShell>
 
-            <SectionReveal delay={0.06} className="lg:col-span-2">
+            <SectionRevealShell delay={0.06} className="lg:col-span-2">
               <p className="footer-column-title font-bold text-sm uppercase tracking-widest text-ink">Producto</p>
               <nav className="mt-4 space-y-2.5" aria-label="Enlaces del producto">
                 {footerProductLinks.map((link) => (
@@ -72,9 +74,9 @@ export function Footer({ brand }: { brand: ReactNode }) {
                   </Link>
                 ))}
               </nav>
-            </SectionReveal>
+            </SectionRevealShell>
 
-            <SectionReveal delay={0.1} className="lg:col-span-3">
+            <SectionRevealShell delay={0.1} className="lg:col-span-3">
               <p className="footer-column-title font-bold text-sm uppercase tracking-widest text-ink">Legal e información</p>
               <nav className="mt-4 space-y-2.5" aria-label="Enlaces legales e informativos">
                 {footerLegalLinks.map((link) => (
@@ -83,9 +85,9 @@ export function Footer({ brand }: { brand: ReactNode }) {
                   </Link>
                 ))}
               </nav>
-            </SectionReveal>
+            </SectionRevealShell>
 
-            <SectionReveal delay={0.14} className="lg:col-span-3">
+            <SectionRevealShell delay={0.14} className="lg:col-span-3">
               <p className="footer-column-title font-bold text-sm uppercase tracking-widest text-ink">Conectar</p>
               <nav className="mt-4 space-y-2.5" aria-label="Enlaces de contacto">
                 {footerConnectLinks.map((link) => (
@@ -94,10 +96,10 @@ export function Footer({ brand }: { brand: ReactNode }) {
                   </Link>
                 ))}
               </nav>
-            </SectionReveal>
+            </SectionRevealShell>
           </div>
 
-          <SectionReveal delay={0.18} className="footer-social-row">
+          <SectionRevealShell delay={0.18} className="footer-social-row">
             <p className="footer-social-heading">Síguenos</p>
             <ul className="footer-social" role="list">
               {footerSocialLinks.map((item) => (
@@ -108,22 +110,19 @@ export function Footer({ brand }: { brand: ReactNode }) {
                     rel="noopener noreferrer"
                     className={`footer-social-link footer-social-link--${item.id}`}
                   >
-                    <span className="sr-only">Síguenos en {item.label} — {siteName}</span>
+                    <span className="sr-only">
+                      Síguenos en {item.label} — {siteName}
+                    </span>
                     <FooterSocialIcon id={item.id} className="footer-social-glyph" />
                   </a>
                 </li>
               ))}
             </ul>
-          </SectionReveal>
+          </SectionRevealShell>
 
           <div className="footer-bottom-bar mt-10 border-t border-[color-mix(in_oklab,var(--border)_85%,transparent)] pt-6">
             <p className="text-center text-xs text-ink-soft" suppressHydrationWarning>
-              <a
-                href="#home"
-                onClick={scrollToHero}
-                className="footer-copyright-link"
-                aria-label={`Volver al inicio de ${siteName}`}
-              >
+              <a href="#home" className="footer-copyright-link" aria-label={`Volver al inicio de ${siteName}`}>
                 &copy; {new Date().getFullYear()} {siteName}. Todos los derechos reservados.
               </a>
             </p>

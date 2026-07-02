@@ -1,6 +1,7 @@
 import type { UfRatesResponse } from "@/lib/ufRate";
-import { HeroInteractive } from "./HeroInteractive";
-import { HeroTabs } from "./HeroTabs";
+import { HeroCalculatorSlot, HeroTabsSlot } from "./DeferredHomeClient";
+import { HeroCalculatorFallback } from "./HeroCalculatorFallback";
+import { HeroTabsShell } from "./HeroTabsShell";
 
 export function Hero({ initialUfData }: { initialUfData?: UfRatesResponse | null }) {
   return (
@@ -52,10 +53,14 @@ export function Hero({ initialUfData }: { initialUfData?: UfRatesResponse | null
             </div>
           </div>
 
-          <HeroTabs />
+          <HeroTabsSlot>
+            <HeroTabsShell />
+          </HeroTabsSlot>
 
           <div className="hero-calculator-slot relative mx-auto mt-8 w-full max-w-content-narrow pb-2 sm:mt-10 sm:pb-6">
-            <HeroInteractive initialUfData={initialUfData} />
+            <HeroCalculatorSlot initialUfData={initialUfData}>
+              <HeroCalculatorFallback />
+            </HeroCalculatorSlot>
           </div>
         </div>
       </div>

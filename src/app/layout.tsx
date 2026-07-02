@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import dynamic from "next/dynamic";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import { DeferredHashScroll } from "@/components/DeferredHashScroll";
 import { FooterBrand } from "@/components/FooterBrand";
 import { Footer } from "@/components/Footer";
-import { HashScrollHandler } from "@/components/HashScrollHandler";
 import { Header } from "@/components/Header";
 import { HeaderBrand } from "@/components/HeaderBrand";
 import { imageCatalog } from "@/lib/images";
@@ -81,7 +81,7 @@ export default function RootLayout({
       <body className="flex min-h-full w-full max-w-full flex-col overflow-x-clip bg-bg-base" suppressHydrationWarning>
         <GoogleAnalytics />
         <Header brand={<HeaderBrand />} />
-        <HashScrollHandler />
+        <DeferredHashScroll />
         {children}
         <Footer brand={<FooterBrand />} />
       </body>
