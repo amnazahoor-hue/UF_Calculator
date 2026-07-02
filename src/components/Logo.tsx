@@ -47,7 +47,8 @@ export function Logo({
           describe={!hasVisibleLabel}
           width={imageSize}
           height={imageSize}
-          unoptimized
+          sizes="48px"
+          quality={88}
           priority={priority}
           loading={priority ? "eager" : "lazy"}
           fetchPriority={priority ? "high" : "auto"}
