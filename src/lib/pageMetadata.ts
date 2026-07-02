@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { siteOpenGraphImage, siteTwitterImage } from "@/lib/metadata";
+import { buildHrefLangAlternates } from "@/lib/seo";
 import { siteName, siteUrl } from "@/lib/site";
 
 type PageMetadataInput = {
@@ -25,7 +26,7 @@ export function buildPageMetadata({
   return {
     title: absoluteTitle ? { absolute: title } : title,
     description,
-    alternates: { canonical: canonicalUrl },
+    alternates: buildHrefLangAlternates(canonicalPath),
     robots: { index, follow: true },
     openGraph: {
       title: ogTitle,

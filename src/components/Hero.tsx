@@ -34,6 +34,7 @@ export function Hero({ initialUfData }: { initialUfData?: UfRatesResponse | null
             <div className="mt-6 sm:mt-7">
               <a
                 href="#tool"
+                aria-label="Ingrese su valor hoy y abra la calculadora UF Chile"
                 className="header-cta inline-flex items-center gap-2 rounded-full bg-ink px-5 py-2.5 text-sm font-semibold text-surface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--bg-warm-2)]"
               >
                 Ingrese su valor hoy calcula ahora

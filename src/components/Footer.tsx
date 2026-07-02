@@ -44,6 +44,7 @@ export function Footer({ brand }: { brand: ReactNode }) {
                 href="#tool"
                 onClick={scrollToTool}
                 className="footer-cta-btn inline-flex shrink-0 items-center justify-center rounded-full bg-ink px-6 py-3 text-sm font-semibold text-surface shadow-[0_8px_24px_color-mix(in_oklab,var(--ink)_20%,transparent)] transition hover:scale-[1.04] hover:bg-[color-mix(in_oklab,var(--ink)_88%,var(--accent))] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
+                aria-label="Abrir la calculadora UF Chile para convertir UF y pesos"
               >
                 Abrir calculadora
               </a>
@@ -66,7 +67,7 @@ export function Footer({ brand }: { brand: ReactNode }) {
               <p className="footer-column-title font-bold text-sm uppercase tracking-widest text-ink">Producto</p>
               <nav className="mt-4 space-y-2.5" aria-label="Enlaces del producto">
                 {footerProductLinks.map((link) => (
-                  <Link key={link.href} href={link.href} className="footer-link">
+                  <Link key={link.href} href={link.href} className="footer-link" aria-label={link.ariaLabel}>
                     {link.label}
                   </Link>
                 ))}
@@ -105,9 +106,9 @@ export function Footer({ brand }: { brand: ReactNode }) {
                     href={item.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    aria-label={`Síguenos en ${item.label}`}
                     className={`footer-social-link footer-social-link--${item.id}`}
                   >
+                    <span className="sr-only">Síguenos en {item.label} — {siteName}</span>
                     <FooterSocialIcon id={item.id} className="footer-social-glyph" />
                   </a>
                 </li>
@@ -117,7 +118,12 @@ export function Footer({ brand }: { brand: ReactNode }) {
 
           <div className="footer-bottom-bar mt-10 border-t border-[color-mix(in_oklab,var(--border)_85%,transparent)] pt-6">
             <p className="text-center text-xs text-ink-soft" suppressHydrationWarning>
-              <a href="#home" onClick={scrollToHero} className="footer-copyright-link">
+              <a
+                href="#home"
+                onClick={scrollToHero}
+                className="footer-copyright-link"
+                aria-label={`Volver al inicio de ${siteName}`}
+              >
                 &copy; {new Date().getFullYear()} {siteName}. Todos los derechos reservados.
               </a>
             </p>

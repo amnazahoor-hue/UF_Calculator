@@ -97,6 +97,7 @@ export function Header({ brand }: { brand: ReactNode }) {
               <a
                 href={pathname === "/" ? "#tool" : "/#tool"}
                 onClick={handleCalculateNow}
+                aria-label="Calcular ahora con la calculadora UF Chile"
                 className="header-cta header-bar-cta ml-1 inline-flex shrink-0 items-center gap-1.5 rounded-full bg-ink px-3.5 py-2 text-xs font-semibold text-surface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 xl:ml-1.5 xl:px-4 xl:py-2.5 xl:text-sm"
               >
                 Calcular ahora
@@ -147,6 +148,7 @@ export function Header({ brand }: { brand: ReactNode }) {
                   <a
                     href={pathname === "/" ? "#tool" : "/#tool"}
                     onClick={handleCalculateNow}
+                    aria-label="Calcular ahora con la calculadora UF Chile"
                     className="header-cta mt-2 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-ink px-4 py-3 text-sm font-semibold text-surface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
                   >
                     Calcular ahora

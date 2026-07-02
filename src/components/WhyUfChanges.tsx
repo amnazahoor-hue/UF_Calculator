@@ -35,6 +35,7 @@ export function WhyUfChanges() {
                   className="content-page-inline-link"
                   target="_blank"
                   rel="noopener noreferrer"
+                  aria-label="Instituto Nacional de Estadísticas de Chile (INE) — índice de precios al consumidor"
                 >
                   INE
                 </a>{" "}

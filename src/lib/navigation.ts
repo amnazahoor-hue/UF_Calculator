@@ -13,9 +13,21 @@ export const headerNavLinks: HeaderNavLink[] = [
 ];
 
 export const footerProductLinks = [
-  { href: "/#tool", label: "Herramienta UF ↔ CLP" },
-  { href: "/#how-it-works", label: "Cómo funciona" },
-  { href: "/#faq", label: "Preguntas frecuentes" },
+  {
+    href: "/#tool",
+    label: "Herramienta UF ↔ CLP",
+    ariaLabel: "Ir a la herramienta de conversión UF a pesos chilenos",
+  },
+  {
+    href: "/#how-it-works",
+    label: "Cómo funciona",
+    ariaLabel: "Ir a la sección cómo funciona la calculadora UF",
+  },
+  {
+    href: "/#faq",
+    label: "Preguntas frecuentes",
+    ariaLabel: "Ir a las preguntas frecuentes sobre la UF en Chile",
+  },
 ] as const;
 
 export const footerLegalLinks = [

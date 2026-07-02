@@ -7,6 +7,7 @@ import { Header } from "@/components/Header";
 import { HeaderBrand } from "@/components/HeaderBrand";
 import { imageCatalog } from "@/lib/images";
 import { siteOpenGraphImage, siteTwitterImage } from "@/lib/metadata";
+import { buildHrefLangAlternates } from "@/lib/seo";
 import { defaultDescription, homeTitle, siteName, siteUrl } from "@/lib/site";
 
 const inter = Inter({
@@ -44,6 +45,7 @@ export const metadata: Metadata = {
     "mindicador UF",
   ],
   robots: { index: true, follow: true },
+  alternates: buildHrefLangAlternates("/"),
   verification: {
     google: "rE9ijM1AJWkITiYDx-n-nAQ-yAB7BP-G7PKQhSzZlLc",
   },
@@ -74,7 +76,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="es" className={`${inter.variable} h-full overflow-x-clip antialiased`} suppressHydrationWarning>
+    <html lang="es-CL" className={`${inter.variable} h-full overflow-x-clip antialiased`} suppressHydrationWarning>
       <head>
         <link rel="preload" href={imageCatalog.logo.src} as="image" type="image/webp" />
       </head>

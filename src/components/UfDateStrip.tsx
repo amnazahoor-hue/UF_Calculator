@@ -44,9 +44,9 @@ export function UfDateStrip({ history, selectedDate, onSelect }: UfDateStripProp
         type="button"
         className="uf-date-strip-arrow"
         onClick={() => scrollByAmount(-1)}
-        aria-label="Días anteriores"
       >
-        ‹
+        <span aria-hidden>‹</span>
+        <span className="sr-only">Ver días anteriores del historial de valor UF</span>
       </button>
 
       <div ref={scrollerRef} className="uf-date-strip-scroll" role="tablist" aria-label="Seleccionar fecha UF">
@@ -74,9 +74,9 @@ export function UfDateStrip({ history, selectedDate, onSelect }: UfDateStripProp
         type="button"
         className="uf-date-strip-arrow"
         onClick={() => scrollByAmount(1)}
-        aria-label="Días siguientes"
       >
-        ›
+        <span aria-hidden>›</span>
+        <span className="sr-only">Ver días siguientes del historial de valor UF</span>
       </button>
     </div>
   );
