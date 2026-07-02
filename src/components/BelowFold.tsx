@@ -6,8 +6,10 @@ import { UfRateProvider } from "@/components/UfRateProvider";
 
 export function BelowFold({ initialUfData }: { initialUfData?: UfRatesResponse | null }) {
   return (
-    <UfRateProvider initialData={initialUfData ?? undefined}>
-      <HomeSections />
-    </UfRateProvider>
+    <div className="below-fold-shell">
+      <UfRateProvider initialData={initialUfData ?? undefined}>
+        <HomeSections />
+      </UfRateProvider>
+    </div>
   );
 }

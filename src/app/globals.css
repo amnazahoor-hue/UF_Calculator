@@ -289,6 +289,7 @@ h2 {
 }
 
 .hero-headline-glow {
+  display: block;
   position: absolute;
   top: 18%;
   left: 0;
@@ -342,8 +343,15 @@ h2 {
 .section-why-uf,
 .section-benefits,
 .section-faq {
-  content-visibility: auto;
-  contain-intrinsic-size: auto 600px;
+  overflow-anchor: auto;
+}
+
+.below-fold-shell {
+  overflow-anchor: auto;
+}
+
+.lazy-on-view-slot {
+  overflow-anchor: auto;
 }
 
 .hero-calculator {

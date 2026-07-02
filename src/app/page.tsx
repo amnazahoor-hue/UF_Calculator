@@ -3,7 +3,7 @@ import { fetchUfRate } from "@/lib/fetchUfRate";
 import { homePageSchemas } from "@/lib/jsonLd";
 import { homeDescription, homeTitle } from "@/lib/site";
 import type { UfRatesResponse } from "@/lib/ufRate";
-import { BelowFoldLoader } from "@/components/BelowFoldLoader";
+import { BelowFold } from "@/components/BelowFold";
 import { Hero } from "@/components/Hero";
 
 export const metadata = buildPageMetadata({
@@ -35,7 +35,7 @@ export default async function Home() {
       />
       <main className="flex-1">
         <Hero initialUfData={initialUfData} />
-        <BelowFoldLoader initialUfData={initialUfData} />
+        <BelowFold initialUfData={initialUfData} />
       </main>
     </>
   );

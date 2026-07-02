@@ -4,18 +4,27 @@ export type CalculatorNavTarget = CalcMode | "RATE" | "FREE";
 
 export const CALCULATOR_NAV_EVENT = "uf-calculator:navigate";
 
-export function scrollToPageSection(sectionId: string) {
+function getHeaderScrollOffset() {
+  if (typeof window === "undefined") return 0;
+
+  const raw = getComputedStyle(document.documentElement).getPropertyValue("--header-offset").trim();
+  const headerOffset = Number.parseFloat(raw);
+  return (Number.isFinite(headerOffset) ? headerOffset : 72) + 12;
+}
+
+export function scrollToPageSection(sectionId: string, behavior: ScrollBehavior = "smooth") {
   if (typeof window === "undefined") return;
 
   if (sectionId === "home") {
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    window.scrollTo({ top: 0, behavior });
     return;
   }
 
   const el = document.getElementById(sectionId);
   if (!el) return;
 
-  el.scrollIntoView({ behavior: "smooth", block: "start" });
+  const top = Math.max(0, el.getBoundingClientRect().top + window.scrollY - getHeaderScrollOffset());
+  window.scrollTo({ top, behavior });
 }
 
 export function emitCalculatorNav(target: CalculatorNavTarget) {

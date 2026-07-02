@@ -3,6 +3,8 @@ import dynamic from "next/dynamic";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { FooterBrand } from "@/components/FooterBrand";
+import { Footer } from "@/components/Footer";
+import { HashScrollHandler } from "@/components/HashScrollHandler";
 import { Header } from "@/components/Header";
 import { HeaderBrand } from "@/components/HeaderBrand";
 import { imageCatalog } from "@/lib/images";
@@ -19,12 +21,8 @@ const inter = Inter({
   adjustFontFallback: true,
 });
 
-const Footer = dynamic(() => import("@/components/Footer").then((m) => ({ default: m.Footer })));
 const GoogleAnalytics = dynamic(() =>
   import("@/components/GoogleAnalytics").then((m) => ({ default: m.GoogleAnalytics })),
-);
-const HashScrollHandler = dynamic(() =>
-  import("@/components/HashScrollHandler").then((m) => ({ default: m.HashScrollHandler })),
 );
 
 export const metadata: Metadata = {

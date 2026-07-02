@@ -31,7 +31,7 @@ export function LazyOnView({ children, rootMargin = "280px 0px", minHeight = "1p
   }, [visible, rootMargin]);
 
   return (
-    <div ref={ref} style={visible ? undefined : { minHeight }}>
+    <div ref={ref} className="lazy-on-view-slot" style={{ minHeight }}>
       {visible ? children : null}
     </div>
   );

@@ -20,7 +20,7 @@ const footerSocialLinks: { id: SocialIconId; label: string; href: string }[] = [
 
 function scrollToTool(e: { preventDefault: () => void }) {
   e.preventDefault();
-  document.getElementById("tool")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  scrollToPageSection("tool");
 }
 
 function scrollToHero(e: { preventDefault: () => void }) {

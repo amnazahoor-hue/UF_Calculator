@@ -9,6 +9,22 @@ type UfDateStripProps = {
   onSelect: (dateKey: string) => void;
 };
 
+function scrollItemIntoHorizontalStrip(
+  scroller: HTMLElement,
+  item: HTMLElement,
+  behavior: ScrollBehavior,
+) {
+  const itemLeft = item.offsetLeft;
+  const itemWidth = item.offsetWidth;
+  const scrollerWidth = scroller.clientWidth;
+  const targetLeft = itemLeft - (scrollerWidth - itemWidth) / 2;
+
+  scroller.scrollTo({
+    left: Math.max(0, targetLeft),
+    behavior,
+  });
+}
+
 export function UfDateStrip({ history, selectedDate, onSelect }: UfDateStripProps) {
   const scrollerRef = useRef<HTMLDivElement>(null);
   const selectedRef = useRef<HTMLButtonElement>(null);
@@ -23,14 +39,15 @@ export function UfDateStrip({ history, selectedDate, onSelect }: UfDateStripProp
   const hasScrolledRef = useRef(false);
 
   useEffect(() => {
-    const node = selectedRef.current;
-    if (!node) return;
+    const scroller = scrollerRef.current;
+    const item = selectedRef.current;
+    if (!scroller || !item) return;
 
     const behavior = hasScrolledRef.current ? "smooth" : "instant";
     hasScrolledRef.current = true;
 
     const frame = requestAnimationFrame(() => {
-      node.scrollIntoView({ behavior, inline: "center", block: "nearest" });
+      scrollItemIntoHorizontalStrip(scroller, item, behavior);
     });
 
     return () => cancelAnimationFrame(frame);
