@@ -1,11 +1,12 @@
 "use client";
 
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
-import type { UfRatesResponse } from "@/lib/ufRate";
+import type { UfRateDay, UfRatesResponse } from "@/lib/ufRate";
 
 type UfRateContextValue = {
   rate: number | null;
   date: string | null;
+  history: UfRateDay[];
   loading: boolean;
   fallback: boolean;
 };
@@ -13,15 +14,26 @@ type UfRateContextValue = {
 const UfRateContext = createContext<UfRateContextValue>({
   rate: null,
   date: null,
+  history: [],
   loading: true,
   fallback: false,
 });
 
-export function UfRateProvider({ children }: { children: ReactNode }) {
-  const [data, setData] = useState<UfRatesResponse | null>(null);
-  const [loading, setLoading] = useState(true);
+export function UfRateProvider({
+  children,
+  initialData,
+}: {
+  children: ReactNode;
+  initialData?: UfRatesResponse | null;
+}) {
+  const [data, setData] = useState<UfRatesResponse | null>(initialData ?? null);
+  const [loading, setLoading] = useState(!initialData);
 
   useEffect(() => {
+    if (initialData) {
+      return;
+    }
+
     let cancelled = false;
 
     fetch("/api/uf")
@@ -41,12 +53,13 @@ export function UfRateProvider({ children }: { children: ReactNode }) {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [initialData]);
 
   const value = useMemo<UfRateContextValue>(
     () => ({
       rate: data?.rate ?? null,
       date: data?.date ?? null,
+      history: data?.history ?? [],
       loading,
       fallback: Boolean(data?.fallback),
     }),

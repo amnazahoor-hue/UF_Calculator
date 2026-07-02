@@ -1,6 +1,5 @@
 "use client";
 
-import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useMemo, useState } from "react";
 import {
   formatConversionResult,
@@ -12,12 +11,6 @@ import {
   stepAmount,
   type CalcMode,
 } from "@/lib/calculatorInput";
-import {
-  buildShareMessage,
-  exportConversionPdf,
-  openEmailShare,
-  openWhatsAppShare,
-} from "@/lib/calculatorShare";
 import { CALCULATOR_NAV_EVENT, emitCalculatorNav, type CalculatorNavTarget } from "@/lib/calculatorNav";
 import { siteUrl } from "@/lib/site";
 import {
@@ -29,13 +22,12 @@ import {
   isTodayDate,
   prepareStripHistory,
   type UfRateDay,
-  type UfRatesResponse,
 } from "@/lib/ufRate";
 import { SectionEyebrow } from "./SectionEyebrow";
-import { SectionReveal } from "./SectionReveal";
 import { UfDateStrip } from "./UfDateStrip";
 import { UfRatePanelSkeleton } from "./UfRatePanelSkeleton";
 import { UfDayChangeNotice } from "./UfDayChange";
+import { useUfRate } from "./UfRateProvider";
 
 export type CalculatorProps = {
   variant?: "hero" | "section";
@@ -138,14 +130,11 @@ function AmountInput({ mode, value, onChange, onUserEdit, label }: AmountInputPr
 
 export function Calculator({ variant = "section" }: CalculatorProps) {
   const isHero = variant === "hero";
+  const { history, date: latestDate, loading, fallback } = useUfRate();
   const [mode, setMode] = useState<CalcMode>("UF_TO_CLP");
   const [input, setInput] = useState("1");
-  const [history, setHistory] = useState<UfRateDay[]>([]);
-  const [latestDate, setLatestDate] = useState("");
   const [selectedDate, setSelectedDate] = useState<string>("");
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string>("");
-  const [fallback, setFallback] = useState(false);
   const [copied, setCopied] = useState(false);
 
   const stripDays = useMemo(() => prepareStripHistory(history), [history]);
@@ -197,26 +186,16 @@ export function Calculator({ variant = "section" }: CalculatorProps) {
   }, []);
 
   useEffect(() => {
-    const loadRate = async () => {
-      try {
-        const res = await fetch("/api/uf");
-        if (!res.ok) throw new Error("Unable to load UF rate");
-        const data = (await res.json()) as UfRatesResponse;
-        if (!data.history?.length || !data.rate) {
-          throw new Error("invalid payload");
-        }
-        setHistory(data.history);
-        setLatestDate(data.date);
-        setSelectedDate(data.date);
-        setFallback(Boolean(data.fallback));
-      } catch {
-        setError("No pudimos cargar el valor UF. Intenta de nuevo en un momento.");
-      } finally {
-        setLoading(false);
-      }
-    };
-    loadRate();
-  }, []);
+    if (latestDate && !selectedDate) {
+      setSelectedDate(latestDate);
+    }
+  }, [latestDate, selectedDate]);
+
+  useEffect(() => {
+    if (!loading && !history.length) {
+      setError("No pudimos cargar el valor UF. Intenta de nuevo en un momento.");
+    }
+  }, [history.length, loading]);
 
   const handleDateSelect = (dateKey: string) => {
     setSelectedDate(dateKey);
@@ -289,18 +268,21 @@ export function Calculator({ variant = "section" }: CalculatorProps) {
         }
       : null;
 
-  const handleWhatsApp = () => {
+  const handleWhatsApp = async () => {
     if (!sharePayload) return;
+    const { buildShareMessage, openWhatsAppShare } = await import("@/lib/calculatorShare");
     openWhatsAppShare(buildShareMessage(sharePayload));
   };
 
-  const handleEmail = () => {
+  const handleEmail = async () => {
     if (!sharePayload) return;
+    const { buildShareMessage, openEmailShare } = await import("@/lib/calculatorShare");
     openEmailShare(buildShareMessage(sharePayload));
   };
 
   const handlePdf = async () => {
     if (!sharePayload) return;
+    const { exportConversionPdf } = await import("@/lib/calculatorShare");
     await exportConversionPdf(sharePayload);
   };
 
@@ -369,16 +351,14 @@ export function Calculator({ variant = "section" }: CalculatorProps) {
                   label={mode === "UF_TO_CLP" ? "UF Amount" : "CLP Amount"}
                 />
                 <div className="mt-4 flex flex-col gap-2 sm:flex-row">
-                  <motion.button
+                  <button
                     type="button"
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
                     onClick={handleCalculate}
                     disabled={loading || Boolean(error) || !rate}
-                    className="calc-submit-btn inline-flex flex-1 items-center justify-center rounded-2xl bg-ink px-6 py-3.5 text-base font-semibold text-surface transition enabled:hover:bg-[color-mix(in_oklab,var(--ink)_88%,var(--accent))] disabled:cursor-not-allowed disabled:opacity-50"
+                    className="calc-submit-btn inline-flex flex-1 items-center justify-center rounded-2xl bg-ink px-6 py-3.5 text-base font-semibold text-surface transition enabled:hover:scale-[1.02] enabled:hover:bg-[color-mix(in_oklab,var(--ink)_88%,var(--accent))] enabled:active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
                   >
                     Calcular
-                  </motion.button>
+                  </button>
                   <button
                     type="button"
                     onClick={handleRestore}
@@ -396,16 +376,14 @@ export function Calculator({ variant = "section" }: CalculatorProps) {
               </div>
 
               <div className="flex items-center justify-center lg:items-center lg:self-center">
-                <motion.button
+                <button
                   type="button"
-                  whileTap={{ rotate: 180, scale: 0.95 }}
-                  whileHover={{ scale: 1.06, borderColor: "var(--accent)" }}
                   onClick={handleSwap}
                   aria-label="Swap conversion direction"
-                  className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border-2 border-border bg-surface text-xl text-accent shadow-sm transition"
+                  className="calc-swap-btn flex h-12 w-12 shrink-0 items-center justify-center rounded-full border-2 border-border bg-surface text-xl text-accent shadow-sm transition hover:scale-105 hover:border-accent active:scale-95"
                 >
                   ⇄
-                </motion.button>
+                </button>
               </div>
 
               <div className={`calc-result-panel min-w-0 ${hasResult ? "calc-result-panel--active" : ""}`}>
@@ -413,32 +391,21 @@ export function Calculator({ variant = "section" }: CalculatorProps) {
                 <div className="calc-result-body mt-2">
                   {hasResult ? (
                     <div>
-                      <motion.p
-                        key={`${mode}-${calculatedResult}`}
-                        initial={{ opacity: 0, y: 8 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-                        className="text-xl font-bold leading-snug sm:text-2xl"
-                      >
+                      <p className="calc-result-reveal text-xl font-bold leading-snug sm:text-2xl">
                         <span className="calc-result-value block break-words">
                           {formatConversionResult(calculatedResult!, mode)}
                         </span>
                         <span className="mt-1 block text-base font-semibold text-ink-soft sm:text-lg">
                           {mode === "UF_TO_CLP" ? "CLP" : "UF"}
                         </span>
-                      </motion.p>
+                      </p>
                       {dayChange ? (
-                        <motion.div
-                          initial={{ opacity: 0, y: 6 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{ duration: 0.35, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
-                          className="mt-4"
-                        >
+                        <div className="mt-4">
                           <p className="mb-2 text-[0.6875rem] font-semibold uppercase tracking-wide text-ink-soft">
                             Variación UF
                           </p>
                           <UfDayChangeNotice change={dayChange} referenceDate={rateDate} />
-                        </motion.div>
+                        </div>
                       ) : null}
                     </div>
                   ) : (
@@ -458,16 +425,8 @@ export function Calculator({ variant = "section" }: CalculatorProps) {
 
             {calcError ? <p className="mt-4 text-sm text-error">{calcError}</p> : null}
 
-            <AnimatePresence mode="wait">
-              {calculatedResult !== null && !invalid ? (
-              <motion.div
-                key="share-panel"
-                initial={{ opacity: 0, y: 12, height: 0 }}
-                animate={{ opacity: 1, y: 0, height: "auto" }}
-                exit={{ opacity: 0, y: 8, height: 0 }}
-                transition={{ duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
-                className="mt-6 overflow-hidden rounded-2xl border border-[color-mix(in_oklab,var(--accent)_25%,var(--border))] bg-[color-mix(in_oklab,var(--bg-warm-2)_50%,var(--surface))] p-4 sm:p-5"
-              >
+            {calculatedResult !== null && !invalid ? (
+              <div className="calc-share-panel mt-6 overflow-hidden rounded-2xl border border-[color-mix(in_oklab,var(--accent)_25%,var(--border))] bg-[color-mix(in_oklab,var(--bg-warm-2)_50%,var(--surface))] p-4 sm:p-5">
                 <p className="text-xs font-semibold uppercase tracking-wider text-accent">Share result</p>
                 <div className="mt-3 flex flex-wrap gap-2">
                   <button
@@ -498,9 +457,8 @@ export function Calculator({ variant = "section" }: CalculatorProps) {
                 <p className="mt-3 text-xs text-ink-soft">
                   El PDF incluye el logo oficial, el detalle de la conversión, información del valor UF y datos de la herramienta. Puedes reenviarlo por WhatsApp después de descargarlo.
                 </p>
-              </motion.div>
-              ) : null}
-            </AnimatePresence>
+              </div>
+            ) : null}
 
             <div id="live-rate" className="uf-live-rate-bar mt-6 flex flex-wrap items-center gap-3 text-xs text-ink-soft">
               <span className="uf-live-rate-pill rounded-full bg-[color-mix(in_oklab,var(--accent)_12%,var(--surface))] px-3 py-1 font-medium text-accent">
@@ -536,17 +494,17 @@ export function Calculator({ variant = "section" }: CalculatorProps) {
       <div className="section-tool-rings" aria-hidden />
 
       <div className="relative z-10 mx-auto w-full max-w-content-narrow px-4 sm:px-6 lg:px-8">
-        <SectionReveal className="text-center">
+        <div className="text-center">
           <SectionEyebrow>Live calculator</SectionEyebrow>
           <h2 className="mt-4 text-3xl font-bold text-ink sm:text-4xl">UF ↔ CLP Tool</h2>
           <p className="mx-auto mt-3 max-w-md text-sm text-ink-soft sm:text-base">
             Enter an amount, then tap Calculate. Share your result via WhatsApp, email, or PDF.
           </p>
-        </SectionReveal>
+        </div>
 
-        <SectionReveal delay={0.1} className="mt-8 sm:mt-10">
+        <div className="mt-8 sm:mt-10">
           {card}
-        </SectionReveal>
+        </div>
       </div>
     </section>
   );

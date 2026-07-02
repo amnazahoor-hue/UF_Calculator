@@ -135,7 +135,7 @@ const trimmedBuffer = await sharp(croppedBuffer)
 const logoPipeline = sharp(trimmedBuffer);
 
 const logoResult = await writeWebpUnderLimit(logoPipeline, logoWebpPath, {
-  widthSteps: [640, 512, 384, 320, 256],
+  widthSteps: [128, 96, 80],
   qualities: [92, 88, 82, 76, 70, 64],
   webp: { alphaQuality: 100, effort: 6 },
 });

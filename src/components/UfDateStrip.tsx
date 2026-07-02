@@ -20,8 +20,20 @@ export function UfDateStrip({ history, selectedDate, onSelect }: UfDateStripProp
     node.scrollBy({ left: direction * 220, behavior: "smooth" });
   }, []);
 
+  const hasScrolledRef = useRef(false);
+
   useEffect(() => {
-    selectedRef.current?.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+    const node = selectedRef.current;
+    if (!node) return;
+
+    const behavior = hasScrolledRef.current ? "smooth" : "instant";
+    hasScrolledRef.current = true;
+
+    const frame = requestAnimationFrame(() => {
+      node.scrollIntoView({ behavior, inline: "center", block: "nearest" });
+    });
+
+    return () => cancelAnimationFrame(frame);
   }, [selectedDate, stripDays.length]);
 
   if (!stripDays.length) return null;

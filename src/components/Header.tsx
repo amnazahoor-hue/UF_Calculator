@@ -1,6 +1,5 @@
 "use client";
 
-import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
@@ -66,10 +65,8 @@ export function Header({ brand }: { brand: ReactNode }) {
         onClick={() => closeMenu()}
       >
         {isActive ? (
-          <motion.span
-            layoutId="header-nav-active"
+          <span
             className={`header-nav-pill absolute inset-0 ${mobile ? "rounded-xl" : "rounded-full"}`}
-            transition={{ type: "spring", stiffness: 400, damping: 34 }}
             aria-hidden
           />
         ) : null}
@@ -133,52 +130,40 @@ export function Header({ brand }: { brand: ReactNode }) {
             </button>
           </div>
 
-          <AnimatePresence>
-            {menuOpen ? (
-              <>
-                <motion.button
-                  key="header-mobile-backdrop"
-                  type="button"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.2 }}
-                  className="header-mobile-backdrop fixed inset-0 z-40 lg:hidden"
-                  aria-label="Cerrar menú"
-                  onClick={closeMenu}
-                />
-                <motion.div
-                  key="header-mobile-panel"
-                  id="mobile-nav-panel"
-                  initial={{ opacity: 0, y: -8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -8 }}
-                  transition={{ duration: 0.22 }}
-                  className="header-mobile-panel absolute left-0 right-0 top-full z-50 mt-2 max-h-[min(80vh,32rem)] overflow-y-auto rounded-3xl border-2 border-[color-mix(in_oklab,var(--border)_85%,var(--accent)_15%)] bg-surface p-3 shadow-[0_24px_56px_color-mix(in_oklab,var(--ink)_22%,transparent)] sm:p-4 lg:hidden"
-                >
-                  <nav aria-label="Navegación móvil" className="flex flex-col gap-1">
-                    {headerNavLinks.map((item) => renderNavItem(item, true))}
-                    <a
-                      href={pathname === "/" ? "#tool" : "/#tool"}
-                      onClick={handleCalculateNow}
-                      className="header-cta mt-2 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-ink px-4 py-3 text-sm font-semibold text-surface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
-                    >
-                      Calcular ahora
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden>
-                        <path
-                          d="M5 12h14M13 6l6 6-6 6"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
-                    </a>
-                  </nav>
-                </motion.div>
-              </>
-            ) : null}
-          </AnimatePresence>
+          {menuOpen ? (
+            <>
+              <button
+                type="button"
+                className="header-mobile-backdrop header-mobile-backdrop--open fixed inset-0 z-40 lg:hidden"
+                aria-label="Cerrar menú"
+                onClick={closeMenu}
+              />
+              <div
+                id="mobile-nav-panel"
+                className="header-mobile-panel header-mobile-panel--open absolute left-0 right-0 top-full z-50 mt-2 max-h-[min(80vh,32rem)] overflow-y-auto rounded-3xl border-2 border-[color-mix(in_oklab,var(--border)_85%,var(--accent)_15%)] bg-surface p-3 shadow-[0_24px_56px_color-mix(in_oklab,var(--ink)_22%,transparent)] sm:p-4 lg:hidden"
+              >
+                <nav aria-label="Navegación móvil" className="flex flex-col gap-1">
+                  {headerNavLinks.map((item) => renderNavItem(item, true))}
+                  <a
+                    href={pathname === "/" ? "#tool" : "/#tool"}
+                    onClick={handleCalculateNow}
+                    className="header-cta mt-2 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-ink px-4 py-3 text-sm font-semibold text-surface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
+                  >
+                    Calcular ahora
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden>
+                      <path
+                        d="M5 12h14M13 6l6 6-6 6"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </a>
+                </nav>
+              </div>
+            </>
+          ) : null}
         </div>
       </div>
     </header>

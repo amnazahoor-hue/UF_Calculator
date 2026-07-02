@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { motion } from "framer-motion";
 import type { ReactNode } from "react";
 import { FooterSocialIcon, type SocialIconId } from "./FooterSocialIcons";
 import { SectionReveal } from "./SectionReveal";
@@ -36,27 +35,19 @@ export function Footer({ brand }: { brand: ReactNode }) {
       <div className="relative mx-auto w-full max-w-shell px-3 sm:px-5 lg:px-8 xl:px-10">
         <div className="footer-bar">
           <SectionReveal>
-            <motion.div
-              className="footer-cta-bar"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-            >
+            <div className="footer-cta-bar">
               <div>
                 <p className="text-xs font-semibold uppercase tracking-widest text-accent">¿Listo para convertir?</p>
                 <p className="mt-2 text-lg font-bold text-ink sm:text-xl">UF ↔ CLP en segundos, con valor actualizado</p>
               </div>
-              <motion.a
+              <a
                 href="#tool"
                 onClick={scrollToTool}
-                whileHover={{ scale: 1.04, y: -2 }}
-                whileTap={{ scale: 0.98 }}
-                className="inline-flex shrink-0 items-center justify-center rounded-full bg-ink px-6 py-3 text-sm font-semibold text-surface shadow-[0_8px_24px_color-mix(in_oklab,var(--ink)_20%,transparent)] transition hover:bg-[color-mix(in_oklab,var(--ink)_88%,var(--accent))] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
+                className="footer-cta-btn inline-flex shrink-0 items-center justify-center rounded-full bg-ink px-6 py-3 text-sm font-semibold text-surface shadow-[0_8px_24px_color-mix(in_oklab,var(--ink)_20%,transparent)] transition hover:scale-[1.04] hover:bg-[color-mix(in_oklab,var(--ink)_88%,var(--accent))] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
               >
                 Abrir calculadora
-              </motion.a>
-            </motion.div>
+              </a>
+            </div>
           </SectionReveal>
 
           <div className="mt-10 grid gap-10 sm:grid-cols-2 lg:mt-11 lg:grid-cols-12 lg:gap-8">

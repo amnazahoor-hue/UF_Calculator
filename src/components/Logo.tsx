@@ -32,7 +32,7 @@ export function Logo({
         ? "footer-logo-label truncate text-sm font-bold tracking-tight text-ink sm:text-base"
         : "truncate text-sm font-bold tracking-tight text-ink sm:text-base";
 
-  const imageSize = footer ? 96 : compact ? 88 : 96;
+  const imageSize = footer ? 96 : compact ? 48 : 96;
   const hasVisibleLabel = showLabel && (header || footer || !compact);
 
   return (

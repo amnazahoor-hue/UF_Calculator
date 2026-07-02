@@ -2,7 +2,10 @@ import { buildPageMetadata } from "@/lib/pageMetadata";
 import { fetchUfRate } from "@/lib/fetchUfRate";
 import { homePageSchemas } from "@/lib/jsonLd";
 import { homeDescription, homeTitle } from "@/lib/site";
-import { HomePageContent } from "@/components/HomePageContent";
+import type { UfRatesResponse } from "@/lib/ufRate";
+import { Hero } from "@/components/Hero";
+import { HomePageClient } from "@/components/HomePageClient";
+import { HomeSections } from "@/components/HomeSections";
 
 export const metadata = buildPageMetadata({
   title: homeTitle,
@@ -13,10 +16,12 @@ export const metadata = buildPageMetadata({
 
 export default async function Home() {
   let faqRate = 40804;
+  let initialUfData: UfRatesResponse | null = null;
 
   try {
     const ufData = await fetchUfRate();
     faqRate = ufData.rate;
+    initialUfData = ufData;
   } catch {
     // fallback rate for schema when API is unavailable at build time
   }
@@ -29,7 +34,12 @@ export default async function Home() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
-      <HomePageContent />
+      <HomePageClient initialUfData={initialUfData}>
+        <main className="flex-1">
+          <Hero />
+          <HomeSections />
+        </main>
+      </HomePageClient>
     </>
   );
 }

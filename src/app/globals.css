@@ -279,6 +279,18 @@ h2 {
   pointer-events: none;
 }
 
+.section-stats,
+.section-info-wrap,
+.section-features,
+.section-how,
+.section-use-cases,
+.section-why-uf,
+.section-benefits,
+.section-faq {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 600px;
+}
+
 .hero-calculator {
   position: relative;
   z-index: 10;
@@ -3514,16 +3526,14 @@ h2 {
   z-index: -1;
 }
 
-.faq-item-answer--measure,
-.faq-item--measure .faq-item-answer {
-  border-top: 1px solid color-mix(in oklab, var(--accent) 14%, var(--border));
-  padding-top: 0.85rem;
-  margin-top: 0.15rem;
-}
-
 .faq-item--measure {
   visibility: hidden;
   pointer-events: none;
+}
+
+.faq-item-answer-wrap--measure {
+  display: block;
+  grid-template-rows: none;
 }
 
 .faq-questions-list {
@@ -3552,6 +3562,7 @@ h2 {
 
 .faq-item--open .faq-item-answer {
   border-top: 1px solid color-mix(in oklab, var(--accent) 14%, var(--border));
+  padding: 0 1rem 1rem 3.35rem;
   padding-top: 0.85rem;
   margin-top: 0.15rem;
 }
@@ -3611,19 +3622,38 @@ h2 {
   font-weight: 500;
   line-height: 1;
   color: var(--accent);
+  transition: transform 0.25s ease;
+}
+
+.faq-item--open .faq-item-toggle {
+  transform: rotate(45deg);
 }
 
 .faq-item-answer-wrap {
+  display: grid;
+  grid-template-rows: 0fr;
   overflow: hidden;
+  transition: grid-template-rows 0.25s ease;
+}
+
+.faq-item--open .faq-item-answer-wrap {
+  grid-template-rows: 1fr;
 }
 
 .faq-item-answer {
-  padding: 0 1rem 1rem 3.35rem;
+  min-height: 0;
+  overflow: hidden;
+  padding: 0 1rem 0 3.35rem;
 }
 
 @media (min-width: 640px) {
   .faq-item-answer {
+    padding: 0 1.05rem 0 3.5rem;
+  }
+
+  .faq-item--open .faq-item-answer {
     padding: 0 1.05rem 1.05rem 3.5rem;
+    padding-top: 0.85rem;
   }
 }
 
@@ -3824,8 +3854,51 @@ h2 {
   cursor: default;
 }
 
+.header-mobile-backdrop--open {
+  animation: header-fade-in 0.2s ease forwards;
+}
+
 .header-mobile-panel {
   transform-origin: top center;
+}
+
+.header-mobile-panel--open {
+  animation: header-slide-in 0.22s ease forwards;
+}
+
+@keyframes header-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes header-slide-in {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.calc-result-reveal {
+  animation: calc-result-in 0.35s ease forwards;
+}
+
+@keyframes calc-result-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* Tablet / iPad header — menu panel + bar spacing (nav shows from lg) */

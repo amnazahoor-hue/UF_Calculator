@@ -1,10 +1,8 @@
 import type { Metadata } from "next";
+import dynamic from "next/dynamic";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { Footer } from "@/components/Footer";
 import { FooterBrand } from "@/components/FooterBrand";
-import { GoogleAnalytics } from "@/components/GoogleAnalytics";
-import { HashScrollHandler } from "@/components/HashScrollHandler";
 import { Header } from "@/components/Header";
 import { HeaderBrand } from "@/components/HeaderBrand";
 import { imageCatalog } from "@/lib/images";
@@ -14,11 +12,19 @@ import { defaultDescription, homeTitle, siteName, siteUrl } from "@/lib/site";
 const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
-  weight: ["400", "600", "700"],
-  display: "swap",
+  weight: ["400", "700"],
+  display: "optional",
   preload: true,
   adjustFontFallback: true,
 });
+
+const Footer = dynamic(() => import("@/components/Footer").then((m) => ({ default: m.Footer })));
+const GoogleAnalytics = dynamic(() =>
+  import("@/components/GoogleAnalytics").then((m) => ({ default: m.GoogleAnalytics })),
+);
+const HashScrollHandler = dynamic(() =>
+  import("@/components/HashScrollHandler").then((m) => ({ default: m.HashScrollHandler })),
+);
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -70,9 +76,7 @@ export default function RootLayout({
   return (
     <html lang="es" className={`${inter.variable} h-full overflow-x-clip antialiased`} suppressHydrationWarning>
       <head>
-        <link rel="preconnect" href="https://mindicador.cl" />
-        <link rel="dns-prefetch" href="https://mindicador.cl" />
-        <link rel="preconnect" href="https://www.googletagmanager.com" />
+        <link rel="preload" href={imageCatalog.logo.src} as="image" type="image/webp" />
       </head>
       <body className="flex min-h-full w-full max-w-full flex-col overflow-x-clip bg-bg-base" suppressHydrationWarning>
         <GoogleAnalytics />

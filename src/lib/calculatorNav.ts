@@ -4,8 +4,6 @@ export type CalculatorNavTarget = CalcMode | "RATE" | "FREE";
 
 export const CALCULATOR_NAV_EVENT = "uf-calculator:navigate";
 
-const HEADER_OFFSET = 108;
-
 export function scrollToPageSection(sectionId: string) {
   if (typeof window === "undefined") return;
 
@@ -17,8 +15,7 @@ export function scrollToPageSection(sectionId: string) {
   const el = document.getElementById(sectionId);
   if (!el) return;
 
-  const top = el.getBoundingClientRect().top + window.scrollY - HEADER_OFFSET;
-  window.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
+  el.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
 export function emitCalculatorNav(target: CalculatorNavTarget) {

@@ -1,6 +1,5 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { useLayoutEffect, useMemo, useRef, useState } from "react";
 import { buildFaqItems } from "@/lib/faqContent";
 import { useUfRate } from "@/components/UfRateProvider";
@@ -15,8 +14,6 @@ const faqImages = [
   imageCatalog.faq.financialMeeting,
   imageCatalog.faq.questionsAnswers,
 ] as const;
-
-const accordionEase = [0.22, 1, 0.36, 1] as const;
 
 export function Faq() {
   const { rate } = useUfRate();
@@ -110,7 +107,7 @@ export function Faq() {
               <div ref={measureRef} className="faq-measure-layer" aria-hidden>
                 {faqItems.map((item) => (
                   <article key={item.q} className="faq-item faq-item--open faq-item--measure">
-                    <div className="faq-item-answer-wrap">
+                    <div className="faq-item-answer-wrap faq-item-answer-wrap--measure">
                       <div className="faq-item-answer" data-faq-measure-answer>
                         <p className="faq-item-answer-text">{item.a}</p>
                       </div>
@@ -140,24 +137,22 @@ export function Faq() {
                         >
                           <span className="faq-item-index">{String(index + 1).padStart(2, "0")}</span>
                           <span className="faq-item-question">{item.q}</span>
-                          <motion.span
-                            className="faq-item-toggle"
-                            aria-hidden
-                            animate={{ rotate: isOpen ? 45 : 0 }}
-                            transition={{ duration: 0.25, ease: accordionEase }}
-                          >
+                          <span className="faq-item-toggle" aria-hidden>
                             +
-                          </motion.span>
+                          </span>
                         </button>
                       </h3>
 
-                      {isOpen ? (
-                        <div id={answerId} className="faq-item-answer-wrap">
-                          <div className="faq-item-answer">
-                            <p className="faq-item-answer-text">{item.a}</p>
-                          </div>
+                      <div
+                        id={answerId}
+                        className="faq-item-answer-wrap"
+                        aria-hidden={!isOpen}
+                        inert={!isOpen ? true : undefined}
+                      >
+                        <div className="faq-item-answer">
+                          <p className="faq-item-answer-text">{item.a}</p>
                         </div>
-                      ) : null}
+                      </div>
                     </article>
                   );
                 })}
