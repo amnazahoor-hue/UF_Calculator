@@ -5,54 +5,45 @@ import { useEffect, useState } from "react";
 import type { UfRatesResponse } from "@/lib/ufRate";
 import { useDeferClient } from "@/lib/useDeferClient";
 
-export function HeroTabsSlot({ children }: { children: ReactNode }) {
-  const ready = useDeferClient({
-    idleTimeout: 3500,
-    interactionSelector: "#home .hero-tablist, #home .hero-calculator-slot, #tool",
-  });
-  const [Tabs, setTabs] = useState<ComponentType | null>(null);
+const HERO_DEFER_SELECTOR =
+  "#home .hero-tablist, #home .hero-calculator-slot, #tool, a[href='#tool']";
 
-  useEffect(() => {
-    if (!ready || Tabs) return;
-    void import("./HeroTabs").then((module) => {
-      setTabs(() => module.HeroTabs);
-    });
-  }, [ready, Tabs]);
-
-  if (!Tabs) {
-    return children;
-  }
-
-  return <Tabs />;
-}
-
-export function HeroCalculatorSlot({
-  children,
+export function HeroDeferredSlots({
+  tabsShell,
+  calculatorShell,
   initialUfData,
 }: {
-  children: ReactNode;
+  tabsShell: ReactNode;
+  calculatorShell: ReactNode;
   initialUfData?: UfRatesResponse | null;
 }) {
   const ready = useDeferClient({
-    idleTimeout: 3500,
-    interactionSelector: "#home .hero-tablist, #home .hero-calculator-slot, #tool, a[href='#tool']",
+    idleTimeout: 4000,
+    interactionSelector: HERO_DEFER_SELECTOR,
   });
-  const [Interactive, setInteractive] = useState<ComponentType<{ initialUfData?: UfRatesResponse | null }> | null>(
+  const [HeroTabs, setHeroTabs] = useState<ComponentType | null>(null);
+  const [HeroInteractive, setHeroInteractive] = useState<ComponentType<{ initialUfData?: UfRatesResponse | null }> | null>(
     null,
   );
 
   useEffect(() => {
-    if (!ready || Interactive) return;
-    void import("./HeroInteractive").then((module) => {
-      setInteractive(() => module.HeroInteractive);
+    if (!ready || (HeroTabs && HeroInteractive)) return;
+
+    void Promise.all([import("./HeroTabs"), import("./HeroInteractive")]).then(([tabsMod, interactiveMod]) => {
+      setHeroTabs(() => tabsMod.HeroTabs);
+      setHeroInteractive(() => interactiveMod.HeroInteractive);
     });
-  }, [ready, Interactive]);
+  }, [ready, HeroTabs, HeroInteractive]);
 
-  if (!Interactive) {
-    return children;
-  }
+  return (
+    <>
+      {HeroTabs ? <HeroTabs /> : tabsShell}
 
-  return <Interactive initialUfData={initialUfData} />;
+      <div className="hero-calculator-slot relative mx-auto mt-8 w-full max-w-content-narrow pb-2 sm:mt-10 sm:pb-6">
+        {HeroInteractive ? <HeroInteractive initialUfData={initialUfData} /> : calculatorShell}
+      </div>
+    </>
+  );
 }
 
 export function BelowFoldSlot({
@@ -63,7 +54,7 @@ export function BelowFoldSlot({
   initialUfData?: UfRatesResponse | null;
 }) {
   const ready = useDeferClient({
-    idleTimeout: 4500,
+    idleTimeout: 5000,
     rootMargin: "480px 0px",
   });
   const [Fold, setFold] = useState<ComponentType<{ initialUfData?: UfRatesResponse | null }> | null>(null);

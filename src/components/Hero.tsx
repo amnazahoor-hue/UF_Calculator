@@ -1,5 +1,5 @@
 import type { UfRatesResponse } from "@/lib/ufRate";
-import { HeroCalculatorSlot, HeroTabsSlot } from "./DeferredHomeClient";
+import { HeroDeferredSlots } from "./DeferredHomeClient";
 import { HeroCalculatorFallback } from "./HeroCalculatorFallback";
 import { HeroTabsShell } from "./HeroTabsShell";
 
@@ -17,12 +17,12 @@ export function Hero({ initialUfData }: { initialUfData?: UfRatesResponse | null
           <span className="hero-headline-glow" />
         </div>
         <div aria-hidden className="hero-panel-grid-lines" />
-        <div aria-hidden className="pointer-events-none absolute -right-6 top-16 z-[2] h-36 w-36 rounded-full bg-[color-mix(in_oklab,var(--accent-2)_28%,transparent)] blur-3xl sm:-right-16 sm:h-44 sm:w-44" />
-        <div aria-hidden className="pointer-events-none absolute -left-4 bottom-24 z-[2] h-28 w-28 rounded-full bg-[color-mix(in_oklab,var(--accent)_14%,transparent)] blur-3xl sm:-left-12 sm:h-36 sm:w-36" />
+        <div aria-hidden className="pointer-events-none hero-orb hero-orb--right absolute -right-6 top-16 z-[2] h-36 w-36 rounded-full bg-[color-mix(in_oklab,var(--accent-2)_28%,transparent)] blur-3xl sm:-right-16 sm:h-44 sm:w-44" />
+        <div aria-hidden className="pointer-events-none hero-orb hero-orb--left absolute -left-4 bottom-24 z-[2] h-28 w-28 rounded-full bg-[color-mix(in_oklab,var(--accent)_14%,transparent)] blur-3xl sm:-left-12 sm:h-36 sm:w-36" />
 
         <div className="relative z-10 px-5 pb-9 pt-6 text-center sm:px-10 sm:pb-11 sm:pt-8 md:px-12 md:pb-12">
           <div className="mx-auto max-w-content-narrow">
-            <h1 className="mx-auto max-w-[920px] text-[clamp(2rem,4.5vw,3.35rem)] font-bold leading-[1.12] tracking-[-0.02em] text-ink">
+            <h1 className="hero-lcp-headline mx-auto max-w-[920px] text-[clamp(2rem,4.5vw,3.35rem)] font-bold leading-[1.12] tracking-[-0.02em] text-ink">
               Calculadora De UF: Convierte UF Pesos Chilenos Al Instante.
             </h1>
 
@@ -53,15 +53,11 @@ export function Hero({ initialUfData }: { initialUfData?: UfRatesResponse | null
             </div>
           </div>
 
-          <HeroTabsSlot>
-            <HeroTabsShell />
-          </HeroTabsSlot>
-
-          <div className="hero-calculator-slot relative mx-auto mt-8 w-full max-w-content-narrow pb-2 sm:mt-10 sm:pb-6">
-            <HeroCalculatorSlot initialUfData={initialUfData}>
-              <HeroCalculatorFallback />
-            </HeroCalculatorSlot>
-          </div>
+          <HeroDeferredSlots
+            initialUfData={initialUfData}
+            tabsShell={<HeroTabsShell />}
+            calculatorShell={<HeroCalculatorFallback />}
+          />
         </div>
       </div>
     </section>

@@ -16,9 +16,10 @@ const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
   weight: ["400", "700"],
-  display: "optional",
+  display: "swap",
   preload: true,
   adjustFontFallback: true,
+  fallback: ["system-ui", "Segoe UI", "Roboto", "sans-serif"],
 });
 
 const GoogleAnalytics = dynamic(() =>
@@ -75,9 +76,6 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es-CL" className={`${inter.variable} h-full overflow-x-clip antialiased`} suppressHydrationWarning>
-      <head>
-        <link rel="preload" href={imageCatalog.logo.src} as="image" type="image/webp" />
-      </head>
       <body className="flex min-h-full w-full max-w-full flex-col overflow-x-clip bg-bg-base" suppressHydrationWarning>
         <GoogleAnalytics />
         <Header brand={<HeaderBrand />} />

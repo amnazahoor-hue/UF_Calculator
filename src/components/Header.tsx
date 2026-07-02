@@ -18,19 +18,37 @@ export function Header({ brand }: { brand: ReactNode }) {
 
   useEffect(() => {
     let frame = 0;
-    const readScroll = () => {
-      frame = 0;
-      setScrolled(window.scrollY > 10);
+    let cleanup: (() => void) | undefined;
+
+    const attach = () => {
+      const readScroll = () => {
+        frame = 0;
+        setScrolled(window.scrollY > 10);
+      };
+      const onScroll = () => {
+        if (frame) return;
+        frame = window.requestAnimationFrame(readScroll);
+      };
+      readScroll();
+      window.addEventListener("scroll", onScroll, { passive: true });
+      cleanup = () => {
+        window.removeEventListener("scroll", onScroll);
+        if (frame) window.cancelAnimationFrame(frame);
+      };
     };
-    const onScroll = () => {
-      if (frame) return;
-      frame = window.requestAnimationFrame(readScroll);
-    };
-    readScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
+
+    if (typeof window.requestIdleCallback === "function") {
+      const idleId = window.requestIdleCallback(attach, { timeout: 2500 });
+      return () => {
+        window.cancelIdleCallback(idleId);
+        cleanup?.();
+      };
+    }
+
+    const timeout = window.setTimeout(attach, 2500);
     return () => {
-      window.removeEventListener("scroll", onScroll);
-      if (frame) window.cancelAnimationFrame(frame);
+      window.clearTimeout(timeout);
+      cleanup?.();
     };
   }, []);
 
