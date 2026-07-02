@@ -7,6 +7,10 @@
   --surface: #ffffff;
   --accent: #e8744a;
   --accent-2: #f2a07b;
+  /* Accessible orange for text on light backgrounds (>= 4.5:1 vs white). */
+  --accent-strong: #a8481c;
+  /* Accessible muted grey for small text (>= 7:1 vs white). */
+  --ink-muted: #4d4d4d;
   --ink: #1a1a1a;
   --ink-soft: #6b6b6b;
   --border: #e7e2db;
@@ -701,6 +705,9 @@ h2 {
 .calc-amount-input {
   max-width: 100%;
   min-width: 0;
+  /* Taller field gives the stacked steppers room for larger tap targets. */
+  min-height: 3.5rem;
+  padding-right: 3.75rem;
 }
 
 .calc-amount-steppers {
@@ -711,28 +718,38 @@ h2 {
   display: flex;
   transform: translateY(-50%);
   flex-direction: column;
-  gap: 0;
-  overflow: hidden;
-  border-radius: 10px;
-  border: 1px solid var(--border);
-  background: color-mix(in oklab, var(--bg-warm-2) 60%, var(--surface));
+  gap: 0.25rem;
 }
 
 .calc-step-btn {
   display: flex;
-  height: 1.125rem;
-  width: 1.75rem;
+  /* WCAG 2.2 min target is 24px; width widened to 48px with 4px spacing. */
+  height: 1.5rem;
+  min-height: 1.5rem;
+  width: 3rem;
+  min-width: 3rem;
   align-items: center;
   justify-content: center;
-  font-size: 0.5rem;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: color-mix(in oklab, var(--bg-warm-2) 60%, var(--surface));
+  font-size: 0.7rem;
   line-height: 1;
-  color: var(--ink-soft);
-  transition: background 0.15s, color 0.15s;
+  color: var(--ink-muted);
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
 }
 
 .calc-step-btn:hover {
+  border-color: color-mix(in oklab, var(--accent) 30%, var(--border));
   background: color-mix(in oklab, var(--accent) 12%, var(--surface));
-  color: var(--accent);
+  color: var(--accent-strong);
+}
+
+.calc-step-btn:focus-visible {
+  outline: 2px solid color-mix(in oklab, var(--accent) 50%, transparent);
+  outline-offset: 2px;
 }
 
 .calculator-card {
@@ -765,10 +782,10 @@ h2 {
 
 .uf-rate-panel-eyebrow {
   font-size: 0.6875rem;
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--accent);
+  color: var(--accent-strong);
 }
 
 .uf-rate-panel-date {
@@ -787,7 +804,7 @@ h2 {
 }
 
 .uf-rate-panel-value strong {
-  color: var(--accent);
+  color: var(--accent-strong);
 }
 
 .uf-rate-value-display {
@@ -811,6 +828,13 @@ h2 {
 
 .uf-live-rate-pill {
   min-width: 11.5rem;
+  /* Override inline text-accent so the value passes AA on the pale pill. */
+  color: var(--accent-strong);
+  background: color-mix(in oklab, var(--accent) 16%, var(--surface));
+}
+
+.uf-live-rate-pill .uf-rate-value-display {
+  color: var(--accent-strong);
 }
 
 .uf-live-rate-date {
@@ -1072,20 +1096,20 @@ h2 {
   font-size: 0.6875rem;
   font-weight: 600;
   text-transform: capitalize;
-  color: var(--ink-soft);
+  color: var(--ink-muted);
 }
 
 .uf-date-strip-item--projected {
   border-style: dashed;
-  opacity: 0.82;
 }
 
+.uf-date-strip-item--projected .uf-date-strip-item-label,
 .uf-date-strip-item--projected .uf-date-strip-item-rate {
-  color: var(--ink-soft);
+  color: var(--ink-muted);
 }
 
 .uf-date-strip-item--active .uf-date-strip-item-label {
-  color: var(--accent);
+  color: var(--accent-strong);
 }
 
 .uf-date-strip-item-rate {
