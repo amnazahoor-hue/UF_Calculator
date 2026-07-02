@@ -1,11 +1,15 @@
 "use client";
 
-import { motion } from "framer-motion";
+import dynamic from "next/dynamic";
 import { useCallback, useEffect, useState } from "react";
 import { scrollToPageSection } from "@/lib/calculatorNav";
 import { SectionEyebrow } from "./SectionEyebrow";
 import { SectionReveal } from "./SectionReveal";
-import { UfUseCasesAnimation } from "./UfUseCasesAnimation";
+
+const UfUseCasesAnimation = dynamic(
+  () => import("./UfUseCasesAnimation").then((m) => ({ default: m.UfUseCasesAnimation })),
+  { ssr: false },
+);
 
 const useCases = [
   {
@@ -80,9 +84,8 @@ export function UfUseCases() {
             <div className="use-cases-list">
               {useCases.map((item, index) => (
                 <SectionReveal key={item.title} delay={index * 0.06}>
-                  <motion.article
+                  <article
                     className={`use-cases-item${activeCase === index ? " use-cases-item--active" : ""}`}
-                    transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
                     onMouseEnter={() => setActiveCase(index)}
                     onFocus={() => setActiveCase(index)}
                     tabIndex={0}
@@ -94,7 +97,7 @@ export function UfUseCases() {
                       <h3 className="use-cases-item-title">{item.title}</h3>
                       <p className="use-cases-item-body">{item.body}</p>
                     </div>
-                  </motion.article>
+                  </article>
                 </SectionReveal>
               ))}
             </div>

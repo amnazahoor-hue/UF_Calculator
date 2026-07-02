@@ -1,7 +1,7 @@
-import { HeroCalculatorLazy } from "./HeroCalculatorLazy";
-import { HeroTabs } from "./HeroTabs";
+import type { UfRatesResponse } from "@/lib/ufRate";
+import { HeroInteractive } from "./HeroInteractive";
 
-export function Hero() {
+export function Hero({ initialUfData }: { initialUfData?: UfRatesResponse | null }) {
   return (
     <section
       id="home"
@@ -48,13 +48,9 @@ export function Hero() {
                 </svg>
               </a>
             </div>
-
-            <HeroTabs />
           </div>
 
-          <div className="relative mx-auto mt-8 w-full max-w-content-narrow pb-2 sm:mt-10 sm:pb-6">
-            <HeroCalculatorLazy />
-          </div>
+          <HeroInteractive initialUfData={initialUfData} />
         </div>
       </div>
     </section>

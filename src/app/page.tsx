@@ -3,9 +3,8 @@ import { fetchUfRate } from "@/lib/fetchUfRate";
 import { homePageSchemas } from "@/lib/jsonLd";
 import { homeDescription, homeTitle } from "@/lib/site";
 import type { UfRatesResponse } from "@/lib/ufRate";
+import { BelowFoldLoader } from "@/components/BelowFoldLoader";
 import { Hero } from "@/components/Hero";
-import { HomePageClient } from "@/components/HomePageClient";
-import { HomeSections } from "@/components/HomeSections";
 
 export const metadata = buildPageMetadata({
   title: homeTitle,
@@ -34,12 +33,10 @@ export default async function Home() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
-      <HomePageClient initialUfData={initialUfData}>
-        <main className="flex-1">
-          <Hero />
-          <HomeSections />
-        </main>
-      </HomePageClient>
+      <main className="flex-1">
+        <Hero initialUfData={initialUfData} />
+        <BelowFoldLoader initialUfData={initialUfData} />
+      </main>
     </>
   );
 }
