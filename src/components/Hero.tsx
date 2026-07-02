@@ -1,5 +1,6 @@
 import type { UfRatesResponse } from "@/lib/ufRate";
 import { HeroInteractive } from "./HeroInteractive";
+import { HeroTabs } from "./HeroTabs";
 
 export function Hero({ initialUfData }: { initialUfData?: UfRatesResponse | null }) {
   return (
@@ -12,9 +13,9 @@ export function Hero({ initialUfData }: { initialUfData?: UfRatesResponse | null
           <span className="hero-panel-glow hero-panel-glow--1" />
           <span className="hero-panel-glow hero-panel-glow--2" />
           <span className="hero-panel-glow hero-panel-glow--3" />
+          <span className="hero-headline-glow" />
         </div>
         <div aria-hidden className="hero-panel-grid-lines" />
-        <div aria-hidden className="hero-headline-glow" />
         <div aria-hidden className="pointer-events-none absolute -right-6 top-16 z-[2] h-36 w-36 rounded-full bg-[color-mix(in_oklab,var(--accent-2)_28%,transparent)] blur-3xl sm:-right-16 sm:h-44 sm:w-44" />
         <div aria-hidden className="pointer-events-none absolute -left-4 bottom-24 z-[2] h-28 w-28 rounded-full bg-[color-mix(in_oklab,var(--accent)_14%,transparent)] blur-3xl sm:-left-12 sm:h-36 sm:w-36" />
 
@@ -51,7 +52,11 @@ export function Hero({ initialUfData }: { initialUfData?: UfRatesResponse | null
             </div>
           </div>
 
-          <HeroInteractive initialUfData={initialUfData} />
+          <HeroTabs />
+
+          <div className="hero-calculator-slot relative mx-auto mt-8 w-full max-w-content-narrow pb-2 sm:mt-10 sm:pb-6">
+            <HeroInteractive initialUfData={initialUfData} />
+          </div>
         </div>
       </div>
     </section>

@@ -32,7 +32,8 @@ export function Logo({
         ? "footer-logo-label truncate text-sm font-bold tracking-tight text-ink sm:text-base"
         : "truncate text-sm font-bold tracking-tight text-ink sm:text-base";
 
-  const imageSize = footer ? 96 : compact ? 48 : 96;
+  const imageWidth = footer ? 96 : compact ? 48 : 96;
+  const imageHeight = footer ? 96 : compact ? 48 : 96;
   const hasVisibleLabel = showLabel && (header || footer || !compact);
 
   return (
@@ -45,9 +46,9 @@ export function Logo({
         <SiteImage
           image={imageCatalog.logo}
           describe={!hasVisibleLabel}
-          width={imageSize}
-          height={imageSize}
-          sizes="48px"
+          width={imageWidth}
+          height={imageHeight}
+          sizes={footer ? "96px" : compact ? "48px" : "96px"}
           quality={88}
           priority={priority}
           loading={priority ? "eager" : "lazy"}

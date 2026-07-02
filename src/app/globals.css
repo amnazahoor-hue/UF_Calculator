@@ -164,6 +164,8 @@ h2 {
 
 /* Hero panel — warm peach card on grey page */
 .hero-panel {
+  position: relative;
+  isolation: isolate;
   height: auto;
   overflow-x: clip;
   background-color: var(--bg-warm);
@@ -288,12 +290,15 @@ h2 {
 
 .hero-headline-glow {
   position: absolute;
-  left: 50%;
   top: 18%;
+  left: 0;
+  right: 0;
   z-index: 0;
   width: min(680px, 90%);
   height: 280px;
-  transform: translateX(-50%);
+  margin-inline: auto;
+  transform: translateZ(0);
+  contain: strict;
   background: radial-gradient(
     ellipse at center,
     color-mix(in oklab, var(--accent) 22%, transparent) 0%,
@@ -302,6 +307,31 @@ h2 {
   );
   filter: blur(12px);
   pointer-events: none;
+}
+
+@media (max-width: 639px) {
+  .hero-headline-glow {
+    top: 10%;
+    height: 200px;
+    width: min(520px, 94%);
+  }
+}
+
+.hero-calculator-slot {
+  min-height: 38.5rem;
+  contain: layout style;
+}
+
+@media (min-width: 640px) {
+  .hero-calculator-slot {
+    min-height: 37rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .hero-calculator-slot {
+    min-height: 26.5rem;
+  }
 }
 
 .section-stats,
@@ -787,7 +817,7 @@ h2 {
 
 .uf-rate-panel {
   margin-bottom: 1.25rem;
-  min-height: 12.75rem;
+  min-height: 13.5rem;
   padding: 1rem;
   border-radius: 1.25rem;
   border: 1px solid color-mix(in oklab, var(--accent) 18%, var(--border));
@@ -3789,7 +3819,17 @@ h2 {
 
 .footer-logo-img {
   display: block;
+  width: 2.75rem;
+  height: 2.75rem;
+  aspect-ratio: 1 / 1;
   background: transparent;
+}
+
+@media (min-width: 640px) {
+  .footer-logo-img {
+    width: 3rem;
+    height: 3rem;
+  }
 }
 
 .footer-brand-link {
